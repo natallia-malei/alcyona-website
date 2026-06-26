@@ -9,6 +9,7 @@ import { PlatformLink } from "../components/PlatformLink";
 import { HeroBackdrop } from "../components/HeroBackdrop";
 import { ReleaseCover } from "../components/ReleaseCover";
 import { Lead } from "../components/Lead";
+import { flex } from "../styles/layouts";
 
 export function Hero() {
   const { t } = useTranslation();
@@ -29,7 +30,7 @@ export function Hero() {
             {tr(release.title)}
           </PageTitle>
           <Lead className="mb-8 max-w-xl">{tr(release.description)}</Lead>
-          <div className="flex flex-wrap items-center gap-4">
+          <div className={flex.wrapInline}>
             <Button to={`/release/${release.id}`}>{t("hero.listenNow")}</Button>
             {release.links.spotify && (
               <PlatformLink href={release.links.spotify}>Spotify →</PlatformLink>

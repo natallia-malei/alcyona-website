@@ -3,6 +3,7 @@ import { getPhotos } from "../storage";
 import { Section } from "../components/Section";
 import { MediaFrame } from "../components/MediaFrame";
 import { MediaImage } from "../components/MediaImage";
+import { grids } from "../styles/layouts";
 
 export function Photos() {
   const { t } = useTranslation();
@@ -10,7 +11,7 @@ export function Photos() {
 
   return (
     <Section id="photos" title={t("photos.title")}>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className={grids.photos}>
         {photos.map((p) => (
           <MediaFrame key={p.id}>
             <MediaImage src={p.url} alt="" zoom="hover" />

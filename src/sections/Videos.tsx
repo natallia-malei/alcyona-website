@@ -4,6 +4,7 @@ import { Section } from "../components/Section";
 import { Eyebrow } from "../components/Eyebrow";
 import { VideoEmbed } from "../components/VideoEmbed";
 import { useLocalizedText } from "../hooks/useLocalizedText";
+import { grids } from "../styles/layouts";
 
 export function Videos() {
   const { t } = useTranslation();
@@ -12,7 +13,7 @@ export function Videos() {
 
   return (
     <Section id="videos" title={t("videos.title")}>
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className={grids.videos}>
         {videos.map((v) => (
           <div key={v.id}>
             <VideoEmbed youtubeId={v.youtubeId} title={tr(v.title)} />
