@@ -1,6 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { getPhotos } from "../storage";
 import { Section } from "../components/Section";
+import { MediaFrame } from "../components/MediaFrame";
+import { MediaImage } from "../components/MediaImage";
 
 export function Photos() {
   const { t } = useTranslation();
@@ -10,16 +12,9 @@ export function Photos() {
     <Section id="photos" title={t("photos.title")}>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {photos.map((p) => (
-          <div
-            key={p.id}
-            className="aspect-square overflow-hidden bg-bg-elevated"
-          >
-            <img
-              src={p.url}
-              alt=""
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-            />
-          </div>
+          <MediaFrame key={p.id}>
+            <MediaImage src={p.url} alt="" zoom="hover" />
+          </MediaFrame>
         ))}
       </div>
     </Section>

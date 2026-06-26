@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import type { Release } from "../types";
 import { useLocalizedText } from "../hooks/useLocalizedText";
 import { Eyebrow } from "./Eyebrow";
+import { MediaFrame } from "./MediaFrame";
+import { MediaImage } from "./MediaImage";
 
 interface ReleaseCardProps {
   release: Release;
@@ -12,13 +14,9 @@ export function ReleaseCard({ release }: ReleaseCardProps) {
 
   return (
     <Link to={`/release/${release.id}`} className="group block">
-      <div className="aspect-square overflow-hidden bg-bg-elevated mb-3">
-        <img
-          src={release.coverUrl}
-          alt={tr(release.title)}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-        />
-      </div>
+      <MediaFrame className="mb-3">
+        <MediaImage src={release.coverUrl} alt={tr(release.title)} zoom="group-hover" />
+      </MediaFrame>
       <Eyebrow size="xs" className="text-fg-muted">
         {release.type} · {new Date(release.releaseDate).getFullYear()}
       </Eyebrow>
