@@ -5,6 +5,7 @@ type Variant = "default" | "accent";
 
 interface NavLinkProps {
   variant?: Variant;
+  underline?: boolean;
   className?: string;
   children: ReactNode;
   to?: string;
@@ -22,12 +23,13 @@ function isExternal(href: string): boolean {
 
 export function NavLink({
   variant = "default",
+  underline = false,
   className = "",
   children,
   to,
   href,
 }: NavLinkProps) {
-  const cls = `transition-colors ${variantClass[variant]} ${className}`;
+  const cls = `transition-colors ${variantClass[variant]} ${underline ? "underline" : ""} ${className}`;
 
   if (to) {
     return (
