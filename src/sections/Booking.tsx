@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { getBand } from "../storage";
 import { SocialLinks } from "../components/SocialLinks";
 import { Container } from "../components/Container";
+import { SectionTitle } from "../components/SectionTitle";
 
 export function Booking() {
   const { t } = useTranslation();
@@ -10,9 +11,7 @@ export function Booking() {
   return (
     <section id="booking" className="py-20 bg-[--color-bg-elevated]">
       <Container size="md" className="text-center">
-        <h2 className="text-3xl md:text-5xl font-bold mb-3">
-          {t("booking.title")}
-        </h2>
+        <SectionTitle className="mb-3">{t("booking.title")}</SectionTitle>
         <p className="text-[--color-fg-muted] mb-8">{t("booking.subtitle")}</p>
         <a
           href={`mailto:${band.bookingEmail}`}

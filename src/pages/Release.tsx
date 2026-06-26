@@ -5,6 +5,7 @@ import { useLocalizedText } from "../hooks/useLocalizedText";
 import { PageTitle } from "../components/PageTitle";
 import { Container } from "../components/Container";
 import { Eyebrow } from "../components/Eyebrow";
+import { SectionTitle } from "../components/SectionTitle";
 
 function formatDuration(sec: number): string {
   const m = Math.floor(sec / 60);
@@ -84,7 +85,7 @@ export function ReleasePage() {
           <PageTitle className="mb-6">{tr(release.title)}</PageTitle>
           <p className="text-[--color-fg-muted] mb-10">{tr(release.description)}</p>
 
-          <h2 className="text-2xl font-bold mb-4">{t("release.tracks")}</h2>
+          <SectionTitle size="sm" className="mb-4">{t("release.tracks")}</SectionTitle>
           <ol className="divide-y divide-white/10">
             {release.tracks.map((track, idx) => (
               <li key={track.id} className="py-4">

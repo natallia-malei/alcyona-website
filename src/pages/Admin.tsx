@@ -5,6 +5,7 @@ import { useLocalizedText } from "../hooks/useLocalizedText";
 import { PageTitle } from "../components/PageTitle";
 import { Button } from "../components/Button";
 import { Container } from "../components/Container";
+import { SectionTitle } from "../components/SectionTitle";
 
 export function Admin() {
   const { t } = useTranslation();
@@ -37,7 +38,7 @@ export function Admin() {
         редактирования будут добавлены на следующем этапе.
       </p>
 
-      <h2 className="text-2xl font-bold mt-10 mb-4">Релизы ({releases.length})</h2>
+      <SectionTitle size="sm" className="mt-10 mb-4">Релизы ({releases.length})</SectionTitle>
       <ul className="divide-y divide-white/10">
         {releases.map((r) => (
           <li key={r.id} className="py-3 flex items-center justify-between">
