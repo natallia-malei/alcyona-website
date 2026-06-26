@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { typography } from "../../styles/typography";
 
 interface PlatformLinkProps {
   href: string;
@@ -11,7 +12,7 @@ export function PlatformLink({ href, children }: PlatformLinkProps) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-sm uppercase tracking-widest hover:text-accent transition-colors"
+      className={`${typography.eyebrow} hover:text-accent transition-colors`}
     >
       {children}
     </a>

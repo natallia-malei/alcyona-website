@@ -1,7 +1,9 @@
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getReleaseById } from "../storage";
 import { Page } from "../components/layout/Page";
+import { NavLink } from "../components/ui/NavLink";
+import { BackLink } from "../components/ui/BackLink";
 import { ReleaseDetail } from "../sections/ReleaseDetail";
 
 export function ReleasePage() {
@@ -13,19 +15,14 @@ export function ReleasePage() {
     return (
       <Page size="xl">
         <p>Release not found.</p>
-        <Link to="/" className="underline">← Home</Link>
+        <NavLink to="/" underline>← Home</NavLink>
       </Page>
     );
   }
 
   return (
     <Page size="xl">
-      <Link
-        to="/#releases"
-        className="text-sm uppercase tracking-widest text-fg-muted hover:text-white"
-      >
-        ← {t("release.back")}
-      </Link>
+      <BackLink to="/#releases">{t("release.back")}</BackLink>
       <ReleaseDetail release={release} />
     </Page>
   );
