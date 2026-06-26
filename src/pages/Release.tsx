@@ -22,7 +22,7 @@ export function ReleasePage() {
   if (!release) {
     return (
       <Container className="pt-32 min-h-screen">
-        <p className="text-fg-muted">Release not found.</p>
+        <p>Release not found.</p>
         <Link to="/" className="underline">← Home</Link>
       </Container>
     );
@@ -83,20 +83,20 @@ export function ReleasePage() {
             {release.type} · {new Date(release.releaseDate).getFullYear()}
           </Eyebrow>
           <PageTitle className="mb-6">{tr(release.title)}</PageTitle>
-          <p className="text-fg-muted mb-10">{tr(release.description)}</p>
+          <p className="mb-10">{tr(release.description)}</p>
 
           <SectionTitle size="sm" className="mb-4">{t("release.tracks")}</SectionTitle>
           <ol className="divide-y divide-white/10">
             {release.tracks.map((track, idx) => (
               <li key={track.id} className="py-4">
                 <div className="flex items-baseline justify-between gap-4">
-                  <p className="text-lg">
+                  <p className="text-lg text-white">
                     <span className="text-fg-muted mr-3">
                       {(idx + 1).toString().padStart(2, "0")}
                     </span>
                     {tr(track.title)}
                   </p>
-                  <p className="text-sm text-fg-muted tabular-nums">
+                  <p className="text-sm tabular-nums">
                     {formatDuration(track.durationSec)}
                   </p>
                 </div>

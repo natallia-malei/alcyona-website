@@ -37,7 +37,7 @@ export function Hero() {
           <PageTitle size="hero" className="mb-6">
             {tr(release.title)}
           </PageTitle>
-          <p className="text-lg text-fg-muted mb-8 max-w-xl">
+          <p className="text-lg mb-8 max-w-xl">
             {tr(release.description)}
           </p>
           <div className="flex flex-wrap items-center gap-4">

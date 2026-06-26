@@ -12,7 +12,7 @@ export function Booking() {
     <section id="booking" className="py-20 bg-bg-elevated">
       <Container size="md" className="text-center">
         <SectionTitle className="mb-3">{t("booking.title")}</SectionTitle>
-        <p className="text-fg-muted mb-8">{t("booking.subtitle")}</p>
+        <p className="mb-8">{t("booking.subtitle")}</p>
         <a
           href={`mailto:${band.bookingEmail}`}
           className="inline-block text-2xl md:text-3xl font-semibold underline underline-offset-8 hover:text-accent transition-colors mb-10"

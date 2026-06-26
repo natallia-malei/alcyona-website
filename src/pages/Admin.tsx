@@ -33,7 +33,7 @@ export function Admin() {
         </Button>
       </div>
 
-      <p className="text-fg-muted mb-4">
+      <p className="mb-4">
         Данные хранятся в Local Storage этого браузера. Полноценные формы
         редактирования будут добавлены на следующем этапе.
       </p>

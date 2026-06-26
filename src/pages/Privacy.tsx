@@ -7,7 +7,7 @@ export function Privacy() {
   return (
     <Container size="sm" className="pt-32 pb-20 min-h-screen">
       <PageTitle className="mb-8">{t("privacy.title")}</PageTitle>
-      <div className="prose prose-invert text-fg-muted leading-relaxed space-y-4">
+      <div className="leading-relaxed space-y-4">
         <p>
           Сайт ALCYONA не собирает персональные данные посетителей за исключением
           информации, добровольно предоставляемой через формы обратной связи.

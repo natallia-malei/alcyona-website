@@ -7,7 +7,7 @@ export function Studio() {
   return (
     <Container size="md" className="pt-32 pb-20 min-h-screen">
       <PageTitle className="mb-8">{t("studio.title")}</PageTitle>
-      <p className="text-fg-muted text-lg leading-relaxed">
+      <p className="text-lg leading-relaxed">
         {/* TODO: контент студии — описание, оборудование, фото, услуги */}
         Здесь будет описание студии группы ALCYONA: оборудование, услуги записи,
         фотографии помещения, контакты.
