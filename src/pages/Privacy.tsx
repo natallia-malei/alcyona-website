@@ -1,11 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { PageTitle } from "../components/PageTitle";
-import { Container } from "../components/Container";
+import { Page } from "../components/Page";
 
 export function Privacy() {
   const { t } = useTranslation();
   return (
-    <Container size="sm" className="pt-32 pb-20 min-h-screen">
+    <Page size="sm">
       <PageTitle className="mb-8">{t("privacy.title")}</PageTitle>
       <div className="leading-relaxed space-y-4">
         <p>
@@ -24,6 +24,6 @@ export function Privacy() {
           .
         </p>
       </div>
-    </Container>
+    </Page>
   );
 }

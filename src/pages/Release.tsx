@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { getReleaseById } from "../storage";
 import { useLocalizedText } from "../hooks/useLocalizedText";
 import { PageTitle } from "../components/PageTitle";
-import { Container } from "../components/Container";
+import { Page } from "../components/Page";
 import { Eyebrow } from "../components/Eyebrow";
 import { SectionTitle } from "../components/SectionTitle";
 
@@ -21,15 +21,15 @@ export function ReleasePage() {
 
   if (!release) {
     return (
-      <Container className="pt-32 min-h-screen">
+      <Page size="xl">
         <p>Release not found.</p>
         <Link to="/" className="underline">← Home</Link>
-      </Container>
+      </Page>
     );
   }
 
   return (
-    <Container className="pt-32 pb-20">
+    <Page size="xl">
       <Link
         to="/#releases"
         className="text-sm uppercase tracking-widest text-fg-muted hover:text-white"
@@ -115,6 +115,6 @@ export function ReleasePage() {
           </ol>
         </div>
       </div>
-    </Container>
+    </Page>
   );
 }

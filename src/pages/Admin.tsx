@@ -4,7 +4,7 @@ import { getReleases, resetAll, saveReleases } from "../storage";
 import { useLocalizedText } from "../hooks/useLocalizedText";
 import { PageHeader } from "../components/PageHeader";
 import { Button } from "../components/Button";
-import { Container } from "../components/Container";
+import { Page } from "../components/Page";
 import { SectionTitle } from "../components/SectionTitle";
 
 export function Admin() {
@@ -25,7 +25,7 @@ export function Admin() {
   };
 
   return (
-    <Container size="lg" className="pt-32 pb-20 min-h-screen">
+    <Page size="lg">
       <PageHeader
         title={t("admin.title")}
         actions={
@@ -61,6 +61,6 @@ export function Admin() {
           </li>
         ))}
       </ul>
-    </Container>
+    </Page>
   );
 }
