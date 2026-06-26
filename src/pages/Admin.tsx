@@ -4,6 +4,7 @@ import { getReleases, resetAll, saveReleases } from "../storage";
 import { useLocalizedText } from "../hooks/useLocalizedText";
 import { PageTitle } from "../components/PageTitle";
 import { Button } from "../components/Button";
+import { Container } from "../components/Container";
 
 export function Admin() {
   const { t } = useTranslation();
@@ -23,7 +24,7 @@ export function Admin() {
   };
 
   return (
-    <div className="pt-32 pb-20 px-6 md:px-12 max-w-5xl mx-auto min-h-screen">
+    <Container size="lg" className="pt-32 pb-20 min-h-screen">
       <div className="flex items-center justify-between mb-8">
         <PageTitle>{t("admin.title")}</PageTitle>
         <Button variant="outline" size="sm" onClick={handleReset}>
@@ -56,6 +57,6 @@ export function Admin() {
           </li>
         ))}
       </ul>
-    </div>
+    </Container>
   );
 }

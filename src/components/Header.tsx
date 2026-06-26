@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { getBand } from "../storage";
 import { SocialLinks } from "./SocialLinks";
 import { LangSwitcher } from "./LangSwitcher";
+import { Container } from "./Container";
 
 export function Header() {
   const { t } = useTranslation();
@@ -10,7 +11,7 @@ export function Header() {
 
   return (
     <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-md bg-black/60 border-b border-white/10">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 h-16 flex items-center justify-between">
+      <Container className="h-16 flex items-center justify-between">
         <Link
           to="/"
           className="font-bold text-xl tracking-[0.3em] hover:text-[--color-accent] transition-colors"
@@ -40,7 +41,7 @@ export function Header() {
           <SocialLinks links={band.social} size="sm" />
           <LangSwitcher />
         </div>
-      </div>
+      </Container>
     </header>
   );
 }

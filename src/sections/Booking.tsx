@@ -1,14 +1,15 @@
 import { useTranslation } from "react-i18next";
 import { getBand } from "../storage";
 import { SocialLinks } from "../components/SocialLinks";
+import { Container } from "../components/Container";
 
 export function Booking() {
   const { t } = useTranslation();
   const band = getBand();
 
   return (
-    <section id="booking" className="py-20 px-6 md:px-12 bg-[--color-bg-elevated]">
-      <div className="max-w-4xl mx-auto text-center">
+    <section id="booking" className="py-20 bg-[--color-bg-elevated]">
+      <Container size="md" className="text-center">
         <h2 className="text-3xl md:text-5xl font-bold mb-3">
           {t("booking.title")}
         </h2>
@@ -22,7 +23,7 @@ export function Booking() {
         <div className="flex justify-center">
           <SocialLinks links={band.social} size="lg" />
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

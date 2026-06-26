@@ -3,6 +3,7 @@ import { getFeaturedRelease } from "../storage";
 import { useLocalizedText } from "../hooks/useLocalizedText";
 import { PageTitle } from "../components/PageTitle";
 import { Button } from "../components/Button";
+import { Container } from "../components/Container";
 
 export function Hero() {
   const { t } = useTranslation();
@@ -22,7 +23,7 @@ export function Hero() {
       />
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-2 gap-12 items-center">
+      <Container className="relative z-10 grid md:grid-cols-2 gap-12 items-center">
         <img
           src={release.coverUrl}
           alt={tr(release.title)}
@@ -62,7 +63,7 @@ export function Hero() {
             )}
           </div>
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

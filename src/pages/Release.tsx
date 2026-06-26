@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { getReleaseById } from "../storage";
 import { useLocalizedText } from "../hooks/useLocalizedText";
 import { PageTitle } from "../components/PageTitle";
+import { Container } from "../components/Container";
 
 function formatDuration(sec: number): string {
   const m = Math.floor(sec / 60);
@@ -18,15 +19,15 @@ export function ReleasePage() {
 
   if (!release) {
     return (
-      <div className="pt-32 px-6 md:px-12 max-w-7xl mx-auto min-h-screen">
+      <Container className="pt-32 min-h-screen">
         <p className="text-[--color-fg-muted]">Release not found.</p>
         <Link to="/" className="underline">← Home</Link>
-      </div>
+      </Container>
     );
   }
 
   return (
-    <div className="pt-32 pb-20 px-6 md:px-12 max-w-7xl mx-auto">
+    <Container className="pt-32 pb-20">
       <Link
         to="/#releases"
         className="text-sm uppercase tracking-widest text-[--color-fg-muted] hover:text-white"
@@ -112,6 +113,6 @@ export function ReleasePage() {
           </ol>
         </div>
       </div>
-    </div>
+    </Container>
   );
 }
