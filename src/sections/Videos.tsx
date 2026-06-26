@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { getVideos } from "../storage";
 import { Section } from "../components/Section";
+import { Eyebrow } from "../components/Eyebrow";
 import { useLocalizedText } from "../hooks/useLocalizedText";
 
 export function Videos() {
@@ -22,9 +23,9 @@ export function Videos() {
                 className="w-full h-full"
               />
             </div>
-            <p className="mt-3 text-sm uppercase tracking-widest text-[--color-fg-muted]">
+            <Eyebrow className="mt-3 text-[--color-fg-muted]">
               {tr(v.title)}
-            </p>
+            </Eyebrow>
           </div>
         ))}
       </div>

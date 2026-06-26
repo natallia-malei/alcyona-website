@@ -4,6 +4,7 @@ import { useLocalizedText } from "../hooks/useLocalizedText";
 import { PageTitle } from "../components/PageTitle";
 import { Button } from "../components/Button";
 import { Container } from "../components/Container";
+import { Eyebrow } from "../components/Eyebrow";
 
 export function Hero() {
   const { t } = useTranslation();
@@ -30,9 +31,9 @@ export function Hero() {
           className="w-full max-w-md mx-auto shadow-2xl rounded-sm"
         />
         <div>
-          <p className="text-sm uppercase tracking-[0.3em] text-[--color-accent] mb-4">
+          <Eyebrow tracking="extra" className="text-[--color-accent] mb-4">
             {release.type === "album" ? "New Album" : "New Release"}
-          </p>
+          </Eyebrow>
           <PageTitle size="hero" className="mb-6">
             {tr(release.title)}
           </PageTitle>

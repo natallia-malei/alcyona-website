@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getReleases } from "../storage";
 import { Section } from "../components/Section";
+import { Eyebrow } from "../components/Eyebrow";
 import { useLocalizedText } from "../hooks/useLocalizedText";
 
 export function Releases() {
@@ -25,9 +26,9 @@ export function Releases() {
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
             </div>
-            <p className="text-xs uppercase tracking-widest text-[--color-fg-muted]">
+            <Eyebrow size="xs" className="text-[--color-fg-muted]">
               {r.type} · {new Date(r.releaseDate).getFullYear()}
-            </p>
+            </Eyebrow>
             <h3 className="text-lg font-semibold group-hover:text-[--color-accent] transition-colors">
               {tr(r.title)}
             </h3>

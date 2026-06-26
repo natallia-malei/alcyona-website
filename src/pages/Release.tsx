@@ -4,6 +4,7 @@ import { getReleaseById } from "../storage";
 import { useLocalizedText } from "../hooks/useLocalizedText";
 import { PageTitle } from "../components/PageTitle";
 import { Container } from "../components/Container";
+import { Eyebrow } from "../components/Eyebrow";
 
 function formatDuration(sec: number): string {
   const m = Math.floor(sec / 60);
@@ -77,9 +78,9 @@ export function ReleasePage() {
         </div>
 
         <div>
-          <p className="text-sm uppercase tracking-[0.3em] text-[--color-accent] mb-2">
+          <Eyebrow tracking="extra" className="text-[--color-accent] mb-2">
             {release.type} · {new Date(release.releaseDate).getFullYear()}
-          </p>
+          </Eyebrow>
           <PageTitle className="mb-6">{tr(release.title)}</PageTitle>
           <p className="text-[--color-fg-muted] mb-10">{tr(release.description)}</p>
 
