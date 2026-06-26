@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getReleases, resetAll, saveReleases } from "../storage";
-import { useLocalizedText } from "../hooks/useLocalizedText";
 import { PageHeader } from "../components/PageHeader";
 import { Button } from "../components/Button";
 import { Page } from "../components/Page";
 import { SectionTitle } from "../components/SectionTitle";
+import { AdminReleaseRow } from "../components/AdminReleaseRow";
+import { DividerList } from "../components/DividerList";
 
 export function Admin() {
   const { t } = useTranslation();
-  const tr = useLocalizedText();
   const [releases, setReleases] = useState(getReleases());
 
   const handleReset = () => {
@@ -36,31 +36,14 @@ export function Admin() {
         className="mb-8"
       />
 
-      <p className="mb-4">
-        Данные хранятся в Local Storage этого браузера. Полноценные формы
-        редактирования будут добавлены на следующем этапе.
-      </p>
+      <p className="mb-4">{t("admin.note")}</p>
 
       <SectionTitle size="sm" className="mt-10 mb-4">Релизы ({releases.length})</SectionTitle>
-      <ul className="divide-y divide-white/10">
+      <DividerList>
         {releases.map((r) => (
-          <li key={r.id} className="py-3 flex items-center justify-between">
-            <span>
-              {tr(r.title)}{" "}
-              <span className="text-fg-muted text-sm">
-                · {r.type} · {r.releaseDate}
-              </span>
-            </span>
-            <button
-              type="button"
-              onClick={() => handleDelete(r.id)}
-              className="text-sm text-fg-muted hover:text-accent"
-            >
-              Delete
-            </button>
-          </li>
+          <AdminReleaseRow key={r.id} release={r} onDelete={handleDelete} />
         ))}
-      </ul>
+      </DividerList>
     </Page>
   );
 }
