@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
-import { PageTitle } from "../components/PageTitle";
-import { Page } from "../components/Page";
-import { NavLink } from "../components/NavLink";
+import { PageTitle } from "../components/ui/PageTitle";
+import { Page } from "../components/layout/Page";
+import { NavLink } from "../components/ui/NavLink";
 
 export function Privacy() {
   const { t } = useTranslation();

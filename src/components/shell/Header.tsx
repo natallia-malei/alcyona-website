@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { getBand } from "../storage";
+import { getBand } from "../../storage";
 import { SocialLinks } from "./SocialLinks";
 import { LangSwitcher } from "./LangSwitcher";
-import { Container } from "./Container";
-import { NavLink } from "./NavLink";
+import { Container } from "../layout/Container";
+import { NavLink } from "../ui/NavLink";
 
 export function Header() {
   const { t } = useTranslation();

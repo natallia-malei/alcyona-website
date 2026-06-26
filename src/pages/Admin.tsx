@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getReleases, resetAll, saveReleases } from "../storage";
-import { PageHeader } from "../components/PageHeader";
-import { Button } from "../components/Button";
-import { Page } from "../components/Page";
-import { SectionTitle } from "../components/SectionTitle";
-import { AdminReleaseRow } from "../components/AdminReleaseRow";
-import { DividerList } from "../components/DividerList";
+import { PageHeader } from "../components/layout/PageHeader";
+import { Button } from "../components/ui/Button";
+import { Page } from "../components/layout/Page";
+import { SectionTitle } from "../components/ui/SectionTitle";
+import { AdminReleaseRow } from "../components/admin/AdminReleaseRow";
+import { DividerList } from "../components/ui/DividerList";
 
 export function Admin() {
   const { t } = useTranslation();

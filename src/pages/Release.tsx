@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getReleaseById } from "../storage";
-import { Page } from "../components/Page";
+import { Page } from "../components/layout/Page";
 import { ReleaseDetail } from "../sections/ReleaseDetail";
 
 export function ReleasePage() {

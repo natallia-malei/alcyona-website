@@ -1,12 +1,12 @@
 import { useTranslation } from "react-i18next";
 import type { Release } from "../types";
 import { useLocalizedText } from "../hooks/useLocalizedText";
-import { PageTitle } from "../components/PageTitle";
-import { SectionTitle } from "../components/SectionTitle";
-import { Eyebrow } from "../components/Eyebrow";
-import { ReleaseLinks } from "../components/ReleaseLinks";
-import { TrackList } from "../components/TrackList";
-import { ReleaseCover } from "../components/ReleaseCover";
+import { PageTitle } from "../components/ui/PageTitle";
+import { SectionTitle } from "../components/ui/SectionTitle";
+import { Eyebrow } from "../components/ui/Eyebrow";
+import { ReleaseLinks } from "../components/release/ReleaseLinks";
+import { TrackList } from "../components/release/TrackList";
+import { ReleaseCover } from "../components/release/ReleaseCover";
 import { grids } from "../styles/layouts";
 
 interface ReleaseDetailProps {

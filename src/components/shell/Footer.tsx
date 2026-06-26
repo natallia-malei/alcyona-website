@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { Container } from "./Container";
-import { NavLink } from "./NavLink";
+import { Container } from "../layout/Container";
+import { NavLink } from "../ui/NavLink";
 
 export function Footer() {
   const { t } = useTranslation();

@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
-import { PageTitle } from "../components/PageTitle";
-import { Page } from "../components/Page";
-import { Lead } from "../components/Lead";
+import { PageTitle } from "../components/ui/PageTitle";
+import { Page } from "../components/layout/Page";
+import { Lead } from "../components/ui/Lead";
 
 export function Studio() {
   const { t } = useTranslation();

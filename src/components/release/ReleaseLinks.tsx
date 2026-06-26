@@ -1,5 +1,5 @@
-import type { StreamingLinks } from "../types";
-import { PlatformLink } from "./PlatformLink";
+import type { StreamingLinks } from "../../types";
+import { PlatformLink } from "../ui/PlatformLink";
 
 type Layout = "row" | "col";
 
