@@ -3,6 +3,7 @@ import { getBand } from "../storage";
 import { SocialLinks } from "../components/SocialLinks";
 import { CTASection } from "../components/CTASection";
 import { BookingEmail } from "../components/BookingEmail";
+import { flex } from "../styles/layouts";
 
 export function Booking() {
   const { t } = useTranslation();
@@ -11,7 +12,7 @@ export function Booking() {
   return (
     <CTASection id="booking" title={t("booking.title")} subtitle={t("booking.subtitle")}>
       <BookingEmail email={band.bookingEmail} />
-      <div className="flex justify-center">
+      <div className={flex.center}>
         <SocialLinks links={band.social} size="lg" />
       </div>
     </CTASection>

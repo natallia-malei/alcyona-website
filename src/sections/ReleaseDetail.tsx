@@ -7,6 +7,7 @@ import { Eyebrow } from "../components/Eyebrow";
 import { ReleaseLinks } from "../components/ReleaseLinks";
 import { TrackList } from "../components/TrackList";
 import { ReleaseCover } from "../components/ReleaseCover";
+import { grids } from "../styles/layouts";
 
 interface ReleaseDetailProps {
   release: Release;
@@ -17,7 +18,7 @@ export function ReleaseDetail({ release }: ReleaseDetailProps) {
   const tr = useLocalizedText();
 
   return (
-    <div className="mt-8 grid md:grid-cols-[1fr_2fr] gap-12">
+    <div className={`${grids.releaseDetail} mt-8`}>
       <div>
         <ReleaseCover coverUrl={release.coverUrl} alt={tr(release.title)} />
         <ReleaseLinks links={release.links} className="mt-6" />
