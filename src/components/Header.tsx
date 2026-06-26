@@ -4,6 +4,7 @@ import { getBand } from "../storage";
 import { SocialLinks } from "./SocialLinks";
 import { LangSwitcher } from "./LangSwitcher";
 import { Container } from "./Container";
+import { NavLink } from "./NavLink";
 
 export function Header() {
   const { t } = useTranslation();
@@ -20,21 +21,11 @@ export function Header() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-8 text-sm uppercase tracking-widest text-[--color-fg-muted]">
-          <a href="/#new-album" className="hover:text-white transition-colors">
-            {t("nav.newAlbum")}
-          </a>
-          <a href="/#releases" className="hover:text-white transition-colors">
-            {t("nav.releases")}
-          </a>
-          <a href="/#photos" className="hover:text-white transition-colors">
-            {t("nav.photos")}
-          </a>
-          <a href="/#videos" className="hover:text-white transition-colors">
-            {t("nav.videos")}
-          </a>
-          <Link to="/studio" className="hover:text-white transition-colors">
-            {t("nav.studio")}
-          </Link>
+          <NavLink href="/#new-album">{t("nav.newAlbum")}</NavLink>
+          <NavLink href="/#releases">{t("nav.releases")}</NavLink>
+          <NavLink href="/#photos">{t("nav.photos")}</NavLink>
+          <NavLink href="/#videos">{t("nav.videos")}</NavLink>
+          <NavLink to="/studio">{t("nav.studio")}</NavLink>
         </nav>
 
         <div className="flex items-center gap-6">
