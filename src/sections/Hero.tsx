@@ -5,6 +5,10 @@ import { PageTitle } from "../components/PageTitle";
 import { Button } from "../components/Button";
 import { Container } from "../components/Container";
 import { Eyebrow } from "../components/Eyebrow";
+import { PlatformLink } from "../components/PlatformLink";
+import { HeroBackdrop } from "../components/HeroBackdrop";
+import { ReleaseCover } from "../components/ReleaseCover";
+import { Lead } from "../components/Lead";
 
 export function Hero() {
   const { t } = useTranslation();
@@ -14,22 +18,9 @@ export function Hero() {
   if (!release) return null;
 
   return (
-    <section
-      id="new-album"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
-    >
-      <div
-        className="absolute inset-0 bg-cover bg-center scale-110 blur-sm opacity-40"
-        style={{ backgroundImage: `url(${release.coverUrl})` }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black" />
-
+    <HeroBackdrop coverUrl={release.coverUrl}>
       <Container className="relative z-10 grid md:grid-cols-2 gap-12 items-center">
-        <img
-          src={release.coverUrl}
-          alt={tr(release.title)}
-          className="w-full max-w-md mx-auto shadow-2xl rounded-sm"
-        />
+        <ReleaseCover coverUrl={release.coverUrl} alt={tr(release.title)} size="lg" />
         <div>
           <Eyebrow tracking="extra" className="text-accent mb-4">
             {release.type === "album" ? "New Album" : "New Release"}
@@ -37,34 +28,18 @@ export function Hero() {
           <PageTitle size="hero" className="mb-6">
             {tr(release.title)}
           </PageTitle>
-          <p className="text-lg mb-8 max-w-xl">
-            {tr(release.description)}
-          </p>
+          <Lead className="mb-8 max-w-xl">{tr(release.description)}</Lead>
           <div className="flex flex-wrap items-center gap-4">
             <Button to={`/release/${release.id}`}>{t("hero.listenNow")}</Button>
             {release.links.spotify && (
-              <a
-                href={release.links.spotify}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm uppercase tracking-widest hover:text-accent transition-colors"
-              >
-                Spotify →
-              </a>
+              <PlatformLink href={release.links.spotify}>Spotify →</PlatformLink>
             )}
             {release.links.appleMusic && (
-              <a
-                href={release.links.appleMusic}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm uppercase tracking-widest hover:text-accent transition-colors"
-              >
-                Apple Music →
-              </a>
+              <PlatformLink href={release.links.appleMusic}>Apple Music →</PlatformLink>
             )}
           </div>
         </div>
       </Container>
-    </section>
+    </HeroBackdrop>
   );
 }
