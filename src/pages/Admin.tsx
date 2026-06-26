@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { getReleases, resetAll, saveReleases } from "../storage";
 import { useLocalizedText } from "../hooks/useLocalizedText";
 import { PageTitle } from "../components/PageTitle";
+import { Button } from "../components/Button";
 
 export function Admin() {
   const { t } = useTranslation();
@@ -25,13 +26,9 @@ export function Admin() {
     <div className="pt-32 pb-20 px-6 md:px-12 max-w-5xl mx-auto min-h-screen">
       <div className="flex items-center justify-between mb-8">
         <PageTitle>{t("admin.title")}</PageTitle>
-        <button
-          type="button"
-          onClick={handleReset}
-          className="text-sm uppercase tracking-widest border border-white/20 px-4 py-2 hover:bg-white/10"
-        >
+        <Button variant="outline" size="sm" onClick={handleReset}>
           Reset
-        </button>
+        </Button>
       </div>
 
       <p className="text-[--color-fg-muted] mb-4">

@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getFeaturedRelease } from "../storage";
 import { useLocalizedText } from "../hooks/useLocalizedText";
 import { PageTitle } from "../components/PageTitle";
+import { Button } from "../components/Button";
 
 export function Hero() {
   const { t } = useTranslation();
@@ -39,12 +39,7 @@ export function Hero() {
             {tr(release.description)}
           </p>
           <div className="flex flex-wrap items-center gap-4">
-            <Link
-              to={`/release/${release.id}`}
-              className="inline-block bg-[--color-accent] hover:bg-red-700 text-white px-8 py-3 uppercase tracking-widest text-sm font-semibold transition-colors"
-            >
-              {t("hero.listenNow")}
-            </Link>
+            <Button to={`/release/${release.id}`}>{t("hero.listenNow")}</Button>
             {release.links.spotify && (
               <a
                 href={release.links.spotify}
