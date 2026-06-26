@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getBand } from "../../storage";
 import { SocialLinks } from "./SocialLinks";
 import { LangSwitcher } from "./LangSwitcher";
+import { Logo } from "./Logo";
 import { Container } from "../layout/Container";
 import { NavLink } from "../ui/NavLink";
 
@@ -13,12 +13,7 @@ export function Header() {
   return (
     <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-md bg-black/60 border-b border-white/10">
       <Container className="h-16 flex items-center justify-between">
-        <Link
-          to="/"
-          className="font-bold text-xl tracking-[0.3em] hover:text-accent transition-colors"
-        >
-          ALCYONA
-        </Link>
+        <Logo />
 
         <nav className="hidden md:flex items-center gap-8 text-sm uppercase tracking-widest text-fg-muted">
           <NavLink href="/#new-album">{t("nav.newAlbum")}</NavLink>

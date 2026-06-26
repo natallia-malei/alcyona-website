@@ -1,4 +1,5 @@
 import type { PropsWithChildren } from "react";
+import { typography } from "../../styles/typography";
 
 type Size = "default" | "sm";
 
@@ -18,7 +19,7 @@ export function SectionTitle({
   children,
 }: PropsWithChildren<SectionTitleProps>) {
   return (
-    <h2 className={`font-bold tracking-tight ${sizeClass[size]} ${className}`}>
+    <h2 className={`${typography.heading} ${sizeClass[size]} ${className}`}>
       {children}
     </h2>
   );

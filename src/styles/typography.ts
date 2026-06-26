@@ -1,0 +1,5 @@
+export const typography = {
+  heading: "font-bold tracking-tight",
+  eyebrow: "text-sm uppercase tracking-widest",
+  brandLogo: "font-bold text-xl tracking-[0.3em]",
+} as const;

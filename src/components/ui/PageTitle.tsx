@@ -1,4 +1,5 @@
 import type { PropsWithChildren } from "react";
+import { typography } from "../../styles/typography";
 
 interface Props {
   size?: "default" | "hero";
@@ -16,7 +17,7 @@ export function PageTitle({
   children,
 }: PropsWithChildren<Props>) {
   return (
-    <h1 className={`font-bold tracking-tight ${sizeClass[size]} ${className}`}>
+    <h1 className={`${typography.heading} ${sizeClass[size]} ${className}`}>
       {children}
     </h1>
   );
