@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getReleases, resetAll, saveReleases } from "../storage";
 import { useLocalizedText } from "../hooks/useLocalizedText";
-import { PageTitle } from "../components/PageTitle";
+import { PageHeader } from "../components/PageHeader";
 import { Button } from "../components/Button";
 import { Container } from "../components/Container";
 import { SectionTitle } from "../components/SectionTitle";
@@ -26,12 +26,15 @@ export function Admin() {
 
   return (
     <Container size="lg" className="pt-32 pb-20 min-h-screen">
-      <div className="flex items-center justify-between mb-8">
-        <PageTitle>{t("admin.title")}</PageTitle>
-        <Button variant="outline" size="sm" onClick={handleReset}>
-          Reset
-        </Button>
-      </div>
+      <PageHeader
+        title={t("admin.title")}
+        actions={
+          <Button variant="outline" size="sm" onClick={handleReset}>
+            Reset
+          </Button>
+        }
+        className="mb-8"
+      />
 
       <p className="mb-4">
         Данные хранятся в Local Storage этого браузера. Полноценные формы
