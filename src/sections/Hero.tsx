@@ -31,13 +31,13 @@ export function Hero() {
           className="w-full max-w-md mx-auto shadow-2xl rounded-sm"
         />
         <div>
-          <Eyebrow tracking="extra" className="text-[--color-accent] mb-4">
+          <Eyebrow tracking="extra" className="text-accent mb-4">
             {release.type === "album" ? "New Album" : "New Release"}
           </Eyebrow>
           <PageTitle size="hero" className="mb-6">
             {tr(release.title)}
           </PageTitle>
-          <p className="text-lg text-[--color-fg-muted] mb-8 max-w-xl">
+          <p className="text-lg text-fg-muted mb-8 max-w-xl">
             {tr(release.description)}
           </p>
           <div className="flex flex-wrap items-center gap-4">
@@ -47,7 +47,7 @@ export function Hero() {
                 href={release.links.spotify}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm uppercase tracking-widest hover:text-[--color-accent] transition-colors"
+                className="text-sm uppercase tracking-widest hover:text-accent transition-colors"
               >
                 Spotify →
               </a>
@@ -57,7 +57,7 @@ export function Hero() {
                 href={release.links.appleMusic}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm uppercase tracking-widest hover:text-[--color-accent] transition-colors"
+                className="text-sm uppercase tracking-widest hover:text-accent transition-colors"
               >
                 Apple Music →
               </a>

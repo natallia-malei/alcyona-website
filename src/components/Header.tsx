@@ -15,12 +15,12 @@ export function Header() {
       <Container className="h-16 flex items-center justify-between">
         <Link
           to="/"
-          className="font-bold text-xl tracking-[0.3em] hover:text-[--color-accent] transition-colors"
+          className="font-bold text-xl tracking-[0.3em] hover:text-accent transition-colors"
         >
           ALCYONA
         </Link>
 
-        <nav className="hidden md:flex items-center gap-8 text-sm uppercase tracking-widest text-[--color-fg-muted]">
+        <nav className="hidden md:flex items-center gap-8 text-sm uppercase tracking-widest text-fg-muted">
           <NavLink href="/#new-album">{t("nav.newAlbum")}</NavLink>
           <NavLink href="/#releases">{t("nav.releases")}</NavLink>
           <NavLink href="/#photos">{t("nav.photos")}</NavLink>

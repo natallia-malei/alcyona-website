@@ -12,7 +12,7 @@ export function Photos() {
         {photos.map((p) => (
           <div
             key={p.id}
-            className="aspect-square overflow-hidden bg-[--color-bg-elevated]"
+            className="aspect-square overflow-hidden bg-bg-elevated"
           >
             <img
               src={p.url}

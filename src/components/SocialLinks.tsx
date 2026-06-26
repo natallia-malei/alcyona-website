@@ -51,7 +51,7 @@ export function SocialLinks({ links, size = "md" }: Props) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={label}
-            className="hover:text-[--color-accent] transition-colors"
+            className="hover:text-accent transition-colors"
           >
             <svg className={iconSize} viewBox="0 0 24 24" fill="currentColor">
               <path d={path} />

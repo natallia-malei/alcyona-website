@@ -12,17 +12,17 @@ export function ReleaseCard({ release }: ReleaseCardProps) {
 
   return (
     <Link to={`/release/${release.id}`} className="group block">
-      <div className="aspect-square overflow-hidden bg-[--color-bg-elevated] mb-3">
+      <div className="aspect-square overflow-hidden bg-bg-elevated mb-3">
         <img
           src={release.coverUrl}
           alt={tr(release.title)}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
       </div>
-      <Eyebrow size="xs" className="text-[--color-fg-muted]">
+      <Eyebrow size="xs" className="text-fg-muted">
         {release.type} · {new Date(release.releaseDate).getFullYear()}
       </Eyebrow>
-      <h3 className="text-lg font-semibold group-hover:text-[--color-accent] transition-colors">
+      <h3 className="text-lg font-semibold group-hover:text-accent transition-colors">
         {tr(release.title)}
       </h3>
     </Link>

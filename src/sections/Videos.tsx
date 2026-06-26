@@ -23,7 +23,7 @@ export function Videos() {
                 className="w-full h-full"
               />
             </div>
-            <Eyebrow className="mt-3 text-[--color-fg-muted]">
+            <Eyebrow className="mt-3 text-fg-muted">
               {tr(v.title)}
             </Eyebrow>
           </div>

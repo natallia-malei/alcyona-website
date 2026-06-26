@@ -13,7 +13,7 @@ interface NavLinkProps {
 
 const variantClass: Record<Variant, string> = {
   default: "hover:text-white",
-  accent: "hover:text-[--color-accent]",
+  accent: "hover:text-accent",
 };
 
 function isExternal(href: string): boolean {

@@ -33,7 +33,7 @@ export function Admin() {
         </Button>
       </div>
 
-      <p className="text-[--color-fg-muted] mb-4">
+      <p className="text-fg-muted mb-4">
         Данные хранятся в Local Storage этого браузера. Полноценные формы
         редактирования будут добавлены на следующем этапе.
       </p>
@@ -44,14 +44,14 @@ export function Admin() {
           <li key={r.id} className="py-3 flex items-center justify-between">
             <span>
               {tr(r.title)}{" "}
-              <span className="text-[--color-fg-muted] text-sm">
+              <span className="text-fg-muted text-sm">
                 · {r.type} · {r.releaseDate}
               </span>
             </span>
             <button
               type="button"
               onClick={() => handleDelete(r.id)}
-              className="text-sm text-[--color-fg-muted] hover:text-[--color-accent]"
+              className="text-sm text-fg-muted hover:text-accent"
             >
               Delete
             </button>

@@ -9,13 +9,13 @@ export function Booking() {
   const band = getBand();
 
   return (
-    <section id="booking" className="py-20 bg-[--color-bg-elevated]">
+    <section id="booking" className="py-20 bg-bg-elevated">
       <Container size="md" className="text-center">
         <SectionTitle className="mb-3">{t("booking.title")}</SectionTitle>
-        <p className="text-[--color-fg-muted] mb-8">{t("booking.subtitle")}</p>
+        <p className="text-fg-muted mb-8">{t("booking.subtitle")}</p>
         <a
           href={`mailto:${band.bookingEmail}`}
-          className="inline-block text-2xl md:text-3xl font-semibold underline underline-offset-8 hover:text-[--color-accent] transition-colors mb-10"
+          className="inline-block text-2xl md:text-3xl font-semibold underline underline-offset-8 hover:text-accent transition-colors mb-10"
         >
           {band.bookingEmail}
         </a>

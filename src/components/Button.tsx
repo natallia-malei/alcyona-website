@@ -19,7 +19,7 @@ const base =
   "inline-flex items-center justify-center gap-2 uppercase tracking-widest font-semibold transition-colors";
 
 const variantClass: Record<Variant, string> = {
-  primary: "bg-[--color-accent] hover:bg-red-700 text-white",
+  primary: "bg-accent hover:bg-red-700 text-white",
   telegram: "bg-[#229ED9] hover:bg-[#1a82b3] text-white",
   outline: "border border-white/20 text-white hover:bg-white/10",
 };
