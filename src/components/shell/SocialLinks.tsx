@@ -1,4 +1,4 @@
-import type { SocialLinks as SocialLinksType } from "../types";
+import type { SocialLinks as SocialLinksType } from "../../types";
 
 interface Props {
   links: SocialLinksType;

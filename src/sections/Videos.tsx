@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { getVideos } from "../storage";
-import { Section } from "../components/Section";
-import { Eyebrow } from "../components/Eyebrow";
-import { VideoEmbed } from "../components/VideoEmbed";
+import { Section } from "../components/layout/Section";
+import { Eyebrow } from "../components/ui/Eyebrow";
+import { VideoEmbed } from "../components/ui/VideoEmbed";
 import { useLocalizedText } from "../hooks/useLocalizedText";
 import { grids } from "../styles/layouts";
 

@@ -1,14 +1,14 @@
 import { useTranslation } from "react-i18next";
 import { getFeaturedRelease } from "../storage";
 import { useLocalizedText } from "../hooks/useLocalizedText";
-import { PageTitle } from "../components/PageTitle";
-import { Button } from "../components/Button";
-import { Container } from "../components/Container";
-import { Eyebrow } from "../components/Eyebrow";
-import { PlatformLink } from "../components/PlatformLink";
-import { HeroBackdrop } from "../components/HeroBackdrop";
-import { ReleaseCover } from "../components/ReleaseCover";
-import { Lead } from "../components/Lead";
+import { PageTitle } from "../components/ui/PageTitle";
+import { Button } from "../components/ui/Button";
+import { Container } from "../components/layout/Container";
+import { Eyebrow } from "../components/ui/Eyebrow";
+import { PlatformLink } from "../components/ui/PlatformLink";
+import { HeroBackdrop } from "../components/layout/HeroBackdrop";
+import { ReleaseCover } from "../components/release/ReleaseCover";
+import { Lead } from "../components/ui/Lead";
 import { flex } from "../styles/layouts";
 
 export function Hero() {

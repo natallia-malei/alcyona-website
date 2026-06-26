@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
-import type { Track } from "../types";
-import { useLocalizedText } from "../hooks/useLocalizedText";
-import { formatDuration } from "../utils/formatDuration";
+import type { Track } from "../../types";
+import { useLocalizedText } from "../../hooks/useLocalizedText";
+import { formatDuration } from "../../utils/formatDuration";
 
 interface TrackItemProps {
   track: Track;

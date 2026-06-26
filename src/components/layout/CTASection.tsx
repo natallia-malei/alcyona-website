@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Container } from "./Container";
-import { SectionTitle } from "./SectionTitle";
+import { SectionTitle } from "../ui/SectionTitle";
 
 interface CTASectionProps {
   id?: string;

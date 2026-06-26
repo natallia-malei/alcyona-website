@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { getReleases } from "../storage";
-import { Section } from "../components/Section";
-import { ReleaseCard } from "../components/ReleaseCard";
+import { Section } from "../components/layout/Section";
+import { ReleaseCard } from "../components/release/ReleaseCard";
 import { grids } from "../styles/layouts";
 
 export function Releases() {

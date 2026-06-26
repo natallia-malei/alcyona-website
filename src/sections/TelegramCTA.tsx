@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { getBand } from "../storage";
-import { Button } from "../components/Button";
-import { CTASection } from "../components/CTASection";
-import { TelegramIcon } from "../components/TelegramIcon";
+import { Button } from "../components/ui/Button";
+import { CTASection } from "../components/layout/CTASection";
+import { TelegramIcon } from "../components/icons/TelegramIcon";
 
 export function TelegramCTA() {
   const { t } = useTranslation();

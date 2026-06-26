@@ -1,6 +1,6 @@
-import type { Track } from "../types";
+import type { Track } from "../../types";
 import { TrackItem } from "./TrackItem";
-import { DividerList } from "./DividerList";
+import { DividerList } from "../ui/DividerList";
 
 interface TrackListProps {
   tracks: Track[];

@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { getPhotos } from "../storage";
-import { Section } from "../components/Section";
-import { MediaFrame } from "../components/MediaFrame";
-import { MediaImage } from "../components/MediaImage";
+import { Section } from "../components/layout/Section";
+import { MediaFrame } from "../components/ui/MediaFrame";
+import { MediaImage } from "../components/ui/MediaImage";
 import { grids } from "../styles/layouts";
 
 export function Photos() {

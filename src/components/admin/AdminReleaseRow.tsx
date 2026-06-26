@@ -1,5 +1,5 @@
-import type { Release } from "../types";
-import { useLocalizedText } from "../hooks/useLocalizedText";
+import type { Release } from "../../types";
+import { useLocalizedText } from "../../hooks/useLocalizedText";
 
 interface AdminReleaseRowProps {
   release: Release;

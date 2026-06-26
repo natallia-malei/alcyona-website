@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import type { Release } from "../types";
-import { useLocalizedText } from "../hooks/useLocalizedText";
-import { Eyebrow } from "./Eyebrow";
-import { MediaFrame } from "./MediaFrame";
-import { MediaImage } from "./MediaImage";
+import type { Release } from "../../types";
+import { useLocalizedText } from "../../hooks/useLocalizedText";
+import { Eyebrow } from "../ui/Eyebrow";
+import { MediaFrame } from "../ui/MediaFrame";
+import { MediaImage } from "../ui/MediaImage";
 
 interface ReleaseCardProps {
   release: Release;

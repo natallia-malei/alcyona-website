@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from "react";
 import { Container } from "./Container";
-import { SectionTitle } from "./SectionTitle";
+import { SectionTitle } from "../ui/SectionTitle";
 
 interface SectionProps {
   id?: string;
