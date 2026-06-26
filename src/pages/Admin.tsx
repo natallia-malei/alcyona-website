@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getReleases, resetAll, saveReleases } from "../storage";
-import { useLocalizedText } from "../hooks/useLocalizedText";
-import { PageTitle } from "../components/PageTitle";
+import { PageHeader } from "../components/PageHeader";
+import { Button } from "../components/Button";
+import { Page } from "../components/Page";
+import { SectionTitle } from "../components/SectionTitle";
+import { AdminReleaseRow } from "../components/AdminReleaseRow";
+import { DividerList } from "../components/DividerList";
 
 export function Admin() {
   const { t } = useTranslation();
-  const tr = useLocalizedText();
   const [releases, setReleases] = useState(getReleases());
 
   const handleReset = () => {
@@ -22,43 +25,25 @@ export function Admin() {
   };
 
   return (
-    <div className="pt-32 pb-20 px-6 md:px-12 max-w-5xl mx-auto min-h-screen">
-      <div className="flex items-center justify-between mb-8">
-        <PageTitle>{t("admin.title")}</PageTitle>
-        <button
-          type="button"
-          onClick={handleReset}
-          className="text-sm uppercase tracking-widest border border-white/20 px-4 py-2 hover:bg-white/10"
-        >
-          Reset
-        </button>
-      </div>
+    <Page size="lg">
+      <PageHeader
+        title={t("admin.title")}
+        actions={
+          <Button variant="outline" size="sm" onClick={handleReset}>
+            Reset
+          </Button>
+        }
+        className="mb-8"
+      />
 
-      <p className="text-[--color-fg-muted] mb-4">
-        Данные хранятся в Local Storage этого браузера. Полноценные формы
-        редактирования будут добавлены на следующем этапе.
-      </p>
+      <p className="mb-4">{t("admin.note")}</p>
 
-      <h2 className="text-2xl font-bold mt-10 mb-4">Релизы ({releases.length})</h2>
-      <ul className="divide-y divide-white/10">
+      <SectionTitle size="sm" className="mt-10 mb-4">Релизы ({releases.length})</SectionTitle>
+      <DividerList>
         {releases.map((r) => (
-          <li key={r.id} className="py-3 flex items-center justify-between">
-            <span>
-              {tr(r.title)}{" "}
-              <span className="text-[--color-fg-muted] text-sm">
-                · {r.type} · {r.releaseDate}
-              </span>
-            </span>
-            <button
-              type="button"
-              onClick={() => handleDelete(r.id)}
-              className="text-sm text-[--color-fg-muted] hover:text-[--color-accent]"
-            >
-              Delete
-            </button>
-          </li>
+          <AdminReleaseRow key={r.id} release={r} onDelete={handleDelete} />
         ))}
-      </ul>
-    </div>
+      </DividerList>
+    </Page>
   );
 }

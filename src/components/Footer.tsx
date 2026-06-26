@@ -1,16 +1,15 @@
-import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Container } from "./Container";
+import { NavLink } from "./NavLink";
 
 export function Footer() {
   const { t } = useTranslation();
   return (
-    <footer className="border-t border-white/10 py-8 px-6 md:px-12">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-[--color-fg-muted]">
+    <footer className="border-t border-white/10 py-8">
+      <Container className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-fg-muted">
         <p>{t("footer.rights")}</p>
-        <Link to="/privacy" className="hover:text-white transition-colors">
-          {t("footer.privacy")}
-        </Link>
-      </div>
+        <NavLink to="/privacy">{t("footer.privacy")}</NavLink>
+      </Container>
     </footer>
   );
 }
