@@ -32,9 +32,24 @@ const resources = {
         rights: "© 2026, ALCYONA. All Rights Reserved.",
         privacy: "Политика конфиденциальности",
       },
-      studio: { title: "Студия ALCYONA" },
-      privacy: { title: "Политика конфиденциальности" },
-      admin: { title: "Админ-панель" },
+      studio: {
+        title: "Студия ALCYONA",
+        content:
+          "Здесь будет описание студии группы ALCYONA: оборудование, услуги записи, фотографии помещения, контакты.",
+      },
+      privacy: {
+        title: "Политика конфиденциальности",
+        paragraph1:
+          "Сайт ALCYONA не собирает персональные данные посетителей за исключением информации, добровольно предоставляемой через формы обратной связи.",
+        paragraph2:
+          "Используются только технические cookies, необходимые для работы сайта. Аналитические системы и трекеры не подключены.",
+        contactPrefix: "По вопросам обработки персональных данных пишите на ",
+      },
+      admin: {
+        title: "Админ-панель",
+        note:
+          "Данные хранятся в Local Storage этого браузера. Полноценные формы редактирования будут добавлены на следующем этапе.",
+      },
       release: { tracks: "Треки", lyrics: "Текст", back: "Назад к релизам" },
     },
   },
@@ -68,9 +83,24 @@ const resources = {
         rights: "© 2026, ALCYONA. All Rights Reserved.",
         privacy: "Privacy Policy",
       },
-      studio: { title: "ALCYONA Studio" },
-      privacy: { title: "Privacy Policy" },
-      admin: { title: "Admin Panel" },
+      studio: {
+        title: "ALCYONA Studio",
+        content:
+          "Description of the ALCYONA studio will be placed here: equipment, recording services, photos, contacts.",
+      },
+      privacy: {
+        title: "Privacy Policy",
+        paragraph1:
+          "The ALCYONA website does not collect personal data of visitors, except for information voluntarily provided through contact forms.",
+        paragraph2:
+          "Only technical cookies essential for the site to function are used. No analytics systems or trackers are connected.",
+        contactPrefix: "For questions about personal data processing, write to ",
+      },
+      admin: {
+        title: "Admin Panel",
+        note:
+          "Data is stored in this browser's Local Storage. Full editing forms will be added at the next stage.",
+      },
       release: { tracks: "Tracks", lyrics: "Lyrics", back: "Back to releases" },
     },
   },
