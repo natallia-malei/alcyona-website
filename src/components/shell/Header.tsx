@@ -5,6 +5,7 @@ import { LangSwitcher } from "./LangSwitcher";
 import { Logo } from "./Logo";
 import { Container } from "../layout/Container";
 import { NavLink } from "../ui/NavLink";
+import { typography } from "../../styles/typography";
 
 export function Header() {
   const { t } = useTranslation();
@@ -15,7 +16,7 @@ export function Header() {
       <Container className="h-16 flex items-center justify-between">
         <Logo />
 
-        <nav className="hidden md:flex items-center gap-8 text-sm uppercase tracking-widest text-fg-muted">
+        <nav className={`hidden md:flex items-center gap-8 ${typography.eyebrow} text-fg-muted`}>
           <NavLink href="/#new-album">{t("nav.newAlbum")}</NavLink>
           <NavLink href="/#releases">{t("nav.releases")}</NavLink>
           <NavLink href="/#photos">{t("nav.photos")}</NavLink>

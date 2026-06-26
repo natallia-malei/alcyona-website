@@ -4,6 +4,7 @@ import { useLocalizedText } from "../../hooks/useLocalizedText";
 import { Eyebrow } from "../ui/Eyebrow";
 import { MediaFrame } from "../ui/MediaFrame";
 import { MediaImage } from "../ui/MediaImage";
+import { interactive } from "../../styles/interactive";
 
 interface ReleaseCardProps {
   release: Release;
@@ -20,7 +21,7 @@ export function ReleaseCard({ release }: ReleaseCardProps) {
       <Eyebrow size="xs" className="text-fg-muted">
         {release.type} · {new Date(release.releaseDate).getFullYear()}
       </Eyebrow>
-      <h3 className="text-lg font-semibold group-hover:text-accent transition-colors">
+      <h3 className={`text-lg font-semibold ${interactive.accentGroupHover}`}>
         {tr(release.title)}
       </h3>
     </Link>

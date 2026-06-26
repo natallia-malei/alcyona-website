@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import type { Locale } from "../../types";
+import { typography } from "../../styles/typography";
 
 export function LangSwitcher() {
   const { i18n } = useTranslation();
@@ -10,7 +11,7 @@ export function LangSwitcher() {
   };
 
   return (
-    <div className="flex items-center gap-2 text-xs uppercase tracking-widest">
+    <div className={`flex items-center gap-2 ${typography.eyebrowXs}`}>
       <button
         type="button"
         onClick={() => toggle("ru")}

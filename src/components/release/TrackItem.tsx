@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import type { Track } from "../../types";
 import { useLocalizedText } from "../../hooks/useLocalizedText";
 import { formatDuration } from "../../utils/formatDuration";
+import { typography } from "../../styles/typography";
 
 interface TrackItemProps {
   track: Track;
@@ -28,7 +29,7 @@ export function TrackItem({ track, index }: TrackItemProps) {
       </div>
       {lyrics && (
         <details className="mt-3">
-          <summary className="text-sm uppercase tracking-widest text-fg-muted cursor-pointer hover:text-white">
+          <summary className={`${typography.eyebrow} text-fg-muted cursor-pointer hover:text-white`}>
             {t("release.lyrics")}
           </summary>
           <pre className="mt-3 whitespace-pre-wrap font-sans text-fg-muted leading-relaxed">

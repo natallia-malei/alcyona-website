@@ -1,4 +1,5 @@
 import type { SocialLinks as SocialLinksType } from "../../types";
+import { interactive } from "../../styles/interactive";
 
 interface Props {
   links: SocialLinksType;
@@ -51,7 +52,7 @@ export function SocialLinks({ links, size = "md" }: Props) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={label}
-            className="hover:text-accent transition-colors"
+            className={interactive.accentHover}
           >
             <svg className={iconSize} viewBox="0 0 24 24" fill="currentColor">
               <path d={path} />
