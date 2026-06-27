@@ -21,6 +21,10 @@ function isExternal(href: string): boolean {
   return href.startsWith("http://") || href.startsWith("https://");
 }
 
+function isHashAnchor(href: string): boolean {
+  return href.startsWith("/#") || href.startsWith("#");
+}
+
 export function NavLink({
   variant = "default",
   underline = false,
@@ -40,6 +44,13 @@ export function NavLink({
   }
 
   if (href) {
+    if (isHashAnchor(href)) {
+      return (
+        <Link to={href} className={cls}>
+          {children}
+        </Link>
+      );
+    }
     const external = isExternal(href);
     return (
       <a

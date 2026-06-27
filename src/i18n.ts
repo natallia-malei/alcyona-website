@@ -52,6 +52,7 @@ const resources = {
           "Данные хранятся в Local Storage этого браузера. Полноценные формы редактирования будут добавлены на следующем этапе.",
       },
       release: { tracks: "Треки", lyrics: "Текст", back: "Назад к релизам" },
+      notFound: { title: "Страница не найдена", home: "На главную" },
     },
   },
   en: {
@@ -103,6 +104,7 @@ const resources = {
           "Data is stored in this browser's Local Storage. Full editing forms will be added at the next stage.",
       },
       release: { tracks: "Tracks", lyrics: "Lyrics", back: "Back to releases" },
+      notFound: { title: "Page not found", home: "Go home" },
     },
   },
 };
