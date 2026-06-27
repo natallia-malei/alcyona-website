@@ -4,9 +4,12 @@ import { RouterProvider } from "react-router-dom";
 import "./index.css";
 import "./i18n";
 import { router } from "./router";
+import { StorageProvider } from "./storage/StorageContext";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <StorageProvider>
+      <RouterProvider router={router} />
+    </StorageProvider>
   </StrictMode>,
 );

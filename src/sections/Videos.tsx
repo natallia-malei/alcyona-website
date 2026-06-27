@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { getVideos } from "../storage";
+import { useVideos } from "../storage/hooks";
 import { Section } from "../components/layout/Section";
 import { Eyebrow } from "../components/ui/Eyebrow";
 import { VideoEmbed } from "../components/ui/VideoEmbed";
@@ -9,7 +9,7 @@ import { grids } from "../styles/layouts";
 export function Videos() {
   const { t } = useTranslation();
   const tr = useLocalizedText();
-  const videos = getVideos();
+  const videos = useVideos();
 
   return (
     <Section id="videos" title={t("videos.title")}>

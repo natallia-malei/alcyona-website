@@ -1,12 +1,12 @@
 import { useTranslation } from "react-i18next";
-import { getReleases } from "../storage";
+import { useReleases } from "../storage/hooks";
 import { Section } from "../components/layout/Section";
 import { ReleaseCard } from "../components/release/ReleaseCard";
 import { grids } from "../styles/layouts";
 
 export function Releases() {
   const { t } = useTranslation();
-  const releases = getReleases();
+  const releases = useReleases();
 
   return (
     <Section id="releases" title={t("releases.title")}>
