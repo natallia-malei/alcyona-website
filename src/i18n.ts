@@ -1,5 +1,6 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
 
 const resources = {
   ru: {
@@ -106,11 +107,19 @@ const resources = {
   },
 };
 
-i18n.use(initReactI18next).init({
-  resources,
-  lng: "ru",
-  fallbackLng: "ru",
-  interpolation: { escapeValue: false },
-});
+i18n
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init({
+    resources,
+    fallbackLng: "en",
+    supportedLngs: ["en", "ru"],
+    interpolation: { escapeValue: false },
+    detection: {
+      order: ["localStorage"],
+      caches: ["localStorage"],
+      lookupLocalStorage: "alcyona:locale",
+    },
+  });
 
 export default i18n;
