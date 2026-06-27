@@ -10,6 +10,7 @@ interface NavLinkProps {
   children: ReactNode;
   to?: string;
   href?: string;
+  onClick?: () => void;
 }
 
 const variantClass: Record<Variant, string> = {
@@ -32,12 +33,13 @@ export function NavLink({
   children,
   to,
   href,
+  onClick,
 }: NavLinkProps) {
   const cls = `transition-colors ${variantClass[variant]} ${underline ? "underline" : ""} ${className}`;
 
   if (to) {
     return (
-      <Link to={to} className={cls}>
+      <Link to={to} className={cls} onClick={onClick}>
         {children}
       </Link>
     );
@@ -46,7 +48,7 @@ export function NavLink({
   if (href) {
     if (isHashAnchor(href)) {
       return (
-        <Link to={href} className={cls}>
+        <Link to={href} className={cls} onClick={onClick}>
           {children}
         </Link>
       );
@@ -58,6 +60,7 @@ export function NavLink({
         target={external ? "_blank" : undefined}
         rel={external ? "noopener noreferrer" : undefined}
         className={cls}
+        onClick={onClick}
       >
         {children}
       </a>
