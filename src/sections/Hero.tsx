@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { getFeaturedRelease } from "../storage";
+import { useFeaturedRelease } from "../storage/hooks";
 import { useLocalizedText } from "../hooks/useLocalizedText";
 import { PageTitle } from "../components/ui/PageTitle";
 import { Button } from "../components/ui/Button";
@@ -14,7 +14,7 @@ import { flex } from "../styles/layouts";
 export function Hero() {
   const { t } = useTranslation();
   const tr = useLocalizedText();
-  const release = getFeaturedRelease();
+  const release = useFeaturedRelease();
 
   if (!release) return null;
 

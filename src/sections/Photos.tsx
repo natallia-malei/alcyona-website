@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { getPhotos } from "../storage";
+import { usePhotos } from "../storage/hooks";
 import { Section } from "../components/layout/Section";
 import { MediaFrame } from "../components/ui/MediaFrame";
 import { MediaImage } from "../components/ui/MediaImage";
@@ -7,7 +7,7 @@ import { grids } from "../styles/layouts";
 
 export function Photos() {
   const { t } = useTranslation();
-  const photos = getPhotos();
+  const photos = usePhotos();
 
   return (
     <Section id="photos" title={t("photos.title")}>

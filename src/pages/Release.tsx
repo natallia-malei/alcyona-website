@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { getReleaseById } from "../storage";
+import { useReleaseById } from "../storage/hooks";
 import { Page } from "../components/layout/Page";
 import { NavLink } from "../components/ui/NavLink";
 import { BackLink } from "../components/ui/BackLink";
@@ -9,7 +9,7 @@ import { ReleaseDetail } from "../sections/ReleaseDetail";
 export function ReleasePage() {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
-  const release = id ? getReleaseById(id) : undefined;
+  const release = useReleaseById(id);
 
   if (!release) {
     return (

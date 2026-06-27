@@ -1,6 +1,5 @@
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { getReleases, resetAll, saveReleases } from "../storage";
+import { useReleases, useStorageActions } from "../storage/hooks";
 import { PageHeader } from "../components/layout/PageHeader";
 import { Button } from "../components/ui/Button";
 import { Page } from "../components/layout/Page";
@@ -10,18 +9,16 @@ import { DividerList } from "../components/ui/DividerList";
 
 export function Admin() {
   const { t } = useTranslation();
-  const [releases, setReleases] = useState(getReleases());
+  const releases = useReleases();
+  const { saveReleases, resetAll } = useStorageActions();
 
   const handleReset = () => {
     if (!confirm("Сбросить все данные к стартовым?")) return;
     resetAll();
-    setReleases(getReleases());
   };
 
   const handleDelete = (id: string) => {
-    const next = releases.filter((r) => r.id !== id);
-    saveReleases(next);
-    setReleases(next);
+    saveReleases(releases.filter((r) => r.id !== id));
   };
 
   return (

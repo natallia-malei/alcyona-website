@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { getBand } from "../../storage";
+import { useBand } from "../../storage/hooks";
 import { SocialLinks } from "./SocialLinks";
 import { LangSwitcher } from "./LangSwitcher";
 import { Logo } from "./Logo";
@@ -9,7 +9,7 @@ import { typography } from "../../styles/typography";
 
 export function Header() {
   const { t } = useTranslation();
-  const band = getBand();
+  const band = useBand();
 
   return (
     <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-md bg-black/60 border-b border-white/10">
