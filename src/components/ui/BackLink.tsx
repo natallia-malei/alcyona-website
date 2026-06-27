@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { typography } from "../../styles/typography";
+import { interactive } from "../../styles/interactive";
 
 interface BackLinkProps {
   to: string;
@@ -9,10 +10,7 @@ interface BackLinkProps {
 
 export function BackLink({ to, children }: BackLinkProps) {
   return (
-    <Link
-      to={to}
-      className={`${typography.eyebrow} text-fg-muted hover:text-white transition-colors`}
-    >
+    <Link to={to} className={`${typography.eyebrow} ${interactive.mutedHover}`}>
       ← {children}
     </Link>
   );

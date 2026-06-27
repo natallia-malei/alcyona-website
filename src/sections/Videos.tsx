@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useVideos } from "../storage/hooks";
 import { Section } from "../components/layout/Section";
+import { Stack } from "../components/layout/Stack";
 import { Eyebrow } from "../components/ui/Eyebrow";
 import { VideoEmbed } from "../components/ui/VideoEmbed";
 import { useLocalizedText } from "../hooks/useLocalizedText";
@@ -15,12 +16,10 @@ export function Videos() {
     <Section id="videos" title={t("videos.title")}>
       <div className={grids.videos}>
         {videos.map((v) => (
-          <div key={v.id}>
+          <Stack key={v.id} gap="sm">
             <VideoEmbed youtubeId={v.youtubeId} title={tr(v.title)} />
-            <Eyebrow className="mt-3 text-fg-muted">
-              {tr(v.title)}
-            </Eyebrow>
-          </div>
+            <Eyebrow className="text-fg-muted">{tr(v.title)}</Eyebrow>
+          </Stack>
         ))}
       </div>
     </Section>

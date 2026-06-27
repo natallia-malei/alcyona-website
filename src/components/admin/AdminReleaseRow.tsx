@@ -1,5 +1,7 @@
 import type { Release } from "../../types";
 import { useLocalizedText } from "../../hooks/useLocalizedText";
+import { typography } from "../../styles/typography";
+import { interactive } from "../../styles/interactive";
 
 interface AdminReleaseRowProps {
   release: Release;
@@ -13,14 +15,14 @@ export function AdminReleaseRow({ release, onDelete }: AdminReleaseRowProps) {
     <li className="py-3 flex items-center justify-between">
       <span>
         {tr(release.title)}{" "}
-        <span className="text-fg-muted text-sm">
+        <span className={typography.caption}>
           · {release.type} · {release.releaseDate}
         </span>
       </span>
       <button
         type="button"
         onClick={() => onDelete(release.id)}
-        className="text-sm text-fg-muted hover:text-accent"
+        className={`${typography.caption} ${interactive.accentHover}`}
       >
         Delete
       </button>

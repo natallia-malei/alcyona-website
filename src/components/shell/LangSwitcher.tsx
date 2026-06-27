@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import type { Locale } from "../../types";
 import { typography } from "../../styles/typography";
+import { interactive } from "../../styles/interactive";
 
 export function LangSwitcher() {
   const { i18n } = useTranslation();
@@ -15,9 +16,7 @@ export function LangSwitcher() {
       <button
         type="button"
         onClick={() => toggle("ru")}
-        className={
-          current === "ru" ? "text-white" : "text-fg-muted hover:text-white"
-        }
+        className={current === "ru" ? "text-white" : interactive.mutedHover}
       >
         RU
       </button>
@@ -25,9 +24,7 @@ export function LangSwitcher() {
       <button
         type="button"
         onClick={() => toggle("en")}
-        className={
-          current === "en" ? "text-white" : "text-fg-muted hover:text-white"
-        }
+        className={current === "en" ? "text-white" : interactive.mutedHover}
       >
         EN
       </button>

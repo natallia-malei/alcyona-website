@@ -3,6 +3,7 @@ import { useReleases, useStorageActions } from "../storage/hooks";
 import { PageHeader } from "../components/layout/PageHeader";
 import { Button } from "../components/ui/Button";
 import { Page } from "../components/layout/Page";
+import { Stack } from "../components/layout/Stack";
 import { SectionTitle } from "../components/ui/SectionTitle";
 import { AdminReleaseRow } from "../components/admin/AdminReleaseRow";
 import { DividerList } from "../components/ui/DividerList";
@@ -23,24 +24,25 @@ export function Admin() {
 
   return (
     <Page size="lg">
-      <PageHeader
-        title={t("admin.title")}
-        actions={
-          <Button variant="outline" size="sm" onClick={handleReset}>
-            Reset
-          </Button>
-        }
-        className="mb-8"
-      />
-
-      <p className="mb-4">{t("admin.note")}</p>
-
-      <SectionTitle size="sm" className="mt-10 mb-4">Релизы ({releases.length})</SectionTitle>
-      <DividerList>
-        {releases.map((r) => (
-          <AdminReleaseRow key={r.id} release={r} onDelete={handleDelete} />
-        ))}
-      </DividerList>
+      <Stack gap="md">
+        <PageHeader
+          title={t("admin.title")}
+          actions={
+            <Button variant="outline" size="sm" onClick={handleReset}>
+              Reset
+            </Button>
+          }
+        />
+        <p>{t("admin.note")}</p>
+        <Stack gap="md" className="pt-6">
+          <SectionTitle size="sm">Релизы ({releases.length})</SectionTitle>
+          <DividerList>
+            {releases.map((r) => (
+              <AdminReleaseRow key={r.id} release={r} onDelete={handleDelete} />
+            ))}
+          </DividerList>
+        </Stack>
+      </Stack>
     </Page>
   );
 }
