@@ -25,4 +25,7 @@ body {
   p {
     color: var(--color-fg-muted);
   }
+  section[id] {
+    scroll-margin-top: 5rem;
+  }
 }

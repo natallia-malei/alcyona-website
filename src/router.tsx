@@ -5,6 +5,7 @@ import { ReleasePage } from "./pages/Release";
 import { Studio } from "./pages/Studio";
 import { Privacy } from "./pages/Privacy";
 import { Admin } from "./pages/Admin";
+import { NotFound } from "./pages/NotFound";
 
 export const router = createBrowserRouter([
   {
@@ -16,6 +17,7 @@ export const router = createBrowserRouter([
       { path: "studio", Component: Studio },
       { path: "privacy", Component: Privacy },
       { path: "admin", Component: Admin },
+      { path: "*", Component: NotFound },
     ],
   },
 ]);
