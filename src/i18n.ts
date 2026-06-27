@@ -13,6 +13,8 @@ const resources = {
         releases: "Релизы",
         booking: "Букинг",
         studio: "Студия",
+        menuOpen: "Открыть меню",
+        menuClose: "Закрыть меню",
       },
       hero: {
         listenNow: "Слушать сейчас",
@@ -65,6 +67,8 @@ const resources = {
         releases: "Releases",
         booking: "Booking",
         studio: "Studio",
+        menuOpen: "Open menu",
+        menuClose: "Close menu",
       },
       hero: {
         listenNow: "Listen now",
