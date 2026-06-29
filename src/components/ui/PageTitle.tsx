@@ -16,9 +16,5 @@ export function PageTitle({
   className = "",
   children,
 }: PropsWithChildren<Props>) {
-  return (
-    <h1 className={`${typography.heading} ${sizeClass[size]} ${className}`}>
-      {children}
-    </h1>
-  );
+  return <h1 className={`${typography.heading} ${sizeClass[size]} ${className}`}>{children}</h1>;
 }

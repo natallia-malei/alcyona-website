@@ -18,9 +18,5 @@ export function SectionTitle({
   className = "",
   children,
 }: PropsWithChildren<SectionTitleProps>) {
-  return (
-    <h2 className={`${typography.heading} ${sizeClass[size]} ${className}`}>
-      {children}
-    </h2>
-  );
+  return <h2 className={`${typography.heading} ${sizeClass[size]} ${className}`}>{children}</h2>;
 }

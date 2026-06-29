@@ -31,7 +31,9 @@ export function ReleaseDetail({ release }: ReleaseDetailProps) {
         <PageTitle className="mb-6">{tr(release.title)}</PageTitle>
         <p className="mb-10">{tr(release.description)}</p>
 
-        <SectionTitle size="sm" className="mb-4">{t("release.tracks")}</SectionTitle>
+        <SectionTitle size="sm" className="mb-4">
+          {t("release.tracks")}
+        </SectionTitle>
         <TrackList tracks={release.tracks} />
       </div>
     </div>

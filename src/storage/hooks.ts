@@ -28,18 +28,12 @@ export function useBand() {
 
 export function useReleaseById(id: string | undefined): Release | undefined {
   const releases = useReleases();
-  return useMemo(
-    () => (id ? releases.find((r) => r.id === id) : undefined),
-    [releases, id],
-  );
+  return useMemo(() => (id ? releases.find((r) => r.id === id) : undefined), [releases, id]);
 }
 
 export function useFeaturedRelease(): Release | undefined {
   const releases = useReleases();
-  return useMemo(
-    () => releases.find((r) => r.isFeatured) ?? releases[0],
-    [releases],
-  );
+  return useMemo(() => releases.find((r) => r.isFeatured) ?? releases[0], [releases]);
 }
 
 export function useStorageActions() {

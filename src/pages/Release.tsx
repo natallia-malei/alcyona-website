@@ -15,7 +15,9 @@ export function ReleasePage() {
     return (
       <Page size="xl">
         <p>Release not found.</p>
-        <NavLink to="/" underline>← Home</NavLink>
+        <NavLink to="/" underline>
+          ← Home
+        </NavLink>
       </Page>
     );
   }

@@ -15,10 +15,6 @@ const zoomClass: Record<Zoom, string> = {
 export function MediaImage({ src, alt, zoom, className = "" }: MediaImageProps) {
   const zoomCls = zoom ? `${zoomClass[zoom]} transition-transform duration-500` : "";
   return (
-    <img
-      src={src}
-      alt={alt}
-      className={`w-full h-full object-cover ${zoomCls} ${className}`}
-    />
+    <img src={src} alt={alt} className={`w-full h-full object-cover ${zoomCls} ${className}`} />
   );
 }

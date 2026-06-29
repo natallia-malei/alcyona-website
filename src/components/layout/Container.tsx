@@ -15,14 +15,6 @@ const sizeClass: Record<Size, string> = {
   xl: "max-w-7xl",
 };
 
-export function Container({
-  size = "xl",
-  className = "",
-  children,
-}: ContainerProps) {
-  return (
-    <div className={`${sizeClass[size]} mx-auto px-6 md:px-12 ${className}`}>
-      {children}
-    </div>
-  );
+export function Container({ size = "xl", className = "", children }: ContainerProps) {
+  return <div className={`${sizeClass[size]} mx-auto px-6 md:px-12 ${className}`}>{children}</div>;
 }

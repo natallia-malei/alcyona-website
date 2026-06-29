@@ -6,14 +6,6 @@ interface DividerListProps {
   children: ReactNode;
 }
 
-export function DividerList({
-  as: Tag = "ul",
-  className = "",
-  children,
-}: DividerListProps) {
-  return (
-    <Tag className={`divide-y divide-white/10 ${className}`}>
-      {children}
-    </Tag>
-  );
+export function DividerList({ as: Tag = "ul", className = "", children }: DividerListProps) {
+  return <Tag className={`divide-y divide-white/10 ${className}`}>{children}</Tag>;
 }

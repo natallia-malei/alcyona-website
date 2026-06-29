@@ -17,8 +17,7 @@ export const seedReleases: Release[] = [
     title: { ru: "Звездопад", en: "Starfall" },
     type: "album",
     releaseDate: "2026-05-01",
-    coverUrl:
-      "https://images.unsplash.com/photo-1518972559570-7cc1309f3229?w=900&q=80",
+    coverUrl: "https://images.unsplash.com/photo-1518972559570-7cc1309f3229?w=900&q=80",
     description: {
       ru: "Дебютный альбом ALCYONA — путешествие сквозь свет и тьму.",
       en: "ALCYONA's debut album — a journey through light and darkness.",
@@ -55,8 +54,7 @@ export const seedReleases: Release[] = [
     title: { ru: "Эхо", en: "Echoes" },
     type: "single",
     releaseDate: "2025-11-12",
-    coverUrl:
-      "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=900&q=80",
+    coverUrl: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=900&q=80",
     description: {
       ru: "Сингл, открывший новую главу звучания группы.",
       en: "The single that opened a new chapter in the band's sound.",
