@@ -8,6 +8,7 @@ import {
   deleteRelease as deleteReleaseMutation,
   deleteVideo as deleteVideoMutation,
   updateBand as updateBandMutation,
+  updatePhotoPositions as updatePhotoPositionsMutation,
   upsertRelease as upsertReleaseMutation,
 } from "../supabase/mutations";
 
@@ -22,6 +23,7 @@ interface StorageContextValue {
   deleteRelease: (id: string) => Promise<void>;
   addPhoto: (url: string) => Promise<void>;
   deletePhoto: (id: string) => Promise<void>;
+  reorderPhotos: (photos: Photo[]) => Promise<void>;
   addVideo: (youtubeId: string, title: Video["title"]) => Promise<void>;
   deleteVideo: (id: string) => Promise<void>;
   updateBand: (band: BandInfo) => Promise<void>;
@@ -84,6 +86,17 @@ export function StorageProvider({ children }: StorageProviderProps) {
     setPhotos((prev) => prev.filter((p) => p.id !== id));
   }, []);
 
+  const reorderPhotos = useCallback(async (next: Photo[]) => {
+    const previous = photos;
+    setPhotos(next);
+    try {
+      await updatePhotoPositionsMutation(next);
+    } catch (err) {
+      setPhotos(previous);
+      throw err;
+    }
+  }, [photos]);
+
   const addVideo = useCallback(
     async (youtubeId: string, title: Video["title"]) => {
       const created = await addVideoMutation({ youtubeId, title }, videos.length + 1);
@@ -115,6 +128,7 @@ export function StorageProvider({ children }: StorageProviderProps) {
         deleteRelease,
         addPhoto,
         deletePhoto,
+        reorderPhotos,
         addVideo,
         deleteVideo,
         updateBand,

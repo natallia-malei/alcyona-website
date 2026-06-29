@@ -7,9 +7,15 @@ interface ImageUploadInputProps {
   label?: string;
   value: string;
   onChange: (url: string) => void;
+  uploadFn?: (file: File) => Promise<string>;
 }
 
-export function ImageUploadInput({ label, value, onChange }: ImageUploadInputProps) {
+export function ImageUploadInput({
+  label,
+  value,
+  onChange,
+  uploadFn = uploadCover,
+}: ImageUploadInputProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +27,7 @@ export function ImageUploadInput({ label, value, onChange }: ImageUploadInputPro
     setUploading(true);
     setError(null);
     try {
-      const url = await uploadCover(file);
+      const url = await uploadFn(file);
       onChange(url);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");
@@ -60,6 +66,7 @@ export function ImageUploadInput({ label, value, onChange }: ImageUploadInputPro
             />
             {uploading ? "Uploading..." : "Upload new image"}
           </label>
+          <p className={typography.caption}>JPG, PNG, GIF, WebP, SVG — up to 50 MB</p>
           {error && <p className="text-sm text-red-400">{error}</p>}
         </div>
       </div>

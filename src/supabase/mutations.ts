@@ -41,6 +41,15 @@ export async function addPhoto(photo: Omit<Photo, "id">, position: number): Prom
   return { id: data.id, url: data.url };
 }
 
+export async function updatePhotoPositions(photos: Photo[]): Promise<void> {
+  const updates = photos.map((p, idx) =>
+    supabase.from("photos").update({ position: idx + 1 }).eq("id", p.id),
+  );
+  const results = await Promise.all(updates);
+  const firstError = results.find((r) => r.error)?.error;
+  if (firstError) throw firstError;
+}
+
 // ----- Videos -----
 
 export async function deleteVideo(id: string): Promise<void> {
