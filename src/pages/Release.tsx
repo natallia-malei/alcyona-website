@@ -24,7 +24,7 @@ export function ReleasePage() {
 
   return (
     <Page size="xl">
-      <BackLink to="/#releases">{t("release.back")}</BackLink>
+      <BackLink to="/">{t("release.back")}</BackLink>
       <ReleaseDetail release={release} />
     </Page>
   );
