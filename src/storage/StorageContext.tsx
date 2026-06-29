@@ -1,27 +1,30 @@
-import { createContext, useCallback, useState, type ReactNode } from "react";
+import { createContext, useCallback, useEffect, useState, type ReactNode } from "react";
 import type { BandInfo, Photo, Release, Video } from "../types";
+import { fetchBand, fetchPhotos, fetchReleases, fetchVideos } from "../supabase/queries";
 import {
-  getBand as readBand,
-  getPhotos as readPhotos,
-  getReleases as readReleases,
-  getVideos as readVideos,
-  resetAll as resetStorage,
-  saveBand as writeBand,
-  savePhotos as writePhotos,
-  saveReleases as writeReleases,
-  saveVideos as writeVideos,
-} from "./index";
+  addPhoto as addPhotoMutation,
+  addVideo as addVideoMutation,
+  deletePhoto as deletePhotoMutation,
+  deleteRelease as deleteReleaseMutation,
+  deleteVideo as deleteVideoMutation,
+  updateBand as updateBandMutation,
+  upsertRelease as upsertReleaseMutation,
+} from "../supabase/mutations";
 
 interface StorageContextValue {
   releases: Release[];
   photos: Photo[];
   videos: Video[];
-  band: BandInfo;
-  saveReleases: (releases: Release[]) => void;
-  savePhotos: (photos: Photo[]) => void;
-  saveVideos: (videos: Video[]) => void;
-  saveBand: (band: BandInfo) => void;
-  resetAll: () => void;
+  band: BandInfo | null;
+  loading: boolean;
+  error: string | null;
+  upsertRelease: (release: Release) => Promise<void>;
+  deleteRelease: (id: string) => Promise<void>;
+  addPhoto: (url: string) => Promise<void>;
+  deletePhoto: (id: string) => Promise<void>;
+  addVideo: (youtubeId: string, title: Video["title"]) => Promise<void>;
+  deleteVideo: (id: string) => Promise<void>;
+  updateBand: (band: BandInfo) => Promise<void>;
 }
 
 export const StorageContext = createContext<StorageContextValue | null>(null);
@@ -31,37 +34,72 @@ interface StorageProviderProps {
 }
 
 export function StorageProvider({ children }: StorageProviderProps) {
-  const [releases, setReleases] = useState<Release[]>(readReleases);
-  const [photos, setPhotos] = useState<Photo[]>(readPhotos);
-  const [videos, setVideos] = useState<Video[]>(readVideos);
-  const [band, setBand] = useState<BandInfo>(readBand);
+  const [releases, setReleases] = useState<Release[]>([]);
+  const [photos, setPhotos] = useState<Photo[]>([]);
+  const [videos, setVideos] = useState<Video[]>([]);
+  const [band, setBand] = useState<BandInfo | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const saveReleases = useCallback((next: Release[]) => {
-    writeReleases(next);
-    setReleases(next);
+  useEffect(() => {
+    Promise.all([fetchReleases(), fetchPhotos(), fetchVideos(), fetchBand()])
+      .then(([r, p, v, b]) => {
+        setReleases(r);
+        setPhotos(p);
+        setVideos(v);
+        setBand(b);
+      })
+      .catch((e: unknown) => {
+        setError(e instanceof Error ? e.message : "Unknown error");
+      })
+      .finally(() => setLoading(false));
   }, []);
 
-  const savePhotos = useCallback((next: Photo[]) => {
-    writePhotos(next);
-    setPhotos(next);
+  const upsertRelease = useCallback(async (release: Release) => {
+    await upsertReleaseMutation(release);
+    setReleases((prev) => {
+      const idx = prev.findIndex((r) => r.id === release.id);
+      if (idx === -1) return [release, ...prev];
+      const next = [...prev];
+      next[idx] = release;
+      return next;
+    });
   }, []);
 
-  const saveVideos = useCallback((next: Video[]) => {
-    writeVideos(next);
-    setVideos(next);
+  const deleteRelease = useCallback(async (id: string) => {
+    await deleteReleaseMutation(id);
+    setReleases((prev) => prev.filter((r) => r.id !== id));
   }, []);
 
-  const saveBand = useCallback((next: BandInfo) => {
-    writeBand(next);
+  const addPhoto = useCallback(
+    async (url: string) => {
+      const created = await addPhotoMutation({ url }, photos.length + 1);
+      setPhotos((prev) => [...prev, created]);
+    },
+    [photos.length],
+  );
+
+  const deletePhoto = useCallback(async (id: string) => {
+    await deletePhotoMutation(id);
+    setPhotos((prev) => prev.filter((p) => p.id !== id));
+  }, []);
+
+  const addVideo = useCallback(
+    async (youtubeId: string, title: Video["title"]) => {
+      const created = await addVideoMutation({ youtubeId, title }, videos.length + 1);
+      setVideos((prev) => [...prev, created]);
+    },
+    [videos.length],
+  );
+
+  const deleteVideo = useCallback(async (id: string) => {
+    await deleteVideoMutation(id);
+    setVideos((prev) => prev.filter((v) => v.id !== id));
+  }, []);
+
+  const updateBand = useCallback(async (next: BandInfo) => {
+    await updateBandMutation(next);
     setBand(next);
-  }, []);
-
-  const resetAll = useCallback(() => {
-    resetStorage();
-    setReleases(readReleases());
-    setPhotos(readPhotos());
-    setVideos(readVideos());
-    setBand(readBand());
   }, []);
 
   return (
@@ -71,11 +109,15 @@ export function StorageProvider({ children }: StorageProviderProps) {
         photos,
         videos,
         band,
-        saveReleases,
-        savePhotos,
-        saveVideos,
-        saveBand,
-        resetAll,
+        loading,
+        error,
+        upsertRelease,
+        deleteRelease,
+        addPhoto,
+        deletePhoto,
+        addVideo,
+        deleteVideo,
+        updateBand,
       }}
     >
       {children}

@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useReleases, useStorageActions } from "../storage/hooks";
 import { PageHeader } from "../components/layout/PageHeader";
-import { Button } from "../components/ui/Button";
 import { Page } from "../components/layout/Page";
 import { Stack } from "../components/layout/Stack";
 import { SectionTitle } from "../components/ui/SectionTitle";
@@ -11,28 +10,21 @@ import { DividerList } from "../components/ui/DividerList";
 export function Admin() {
   const { t } = useTranslation();
   const releases = useReleases();
-  const { saveReleases, resetAll } = useStorageActions();
+  const { deleteRelease } = useStorageActions();
 
-  const handleReset = () => {
-    if (!confirm("Сбросить все данные к стартовым?")) return;
-    resetAll();
-  };
-
-  const handleDelete = (id: string) => {
-    saveReleases(releases.filter((r) => r.id !== id));
+  const handleDelete = async (id: string) => {
+    if (!confirm(`Удалить релиз "${id}"?`)) return;
+    try {
+      await deleteRelease(id);
+    } catch (e) {
+      alert(`Не удалось удалить: ${e instanceof Error ? e.message : "unknown error"}`);
+    }
   };
 
   return (
     <Page size="lg">
       <Stack gap="md">
-        <PageHeader
-          title={t("admin.title")}
-          actions={
-            <Button variant="outline" size="sm" onClick={handleReset}>
-              Reset
-            </Button>
-          }
-        />
+        <PageHeader title={t("admin.title")} />
         <p>{t("admin.note")}</p>
         <Stack gap="md" className="pt-6">
           <SectionTitle size="sm">Релизы ({releases.length})</SectionTitle>
