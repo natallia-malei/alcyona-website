@@ -25,7 +25,7 @@ export function Header() {
           <nav className={`hidden md:flex items-center gap-8 ${typography.eyebrow} text-fg-muted`}>
             <NavLink href="/#new-album">{t("nav.newAlbum")}</NavLink>
             <NavLink href="/#releases">{t("nav.releases")}</NavLink>
-            <NavLink href="/#photos">{t("nav.photos")}</NavLink>
+            <NavLink to="/photos">{t("nav.photos")}</NavLink>
             <NavLink href="/#videos">{t("nav.videos")}</NavLink>
             <NavLink to="/studio">{t("nav.studio")}</NavLink>
           </nav>

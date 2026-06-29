@@ -55,6 +55,7 @@ export function useStorageActions() {
     deleteRelease: ctx.deleteRelease,
     addPhoto: ctx.addPhoto,
     deletePhoto: ctx.deletePhoto,
+    reorderPhotos: ctx.reorderPhotos,
     addVideo: ctx.addVideo,
     deleteVideo: ctx.deleteVideo,
     updateBand: ctx.updateBand,

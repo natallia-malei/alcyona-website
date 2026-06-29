@@ -24,7 +24,12 @@ const resources = {
         subtitle: "Анонсы концертов, релизов и закулисье",
         cta: "Подписаться",
       },
-      photos: { title: "Фотографии" },
+      photos: {
+        title: "Фотографии",
+        addPhoto: "Добавить фото",
+        deleteConfirm: "Удалить эту фотографию?",
+        empty: "Пока нет фотографий",
+      },
       videos: { title: "Видео" },
       releases: { title: "Альбомы и релизы", open: "Открыть" },
       booking: {
@@ -77,7 +82,12 @@ const resources = {
         subtitle: "Concert announcements, releases, and behind the scenes",
         cta: "Subscribe",
       },
-      photos: { title: "Photos" },
+      photos: {
+        title: "Photos",
+        addPhoto: "Add photo",
+        deleteConfirm: "Delete this photo?",
+        empty: "No photos yet",
+      },
       videos: { title: "Videos" },
       releases: { title: "Albums & Releases", open: "Open" },
       booking: {
