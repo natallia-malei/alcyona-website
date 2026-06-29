@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Environment files (Vite)
+.env
+.env.*
+!.env.example
+
 # Personal/working files
 CHECKLIST.md
 
