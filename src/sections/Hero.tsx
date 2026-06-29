@@ -13,6 +13,11 @@ import { Lead } from "../components/ui/Lead";
 import { EditButton } from "../components/ui/EditButton";
 import { Modal } from "../components/ui/Modal";
 import { ReleaseForm } from "../components/forms/ReleaseForm";
+import { SpotifyIcon } from "../components/icons/SpotifyIcon";
+import { AppleMusicIcon } from "../components/icons/AppleMusicIcon";
+import { YouTubeIcon } from "../components/icons/YouTubeIcon";
+import { YandexMusicIcon } from "../components/icons/YandexMusicIcon";
+import { VKIcon } from "../components/icons/VKIcon";
 import { flex } from "../styles/layouts";
 
 export function Hero() {
@@ -49,10 +54,37 @@ export function Hero() {
             <div className={flex.wrapInline}>
               <Button to={`/release/${release.id}`}>{t("hero.listenNow")}</Button>
               {release.links.spotify && (
-                <PlatformLink href={release.links.spotify}>Spotify →</PlatformLink>
+                <PlatformLink href={release.links.spotify} variant="icon" ariaLabel="Spotify">
+                  <SpotifyIcon />
+                </PlatformLink>
               )}
               {release.links.appleMusic && (
-                <PlatformLink href={release.links.appleMusic}>Apple Music →</PlatformLink>
+                <PlatformLink
+                  href={release.links.appleMusic}
+                  variant="icon"
+                  ariaLabel="Apple Music"
+                >
+                  <AppleMusicIcon />
+                </PlatformLink>
+              )}
+              {release.links.youtube && (
+                <PlatformLink href={release.links.youtube} variant="icon" ariaLabel="YouTube">
+                  <YouTubeIcon />
+                </PlatformLink>
+              )}
+              {release.links.yandexMusic && (
+                <PlatformLink
+                  href={release.links.yandexMusic}
+                  variant="icon"
+                  ariaLabel="Yandex Music"
+                >
+                  <YandexMusicIcon />
+                </PlatformLink>
+              )}
+              {release.links.vk && (
+                <PlatformLink href={release.links.vk} variant="icon" ariaLabel="VK">
+                  <VKIcon />
+                </PlatformLink>
               )}
             </div>
           </div>
