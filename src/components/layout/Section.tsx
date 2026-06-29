@@ -8,12 +8,7 @@ interface SectionProps {
   className?: string;
 }
 
-export function Section({
-  id,
-  title,
-  className = "",
-  children,
-}: PropsWithChildren<SectionProps>) {
+export function Section({ id, title, className = "", children }: PropsWithChildren<SectionProps>) {
   return (
     <section id={id} className={`py-20 ${className}`}>
       <Container>

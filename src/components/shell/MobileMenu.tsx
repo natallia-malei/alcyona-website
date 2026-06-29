@@ -37,11 +37,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   if (!isOpen) return null;
 
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      className="fixed inset-0 z-[60] bg-bg flex flex-col"
-    >
+    <div role="dialog" aria-modal="true" className="fixed inset-0 z-[60] bg-bg flex flex-col">
       <div className="flex justify-end p-6">
         <button
           type="button"
