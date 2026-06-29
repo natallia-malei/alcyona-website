@@ -23,7 +23,11 @@ export function useVideos() {
 }
 
 export function useBand() {
-  return useStorageContext().band;
+  const band = useStorageContext().band;
+  if (!band) {
+    throw new Error("useBand called before storage loaded — ensure StorageProvider has finished loading");
+  }
+  return band;
 }
 
 export function useReleaseById(id: string | undefined): Release | undefined {
@@ -36,13 +40,23 @@ export function useFeaturedRelease(): Release | undefined {
   return useMemo(() => releases.find((r) => r.isFeatured) ?? releases[0], [releases]);
 }
 
+export function useStorageLoading(): boolean {
+  return useStorageContext().loading;
+}
+
+export function useStorageError(): string | null {
+  return useStorageContext().error;
+}
+
 export function useStorageActions() {
   const ctx = useStorageContext();
   return {
-    saveReleases: ctx.saveReleases,
-    savePhotos: ctx.savePhotos,
-    saveVideos: ctx.saveVideos,
-    saveBand: ctx.saveBand,
-    resetAll: ctx.resetAll,
+    upsertRelease: ctx.upsertRelease,
+    deleteRelease: ctx.deleteRelease,
+    addPhoto: ctx.addPhoto,
+    deletePhoto: ctx.deletePhoto,
+    addVideo: ctx.addVideo,
+    deleteVideo: ctx.deleteVideo,
+    updateBand: ctx.updateBand,
   };
 }
