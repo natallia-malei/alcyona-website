@@ -6,6 +6,7 @@ import { Studio } from "./pages/Studio";
 import { Privacy } from "./pages/Privacy";
 import { Admin } from "./pages/Admin";
 import { PhotosGallery } from "./pages/PhotosGallery";
+import { VideosGallery } from "./pages/VideosGallery";
 import { NotFound } from "./pages/NotFound";
 
 export const router = createBrowserRouter([
@@ -18,6 +19,7 @@ export const router = createBrowserRouter([
       { path: "studio", Component: Studio },
       { path: "privacy", Component: Privacy },
       { path: "photos", Component: PhotosGallery },
+      { path: "videos", Component: VideosGallery },
       { path: "admin", Component: Admin },
       { path: "*", Component: NotFound },
     ],

@@ -17,6 +17,7 @@ import {
   deleteVideo as deleteVideoMutation,
   updateBand as updateBandMutation,
   updatePhotoPositions as updatePhotoPositionsMutation,
+  updateVideoPositions as updateVideoPositionsMutation,
   upsertRelease as upsertReleaseMutation,
 } from "../supabase/mutations";
 
@@ -105,6 +106,17 @@ export function StorageProvider({ children }: StorageProviderProps) {
     setVideos((prev) => prev.filter((v) => v.id !== id));
   }, []);
 
+  const reorderVideos = useCallback(async (next: Video[]) => {
+    const previous = videosRef.current;
+    setVideos(next);
+    try {
+      await updateVideoPositionsMutation(next);
+    } catch (err) {
+      setVideos(previous);
+      throw err;
+    }
+  }, []);
+
   const updateBand = useCallback(async (next: BandInfo) => {
     await updateBandMutation(next);
     setBand(next);
@@ -125,6 +137,7 @@ export function StorageProvider({ children }: StorageProviderProps) {
       reorderPhotos,
       addVideo,
       deleteVideo,
+      reorderVideos,
       updateBand,
     }),
     [
@@ -141,6 +154,7 @@ export function StorageProvider({ children }: StorageProviderProps) {
       reorderPhotos,
       addVideo,
       deleteVideo,
+      reorderVideos,
       updateBand,
     ],
   );
