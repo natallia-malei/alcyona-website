@@ -26,7 +26,7 @@ export function Header() {
             <NavLink href="/#new-album">{t("nav.newAlbum")}</NavLink>
             <NavLink href="/#releases">{t("nav.releases")}</NavLink>
             <NavLink to="/photos">{t("nav.photos")}</NavLink>
-            <NavLink href="/#videos">{t("nav.videos")}</NavLink>
+            <NavLink to="/videos">{t("nav.videos")}</NavLink>
             <NavLink to="/studio">{t("nav.studio")}</NavLink>
           </nav>
 

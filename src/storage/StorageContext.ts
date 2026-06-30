@@ -15,6 +15,7 @@ export interface StorageContextValue {
   reorderPhotos: (photos: Photo[]) => Promise<void>;
   addVideo: (youtubeId: string, title: Video["title"]) => Promise<void>;
   deleteVideo: (id: string) => Promise<void>;
+  reorderVideos: (videos: Video[]) => Promise<void>;
   updateBand: (band: BandInfo) => Promise<void>;
 }
 

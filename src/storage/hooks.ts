@@ -58,6 +58,7 @@ export function useStorageActions() {
     reorderPhotos: ctx.reorderPhotos,
     addVideo: ctx.addVideo,
     deleteVideo: ctx.deleteVideo,
+    reorderVideos: ctx.reorderVideos,
     updateBand: ctx.updateBand,
   };
 }

@@ -37,7 +37,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   if (!isOpen) return null;
 
   return (
-    <div role="dialog" aria-modal="true" className="fixed inset-0 z-[60] bg-bg flex flex-col">
+    <div role="dialog" aria-modal="true" className="fixed inset-0 z-60 bg-bg flex flex-col">
       <div className="flex justify-end p-6">
         <button
           type="button"
@@ -61,7 +61,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         <NavLink variant="accent" to="/photos" onClick={onClose}>
           {t("nav.photos")}
         </NavLink>
-        <NavLink variant="accent" href="/#videos" onClick={onClose}>
+        <NavLink variant="accent" to="/videos" onClick={onClose}>
           {t("nav.videos")}
         </NavLink>
         <NavLink variant="accent" to="/studio" onClick={onClose}>

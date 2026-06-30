@@ -68,6 +68,15 @@ export async function addVideo(video: Omit<Video, "id">, position: number): Prom
   return { id: data.id, youtubeId: data.youtube_id, title: data.title };
 }
 
+export async function updateVideoPositions(videos: Video[]): Promise<void> {
+  const updates = videos.map((v, idx) =>
+    supabase.from("videos").update({ position: idx + 1 }).eq("id", v.id),
+  );
+  const results = await Promise.all(updates);
+  const firstError = results.find((r) => r.error)?.error;
+  if (firstError) throw firstError;
+}
+
 // ----- Band -----
 
 export async function updateBand(band: BandInfo): Promise<void> {

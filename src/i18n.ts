@@ -30,7 +30,14 @@ const resources = {
         deleteConfirm: "Удалить эту фотографию?",
         empty: "Пока нет фотографий",
       },
-      videos: { title: "Видео" },
+      videos: {
+        title: "Видео",
+        addVideo: "Добавить видео",
+        deleteConfirm: "Удалить это видео?",
+        empty: "Пока нет видео",
+        youtubeChannel: "YouTube канал",
+        dragHandle: "Переместить",
+      },
       releases: { title: "Альбомы и релизы", open: "Открыть" },
       booking: {
         title: "Букинг",
@@ -88,7 +95,14 @@ const resources = {
         deleteConfirm: "Delete this photo?",
         empty: "No photos yet",
       },
-      videos: { title: "Videos" },
+      videos: {
+        title: "Videos",
+        addVideo: "Add video",
+        deleteConfirm: "Delete this video?",
+        empty: "No videos yet",
+        youtubeChannel: "YouTube channel",
+        dragHandle: "Drag to reorder",
+      },
       releases: { title: "Albums & Releases", open: "Open" },
       booking: {
         title: "Booking",
