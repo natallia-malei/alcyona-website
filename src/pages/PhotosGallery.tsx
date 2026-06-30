@@ -22,7 +22,7 @@ import { PageHeader } from "../components/layout/PageHeader";
 import { Button } from "../components/ui/Button";
 import { Modal } from "../components/ui/Modal";
 import { AddPhotoForm } from "../components/forms/AddPhotoForm";
-import { SortablePhoto } from "../components/admin/SortablePhoto";
+import { SortablePhoto } from "../components/photos/SortablePhoto";
 import { grids } from "../styles/layouts";
 
 export function PhotosGallery() {
