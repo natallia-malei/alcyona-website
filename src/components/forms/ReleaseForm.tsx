@@ -19,6 +19,18 @@ const typeOptions = [
   { value: "ep" as const, label: "EP" },
 ];
 
+const STREAMING_FIELDS: ReadonlyArray<{
+  key: keyof StreamingLinks;
+  label: string;
+  placeholder: string;
+}> = [
+  { key: "spotify", label: "Spotify", placeholder: "https://open.spotify.com/album/..." },
+  { key: "appleMusic", label: "Apple Music", placeholder: "https://music.apple.com/album/..." },
+  { key: "youtube", label: "YouTube", placeholder: "https://youtube.com/..." },
+  { key: "yandexMusic", label: "Yandex Music", placeholder: "https://music.yandex.ru/album/..." },
+  { key: "vk", label: "VK", placeholder: "https://vk.com/music/album/..." },
+];
+
 export function ReleaseForm({ initialRelease, onSubmit, onCancel }: ReleaseFormProps) {
   const [release, setRelease] = useState<Release>(initialRelease);
   const [submitting, setSubmitting] = useState(false);
@@ -88,41 +100,16 @@ export function ReleaseForm({ initialRelease, onSubmit, onCancel }: ReleaseFormP
       <div>
         <div className={`mb-3 ${typography.caption}`}>Streaming links</div>
         <div className="space-y-3">
-          <Input
-            label="Spotify"
-            type="url"
-            value={release.links.spotify ?? ""}
-            onChange={(v) => updateLink("spotify", v)}
-            placeholder="https://open.spotify.com/album/..."
-          />
-          <Input
-            label="Apple Music"
-            type="url"
-            value={release.links.appleMusic ?? ""}
-            onChange={(v) => updateLink("appleMusic", v)}
-            placeholder="https://music.apple.com/album/..."
-          />
-          <Input
-            label="YouTube"
-            type="url"
-            value={release.links.youtube ?? ""}
-            onChange={(v) => updateLink("youtube", v)}
-            placeholder="https://youtube.com/..."
-          />
-          <Input
-            label="Yandex Music"
-            type="url"
-            value={release.links.yandexMusic ?? ""}
-            onChange={(v) => updateLink("yandexMusic", v)}
-            placeholder="https://music.yandex.ru/album/..."
-          />
-          <Input
-            label="VK"
-            type="url"
-            value={release.links.vk ?? ""}
-            onChange={(v) => updateLink("vk", v)}
-            placeholder="https://vk.com/music/album/..."
-          />
+          {STREAMING_FIELDS.map(({ key, label, placeholder }) => (
+            <Input
+              key={key}
+              label={label}
+              type="url"
+              value={release.links[key] ?? ""}
+              onChange={(v) => updateLink(key, v)}
+              placeholder={placeholder}
+            />
+          ))}
         </div>
       </div>
 

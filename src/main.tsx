@@ -4,7 +4,7 @@ import { RouterProvider } from "react-router-dom";
 import "./index.css";
 import "./i18n";
 import { router } from "./router";
-import { StorageProvider } from "./storage/StorageContext";
+import { StorageProvider } from "./storage/StorageProvider";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

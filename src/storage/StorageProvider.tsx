@@ -1,5 +1,13 @@
-import { createContext, useCallback, useEffect, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import type { BandInfo, Photo, Release, Video } from "../types";
+import { StorageContext, type StorageContextValue } from "./StorageContext";
 import { fetchBand, fetchPhotos, fetchReleases, fetchVideos } from "../supabase/queries";
 import {
   addPhoto as addPhotoMutation,
@@ -12,25 +20,6 @@ import {
   upsertRelease as upsertReleaseMutation,
 } from "../supabase/mutations";
 
-interface StorageContextValue {
-  releases: Release[];
-  photos: Photo[];
-  videos: Video[];
-  band: BandInfo | null;
-  loading: boolean;
-  error: string | null;
-  upsertRelease: (release: Release) => Promise<void>;
-  deleteRelease: (id: string) => Promise<void>;
-  addPhoto: (url: string) => Promise<void>;
-  deletePhoto: (id: string) => Promise<void>;
-  reorderPhotos: (photos: Photo[]) => Promise<void>;
-  addVideo: (youtubeId: string, title: Video["title"]) => Promise<void>;
-  deleteVideo: (id: string) => Promise<void>;
-  updateBand: (band: BandInfo) => Promise<void>;
-}
-
-export const StorageContext = createContext<StorageContextValue | null>(null);
-
 interface StorageProviderProps {
   children: ReactNode;
 }
@@ -42,6 +31,16 @@ export function StorageProvider({ children }: StorageProviderProps) {
   const [band, setBand] = useState<BandInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Refs mirror state so mutation callbacks can read latest values without re-creating on each change
+  const photosRef = useRef<Photo[]>(photos);
+  const videosRef = useRef<Video[]>(videos);
+  useEffect(() => {
+    photosRef.current = photos;
+  }, [photos]);
+  useEffect(() => {
+    videosRef.current = videos;
+  }, [videos]);
 
   useEffect(() => {
     Promise.all([fetchReleases(), fetchPhotos(), fetchVideos(), fetchBand()])
@@ -73,13 +72,11 @@ export function StorageProvider({ children }: StorageProviderProps) {
     setReleases((prev) => prev.filter((r) => r.id !== id));
   }, []);
 
-  const addPhoto = useCallback(
-    async (url: string) => {
-      const created = await addPhotoMutation({ url }, photos.length + 1);
-      setPhotos((prev) => [...prev, created]);
-    },
-    [photos.length],
-  );
+  const addPhoto = useCallback(async (url: string) => {
+    const position = photosRef.current.length + 1;
+    const created = await addPhotoMutation({ url }, position);
+    setPhotos((prev) => [...prev, created]);
+  }, []);
 
   const deletePhoto = useCallback(async (id: string) => {
     await deletePhotoMutation(id);
@@ -87,7 +84,7 @@ export function StorageProvider({ children }: StorageProviderProps) {
   }, []);
 
   const reorderPhotos = useCallback(async (next: Photo[]) => {
-    const previous = photos;
+    const previous = photosRef.current;
     setPhotos(next);
     try {
       await updatePhotoPositionsMutation(next);
@@ -95,15 +92,13 @@ export function StorageProvider({ children }: StorageProviderProps) {
       setPhotos(previous);
       throw err;
     }
-  }, [photos]);
+  }, []);
 
-  const addVideo = useCallback(
-    async (youtubeId: string, title: Video["title"]) => {
-      const created = await addVideoMutation({ youtubeId, title }, videos.length + 1);
-      setVideos((prev) => [...prev, created]);
-    },
-    [videos.length],
-  );
+  const addVideo = useCallback(async (youtubeId: string, title: Video["title"]) => {
+    const position = videosRef.current.length + 1;
+    const created = await addVideoMutation({ youtubeId, title }, position);
+    setVideos((prev) => [...prev, created]);
+  }, []);
 
   const deleteVideo = useCallback(async (id: string) => {
     await deleteVideoMutation(id);
@@ -115,26 +110,40 @@ export function StorageProvider({ children }: StorageProviderProps) {
     setBand(next);
   }, []);
 
-  return (
-    <StorageContext.Provider
-      value={{
-        releases,
-        photos,
-        videos,
-        band,
-        loading,
-        error,
-        upsertRelease,
-        deleteRelease,
-        addPhoto,
-        deletePhoto,
-        reorderPhotos,
-        addVideo,
-        deleteVideo,
-        updateBand,
-      }}
-    >
-      {children}
-    </StorageContext.Provider>
+  const value = useMemo<StorageContextValue>(
+    () => ({
+      releases,
+      photos,
+      videos,
+      band,
+      loading,
+      error,
+      upsertRelease,
+      deleteRelease,
+      addPhoto,
+      deletePhoto,
+      reorderPhotos,
+      addVideo,
+      deleteVideo,
+      updateBand,
+    }),
+    [
+      releases,
+      photos,
+      videos,
+      band,
+      loading,
+      error,
+      upsertRelease,
+      deleteRelease,
+      addPhoto,
+      deletePhoto,
+      reorderPhotos,
+      addVideo,
+      deleteVideo,
+      updateBand,
+    ],
   );
+
+  return <StorageContext.Provider value={value}>{children}</StorageContext.Provider>;
 }
