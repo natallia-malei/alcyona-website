@@ -17,6 +17,7 @@ import {
   deleteVideo as deleteVideoMutation,
   updateBand as updateBandMutation,
   updatePhotoPositions as updatePhotoPositionsMutation,
+  updateReleasePositions as updateReleasePositionsMutation,
   updateVideoPositions as updateVideoPositionsMutation,
   upsertRelease as upsertReleaseMutation,
 } from "../supabase/mutations";
@@ -34,8 +35,12 @@ export function StorageProvider({ children }: StorageProviderProps) {
   const [error, setError] = useState<string | null>(null);
 
   // Refs mirror state so mutation callbacks can read latest values without re-creating on each change
+  const releasesRef = useRef<Release[]>(releases);
   const photosRef = useRef<Photo[]>(photos);
   const videosRef = useRef<Video[]>(videos);
+  useEffect(() => {
+    releasesRef.current = releases;
+  }, [releases]);
   useEffect(() => {
     photosRef.current = photos;
   }, [photos]);
@@ -58,10 +63,14 @@ export function StorageProvider({ children }: StorageProviderProps) {
   }, []);
 
   const upsertRelease = useCallback(async (release: Release) => {
-    await upsertReleaseMutation(release);
+    const existingIdx = releasesRef.current.findIndex((r) => r.id === release.id);
+    const position = existingIdx === -1 ? releasesRef.current.length + 1 : existingIdx + 1;
+
+    await upsertReleaseMutation(release, position);
+
     setReleases((prev) => {
       const idx = prev.findIndex((r) => r.id === release.id);
-      if (idx === -1) return [release, ...prev];
+      if (idx === -1) return [...prev, release];
       const next = [...prev];
       next[idx] = release;
       return next;
@@ -71,6 +80,17 @@ export function StorageProvider({ children }: StorageProviderProps) {
   const deleteRelease = useCallback(async (id: string) => {
     await deleteReleaseMutation(id);
     setReleases((prev) => prev.filter((r) => r.id !== id));
+  }, []);
+
+  const reorderReleases = useCallback(async (next: Release[]) => {
+    const previous = releasesRef.current;
+    setReleases(next);
+    try {
+      await updateReleasePositionsMutation(next);
+    } catch (err) {
+      setReleases(previous);
+      throw err;
+    }
   }, []);
 
   const addPhoto = useCallback(async (url: string) => {
@@ -132,6 +152,7 @@ export function StorageProvider({ children }: StorageProviderProps) {
       error,
       upsertRelease,
       deleteRelease,
+      reorderReleases,
       addPhoto,
       deletePhoto,
       reorderPhotos,
@@ -149,6 +170,7 @@ export function StorageProvider({ children }: StorageProviderProps) {
       error,
       upsertRelease,
       deleteRelease,
+      reorderReleases,
       addPhoto,
       deletePhoto,
       reorderPhotos,

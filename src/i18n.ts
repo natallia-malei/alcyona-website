@@ -38,7 +38,15 @@ const resources = {
         youtubeChannel: "YouTube канал",
         dragHandle: "Переместить",
       },
-      releases: { title: "Альбомы и релизы", open: "Открыть" },
+      releases: {
+        title: "Альбомы и релизы",
+        open: "Открыть",
+        addRelease: "Добавить релиз",
+        editRelease: "Редактировать релиз",
+        deleteConfirm: "Удалить этот релиз?",
+        dragHandle: "Переместить",
+        empty: "Пока нет релизов",
+      },
       booking: {
         title: "Букинг",
         subtitle: "По всем вопросам выступлений и сотрудничества",
@@ -103,7 +111,15 @@ const resources = {
         youtubeChannel: "YouTube channel",
         dragHandle: "Drag to reorder",
       },
-      releases: { title: "Albums & Releases", open: "Open" },
+      releases: {
+        title: "Albums & Releases",
+        open: "Open",
+        addRelease: "Add release",
+        editRelease: "Edit release",
+        deleteConfirm: "Delete this release?",
+        dragHandle: "Drag to reorder",
+        empty: "No releases yet",
+      },
       booking: {
         title: "Booking",
         subtitle: "For all performance and collaboration inquiries",

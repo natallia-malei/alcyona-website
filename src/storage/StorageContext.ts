@@ -10,6 +10,7 @@ export interface StorageContextValue {
   error: string | null;
   upsertRelease: (release: Release) => Promise<void>;
   deleteRelease: (id: string) => Promise<void>;
+  reorderReleases: (releases: Release[]) => Promise<void>;
   addPhoto: (url: string) => Promise<void>;
   deletePhoto: (id: string) => Promise<void>;
   reorderPhotos: (photos: Photo[]) => Promise<void>;
