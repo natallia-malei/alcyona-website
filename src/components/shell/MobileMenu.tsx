@@ -55,7 +55,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         <NavLink variant="accent" href="/#new-album" onClick={onClose}>
           {t("nav.newAlbum")}
         </NavLink>
-        <NavLink variant="accent" href="/#releases" onClick={onClose}>
+        <NavLink variant="accent" to="/releases" onClick={onClose}>
           {t("nav.releases")}
         </NavLink>
         <NavLink variant="accent" to="/photos" onClick={onClose}>

@@ -5,6 +5,7 @@ import { LocalizedTextInput } from "../ui/LocalizedTextInput";
 import { Select } from "../ui/Select";
 import { FormActions } from "../ui/FormActions";
 import { ImageUploadInput } from "../ui/ImageUploadInput";
+import { TrackListEditor } from "./TrackListEditor";
 import { typography } from "../../styles/typography";
 
 interface ReleaseFormProps {
@@ -112,6 +113,11 @@ export function ReleaseForm({ initialRelease, onSubmit, onCancel }: ReleaseFormP
           ))}
         </div>
       </div>
+
+      <TrackListEditor
+        tracks={release.tracks}
+        onChange={(tracks) => setRelease({ ...release, tracks })}
+      />
 
       {error && (
         <p className="text-sm text-red-400 bg-red-950/40 border border-red-900/60 rounded-sm p-3">

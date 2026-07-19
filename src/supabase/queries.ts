@@ -69,7 +69,7 @@ export async function fetchReleases(): Promise<Release[]> {
   const { data, error } = await supabase
     .from("releases")
     .select("*, tracks(*)")
-    .order("release_date", { ascending: false });
+    .order("position");
 
   if (error) throw error;
   return (data as ReleaseRow[]).map(rowToRelease);

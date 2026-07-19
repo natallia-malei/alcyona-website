@@ -53,6 +53,7 @@ export function useStorageActions() {
   return {
     upsertRelease: ctx.upsertRelease,
     deleteRelease: ctx.deleteRelease,
+    reorderReleases: ctx.reorderReleases,
     addPhoto: ctx.addPhoto,
     deletePhoto: ctx.deletePhoto,
     reorderPhotos: ctx.reorderPhotos,

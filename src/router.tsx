@@ -7,6 +7,7 @@ import { Privacy } from "./pages/Privacy";
 import { Admin } from "./pages/Admin";
 import { PhotosGallery } from "./pages/PhotosGallery";
 import { VideosGallery } from "./pages/VideosGallery";
+import { ReleasesGallery } from "./pages/ReleasesGallery";
 import { NotFound } from "./pages/NotFound";
 
 export const router = createBrowserRouter([
@@ -20,6 +21,7 @@ export const router = createBrowserRouter([
       { path: "privacy", Component: Privacy },
       { path: "photos", Component: PhotosGallery },
       { path: "videos", Component: VideosGallery },
+      { path: "releases", Component: ReleasesGallery },
       { path: "admin", Component: Admin },
       { path: "*", Component: NotFound },
     ],
