@@ -4,7 +4,6 @@ import { Landing } from "./pages/Landing";
 import { ReleasePage } from "./pages/Release";
 import { Studio } from "./pages/Studio";
 import { Privacy } from "./pages/Privacy";
-import { Admin } from "./pages/Admin";
 import { PhotosGallery } from "./pages/PhotosGallery";
 import { VideosGallery } from "./pages/VideosGallery";
 import { ReleasesGallery } from "./pages/ReleasesGallery";
@@ -22,7 +21,6 @@ export const router = createBrowserRouter([
       { path: "photos", Component: PhotosGallery },
       { path: "videos", Component: VideosGallery },
       { path: "releases", Component: ReleasesGallery },
-      { path: "admin", Component: Admin },
       { path: "*", Component: NotFound },
     ],
   },
