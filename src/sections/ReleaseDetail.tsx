@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import type { Release } from "../types";
 import { useLocalizedText } from "../hooks/useLocalizedText";
 import { useStorageActions } from "../storage/hooks";
+import { useIsAuthenticated } from "../auth/hooks";
 import { PageTitle } from "../components/ui/PageTitle";
 import { SectionTitle } from "../components/ui/SectionTitle";
 import { Eyebrow } from "../components/ui/Eyebrow";
@@ -22,6 +23,7 @@ export function ReleaseDetail({ release }: ReleaseDetailProps) {
   const { t } = useTranslation();
   const tr = useLocalizedText();
   const { upsertRelease } = useStorageActions();
+  const isAuth = useIsAuthenticated();
   const [editing, setEditing] = useState(false);
 
   const handleSave = async (next: Release) => {
@@ -31,9 +33,11 @@ export function ReleaseDetail({ release }: ReleaseDetailProps) {
 
   return (
     <>
-      <div className="flex justify-end mt-8">
-        <EditButton onClick={() => setEditing(true)} />
-      </div>
+      {isAuth && (
+        <div className="flex justify-end mt-8">
+          <EditButton onClick={() => setEditing(true)} />
+        </div>
+      )}
 
       <div className={`${grids.releaseDetail} mt-4`}>
         <div>

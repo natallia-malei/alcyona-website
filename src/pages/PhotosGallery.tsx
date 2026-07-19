@@ -16,11 +16,14 @@ import {
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
 import { usePhotos, useStorageActions } from "../storage/hooks";
+import { useIsAuthenticated } from "../auth/hooks";
 import { Page } from "../components/layout/Page";
 import { Stack } from "../components/layout/Stack";
 import { PageHeader } from "../components/layout/PageHeader";
 import { Button } from "../components/ui/Button";
 import { Modal } from "../components/ui/Modal";
+import { MediaFrame } from "../components/ui/MediaFrame";
+import { MediaImage } from "../components/ui/MediaImage";
 import { AddPhotoForm } from "../components/forms/AddPhotoForm";
 import { SortablePhoto } from "../components/photos/SortablePhoto";
 import { grids } from "../styles/layouts";
@@ -29,6 +32,7 @@ export function PhotosGallery() {
   const { t } = useTranslation();
   const photos = usePhotos();
   const { addPhoto, deletePhoto, reorderPhotos } = useStorageActions();
+  const isAuth = useIsAuthenticated();
   const [adding, setAdding] = useState(false);
 
   const sensors = useSensors(
@@ -72,15 +76,17 @@ export function PhotosGallery() {
         <PageHeader
           title={t("photos.title")}
           actions={
-            <Button variant="outline" size="sm" onClick={() => setAdding(true)}>
-              + {t("photos.addPhoto")}
-            </Button>
+            isAuth ? (
+              <Button variant="outline" size="sm" onClick={() => setAdding(true)}>
+                + {t("photos.addPhoto")}
+              </Button>
+            ) : undefined
           }
         />
 
         {photos.length === 0 ? (
           <p>{t("photos.empty")}</p>
-        ) : (
+        ) : isAuth ? (
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={photos.map((p) => p.id)} strategy={rectSortingStrategy}>
               <div className={grids.photos}>
@@ -95,6 +101,14 @@ export function PhotosGallery() {
               </div>
             </SortableContext>
           </DndContext>
+        ) : (
+          <div className={grids.photos}>
+            {photos.map((p) => (
+              <MediaFrame key={p.id}>
+                <MediaImage src={p.url} alt="" zoom="hover" />
+              </MediaFrame>
+            ))}
+          </div>
         )}
       </Stack>
 

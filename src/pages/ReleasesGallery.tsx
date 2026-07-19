@@ -17,12 +17,14 @@ import {
 } from "@dnd-kit/sortable";
 import type { Release } from "../types";
 import { useReleases, useStorageActions } from "../storage/hooks";
+import { useIsAuthenticated } from "../auth/hooks";
 import { Page } from "../components/layout/Page";
 import { Stack } from "../components/layout/Stack";
 import { PageHeader } from "../components/layout/PageHeader";
 import { Button } from "../components/ui/Button";
 import { Modal } from "../components/ui/Modal";
 import { ReleaseForm } from "../components/forms/ReleaseForm";
+import { ReleaseCard } from "../components/release/ReleaseCard";
 import { SortableReleaseCard } from "../components/release/SortableReleaseCard";
 import { grids } from "../styles/layouts";
 
@@ -43,6 +45,7 @@ export function ReleasesGallery() {
   const { t } = useTranslation();
   const releases = useReleases();
   const { upsertRelease, deleteRelease, reorderReleases } = useStorageActions();
+  const isAuth = useIsAuthenticated();
   const [editing, setEditing] = useState<Release | null>(null);
 
   const sensors = useSensors(
@@ -86,15 +89,17 @@ export function ReleasesGallery() {
         <PageHeader
           title={t("releases.title")}
           actions={
-            <Button variant="outline" size="sm" onClick={() => setEditing(makeEmptyRelease())}>
-              + {t("releases.addRelease")}
-            </Button>
+            isAuth ? (
+              <Button variant="outline" size="sm" onClick={() => setEditing(makeEmptyRelease())}>
+                + {t("releases.addRelease")}
+              </Button>
+            ) : undefined
           }
         />
 
         {releases.length === 0 ? (
           <p>{t("releases.empty")}</p>
-        ) : (
+        ) : isAuth ? (
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={releases.map((r) => r.id)} strategy={rectSortingStrategy}>
               <div className={grids.releases}>
@@ -112,6 +117,12 @@ export function ReleasesGallery() {
               </div>
             </SortableContext>
           </DndContext>
+        ) : (
+          <div className={grids.releases}>
+            {releases.map((release) => (
+              <ReleaseCard key={release.id} release={release} />
+            ))}
+          </div>
         )}
       </Stack>
 

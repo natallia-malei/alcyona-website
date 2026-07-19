@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useFeaturedRelease, useStorageActions } from "../storage/hooks";
+import { useIsAuthenticated } from "../auth/hooks";
 import { useLocalizedText } from "../hooks/useLocalizedText";
 import { PageTitle } from "../components/ui/PageTitle";
 import { Button } from "../components/ui/Button";
@@ -25,6 +26,7 @@ export function Hero() {
   const tr = useLocalizedText();
   const release = useFeaturedRelease();
   const { upsertRelease } = useStorageActions();
+  const isAuth = useIsAuthenticated();
   const [editing, setEditing] = useState(false);
 
   if (!release) return null;
@@ -37,10 +39,12 @@ export function Hero() {
   return (
     <>
       <HeroBackdrop coverUrl={release.coverUrl}>
-        <EditButton
-          onClick={() => setEditing(true)}
-          className="absolute top-20 right-4 md:right-12 z-20"
-        />
+        {isAuth && (
+          <EditButton
+            onClick={() => setEditing(true)}
+            className="absolute top-20 right-4 md:right-12 z-20"
+          />
+        )}
         <Container className="relative z-10 grid md:grid-cols-2 gap-12 items-center">
           <ReleaseCover coverUrl={release.coverUrl} alt={tr(release.title)} size="lg" />
           <div>

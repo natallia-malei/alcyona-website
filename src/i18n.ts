@@ -72,6 +72,14 @@ const resources = {
       },
       release: { tracks: "Треки", lyrics: "Текст", back: "Назад" },
       notFound: { title: "Страница не найдена", home: "На главную" },
+      auth: {
+        signIn: "Войти",
+        signOut: "Выйти",
+        email: "Email",
+        password: "Пароль",
+        showPassword: "Показать пароль",
+        hidePassword: "Скрыть пароль",
+      },
     },
   },
   en: {
@@ -143,6 +151,14 @@ const resources = {
       },
       release: { tracks: "Tracks", lyrics: "Lyrics", back: "Back" },
       notFound: { title: "Page not found", home: "Go home" },
+      auth: {
+        signIn: "Sign in",
+        signOut: "Sign out",
+        email: "Email",
+        password: "Password",
+        showPassword: "Show password",
+        hidePassword: "Hide password",
+      },
     },
   },
 };

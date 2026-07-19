@@ -17,20 +17,26 @@ import {
 } from "@dnd-kit/sortable";
 import type { LocalizedText } from "../types";
 import { useBand, useStorageActions, useVideos } from "../storage/hooks";
+import { useIsAuthenticated } from "../auth/hooks";
+import { useLocalizedText } from "../hooks/useLocalizedText";
 import { Page } from "../components/layout/Page";
 import { Stack } from "../components/layout/Stack";
 import { PageHeader } from "../components/layout/PageHeader";
 import { Button } from "../components/ui/Button";
 import { Modal } from "../components/ui/Modal";
+import { Eyebrow } from "../components/ui/Eyebrow";
+import { VideoEmbed } from "../components/ui/VideoEmbed";
 import { AddVideoForm } from "../components/forms/AddVideoForm";
 import { SortableVideo } from "../components/videos/SortableVideo";
 import { grids } from "../styles/layouts";
 
 export function VideosGallery() {
   const { t } = useTranslation();
+  const tr = useLocalizedText();
   const videos = useVideos();
   const band = useBand();
   const { addVideo, deleteVideo, reorderVideos } = useStorageActions();
+  const isAuth = useIsAuthenticated();
   const [adding, setAdding] = useState(false);
 
   const sensors = useSensors(
@@ -82,16 +88,18 @@ export function VideosGallery() {
                   {t("videos.youtubeChannel")}
                 </Button>
               )}
-              <Button variant="outline" size="sm" onClick={() => setAdding(true)}>
-                + {t("videos.addVideo")}
-              </Button>
+              {isAuth && (
+                <Button variant="outline" size="sm" onClick={() => setAdding(true)}>
+                  + {t("videos.addVideo")}
+                </Button>
+              )}
             </div>
           }
         />
 
         {videos.length === 0 ? (
           <p>{t("videos.empty")}</p>
-        ) : (
+        ) : isAuth ? (
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={videos.map((v) => v.id)} strategy={rectSortingStrategy}>
               <div className={grids.videos}>
@@ -107,6 +115,15 @@ export function VideosGallery() {
               </div>
             </SortableContext>
           </DndContext>
+        ) : (
+          <div className={grids.videos}>
+            {videos.map((v) => (
+              <Stack key={v.id} gap="sm">
+                <VideoEmbed youtubeId={v.youtubeId} title={tr(v.title)} />
+                <Eyebrow className="text-fg-muted">{tr(v.title)}</Eyebrow>
+              </Stack>
+            ))}
+          </div>
         )}
       </Stack>
 
