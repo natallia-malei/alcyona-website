@@ -68,10 +68,6 @@ const resources = {
           "Используются только технические cookies, необходимые для работы сайта. Аналитические системы и трекеры не подключены.",
         contactPrefix: "По вопросам обработки персональных данных пишите на ",
       },
-      admin: {
-        title: "Админ-панель",
-        note: "Данные хранятся в Local Storage этого браузера. Полноценные формы редактирования будут добавлены на следующем этапе.",
-      },
       release: { tracks: "Треки", lyrics: "Текст", back: "Назад" },
       notFound: { title: "Страница не найдена", home: "На главную" },
     },
@@ -140,10 +136,6 @@ const resources = {
         paragraph2:
           "Only technical cookies essential for the site to function are used. No analytics systems or trackers are connected.",
         contactPrefix: "For questions about personal data processing, write to ",
-      },
-      admin: {
-        title: "Admin Panel",
-        note: "Data is stored in this browser's Local Storage. Full editing forms will be added at the next stage.",
       },
       release: { tracks: "Tracks", lyrics: "Lyrics", back: "Back" },
       notFound: { title: "Page not found", home: "Go home" },
