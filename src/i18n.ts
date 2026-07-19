@@ -23,6 +23,7 @@ const resources = {
         title: "Подпишись на наш Telegram",
         subtitle: "Анонсы концертов, релизов и закулисье",
         cta: "Подписаться",
+        editTitle: "Редактировать Telegram-канал",
       },
       photos: {
         title: "Фотографии",
@@ -50,6 +51,7 @@ const resources = {
       booking: {
         title: "Букинг",
         subtitle: "По всем вопросам выступлений и сотрудничества",
+        editTitle: "Редактировать контакты",
       },
       footer: {
         rights: "© 2026, ALCYONA. All Rights Reserved.",
@@ -92,6 +94,7 @@ const resources = {
         title: "Join our Telegram",
         subtitle: "Concert announcements, releases, and behind the scenes",
         cta: "Subscribe",
+        editTitle: "Edit Telegram channel",
       },
       photos: {
         title: "Photos",
@@ -119,6 +122,7 @@ const resources = {
       booking: {
         title: "Booking",
         subtitle: "For all performance and collaboration inquiries",
+        editTitle: "Edit booking contacts",
       },
       footer: {
         rights: "© 2026, ALCYONA. All Rights Reserved.",
