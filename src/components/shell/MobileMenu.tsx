@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useBand } from "../../storage/hooks";
+import { useAuthActions, useIsAuthenticated } from "../../auth/hooks";
 import { NavLink } from "../ui/NavLink";
 import { SocialLinks } from "./SocialLinks";
 import { LangSwitcher } from "./LangSwitcher";
@@ -16,6 +17,13 @@ interface MobileMenuProps {
 export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const { t } = useTranslation();
   const band = useBand();
+  const isAuth = useIsAuthenticated();
+  const { signOut } = useAuthActions();
+
+  const handleSignOut = async () => {
+    await signOut();
+    onClose();
+  };
 
   useEffect(() => {
     if (!isOpen) return;
@@ -72,6 +80,15 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       <div className="flex flex-col items-center gap-6 p-8">
         <SocialLinks links={band.social} size="lg" />
         <LangSwitcher />
+        {isAuth && (
+          <button
+            type="button"
+            onClick={handleSignOut}
+            className={`${typography.eyebrow} ${interactive.accentHover}`}
+          >
+            {t("auth.signOut")}
+          </button>
+        )}
       </div>
     </div>
   );

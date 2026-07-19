@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useBand } from "../../storage/hooks";
+import { useAuthActions, useIsAuthenticated } from "../../auth/hooks";
 import { SocialLinks } from "./SocialLinks";
 import { LangSwitcher } from "./LangSwitcher";
 import { Logo } from "./Logo";
@@ -14,6 +15,8 @@ import { interactive } from "../../styles/interactive";
 export function Header() {
   const { t } = useTranslation();
   const band = useBand();
+  const isAuth = useIsAuthenticated();
+  const { signOut } = useAuthActions();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -33,6 +36,15 @@ export function Header() {
           <div className="hidden md:flex items-center gap-6">
             <SocialLinks links={band.social} size="sm" />
             <LangSwitcher />
+            {isAuth && (
+              <button
+                type="button"
+                onClick={() => signOut()}
+                className={`${typography.eyebrow} ${interactive.accentHover}`}
+              >
+                {t("auth.signOut")}
+              </button>
+            )}
           </div>
 
           <button
