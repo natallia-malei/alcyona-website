@@ -11,6 +11,9 @@ import { Login } from "./pages/Login";
 import { NotFound } from "./pages/NotFound";
 
 export const router = createBrowserRouter([
+  // /login is standalone: it doesn't need band/releases/etc. data,
+  // so it renders without the App's storage-loading gate.
+  { path: "/login", Component: Login },
   {
     path: "/",
     Component: App,
@@ -22,7 +25,6 @@ export const router = createBrowserRouter([
       { path: "photos", Component: PhotosGallery },
       { path: "videos", Component: VideosGallery },
       { path: "releases", Component: ReleasesGallery },
-      { path: "login", Component: Login },
       { path: "*", Component: NotFound },
     ],
   },

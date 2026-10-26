@@ -1,4 +1,5 @@
 import { useRef, useState, type ChangeEvent } from "react";
+import { useTranslation } from "react-i18next";
 import { uploadCover } from "../../supabase/storage";
 import { Input } from "./Input";
 import { typography } from "../../styles/typography";
@@ -16,6 +17,7 @@ export function ImageUploadInput({
   onChange,
   uploadFn = uploadCover,
 }: ImageUploadInputProps) {
+  const { t } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +32,7 @@ export function ImageUploadInput({
       const url = await uploadFn(file);
       onChange(url);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Upload failed");
+      setError(err instanceof Error ? err.message : t("admin.imageUploadFailed"));
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -50,7 +52,7 @@ export function ImageUploadInput({
           />
         ) : (
           <div className="w-24 h-24 bg-bg border border-white/10 rounded-sm flex items-center justify-center text-fg-muted text-xs">
-            No image
+            {t("admin.imageNone")}
           </div>
         )}
 
@@ -64,15 +66,15 @@ export function ImageUploadInput({
               disabled={uploading}
               className="hidden"
             />
-            {uploading ? "Uploading..." : "Upload new image"}
+            {uploading ? t("admin.imageUploading") : t("admin.imageUpload")}
           </label>
-          <p className={typography.caption}>JPG, PNG, GIF, WebP, SVG — up to 50 MB</p>
+          <p className={typography.caption}>{t("admin.imageFileHint")}</p>
           {error && <p className="text-sm text-red-400">{error}</p>}
         </div>
       </div>
 
       <Input
-        label="…or paste image URL directly"
+        label={t("admin.imagePasteUrl")}
         type="url"
         value={value}
         onChange={onChange}

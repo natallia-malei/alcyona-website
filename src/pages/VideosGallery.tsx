@@ -18,6 +18,8 @@ import {
 import type { LocalizedText } from "../types";
 import { useBand, useStorageActions, useVideos } from "../storage/hooks";
 import { useIsAuthenticated } from "../auth/hooks";
+import { useConfirm } from "../hooks/useConfirm";
+import { useToast } from "../hooks/useToast";
 import { useLocalizedText } from "../hooks/useLocalizedText";
 import { Page } from "../components/layout/Page";
 import { Stack } from "../components/layout/Stack";
@@ -37,6 +39,8 @@ export function VideosGallery() {
   const band = useBand();
   const { addVideo, deleteVideo, reorderVideos } = useStorageActions();
   const isAuth = useIsAuthenticated();
+  const confirm = useConfirm();
+  const toast = useToast();
   const [adding, setAdding] = useState(false);
 
   const sensors = useSensors(
@@ -50,11 +54,12 @@ export function VideosGallery() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm(t("videos.deleteConfirm"))) return;
+    const ok = await confirm({ message: t("videos.deleteConfirm"), variant: "danger" });
+    if (!ok) return;
     try {
       await deleteVideo(id);
     } catch (e) {
-      alert(e instanceof Error ? e.message : "Delete failed");
+      toast.error(e instanceof Error ? e.message : t("common.deleteFailed"));
     }
   };
 
@@ -70,7 +75,7 @@ export function VideosGallery() {
     try {
       await reorderVideos(next);
     } catch (e) {
-      alert(e instanceof Error ? e.message : "Reorder failed");
+      toast.error(e instanceof Error ? e.message : t("common.reorderFailed"));
     }
   };
 

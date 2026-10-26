@@ -7,7 +7,7 @@ import { useScrollOnRouteChange } from "./hooks/useScrollOnRouteChange";
 import { useStorageError, useStorageLoading } from "./storage/hooks";
 
 export default function App() {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   useScrollOnRouteChange();
   const loading = useStorageLoading();
   const error = useStorageError();
@@ -19,7 +19,7 @@ export default function App() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-fg-muted">Loading…</p>
+        <p className="text-fg-muted">{t("app.loading")}</p>
       </div>
     );
   }
@@ -28,7 +28,7 @@ export default function App() {
     return (
       <div className="min-h-screen flex items-center justify-center p-6">
         <p className="text-fg-muted text-center max-w-md">
-          Не удалось загрузить данные: {error}
+          {t("app.errorTitle")}: {error}
         </p>
       </div>
     );

@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 import type { BandInfo, SocialLinks } from "../../types";
 import { Input } from "../ui/Input";
 import { FormActions } from "../ui/FormActions";
@@ -26,6 +27,7 @@ export function BookingContactsForm({
   onSubmit,
   onCancel,
 }: BookingContactsFormProps) {
+  const { t } = useTranslation();
   const [band, setBand] = useState<BandInfo>(initialBand);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -47,7 +49,7 @@ export function BookingContactsForm({
     try {
       await onSubmit({ ...band, bookingEmail: band.bookingEmail.trim() });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to save");
+      setError(err instanceof Error ? err.message : t("common.saveFailed"));
       setSubmitting(false);
     }
   };
@@ -55,7 +57,7 @@ export function BookingContactsForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <Input
-        label="Booking email"
+        label={t("admin.bookingEmail")}
         type="email"
         value={band.bookingEmail}
         onChange={(bookingEmail) => setBand({ ...band, bookingEmail })}
@@ -64,7 +66,7 @@ export function BookingContactsForm({
       />
 
       <div>
-        <div className={`mb-3 ${typography.caption}`}>Social links</div>
+        <div className={`mb-3 ${typography.caption}`}>{t("admin.socialLinks")}</div>
         <div className="space-y-3">
           {SOCIAL_FIELDS.map(({ key, label, placeholder }) => (
             <Input

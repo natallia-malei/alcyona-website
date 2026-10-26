@@ -17,6 +17,8 @@ import {
 } from "@dnd-kit/sortable";
 import { usePhotos, useStorageActions } from "../storage/hooks";
 import { useIsAuthenticated } from "../auth/hooks";
+import { useConfirm } from "../hooks/useConfirm";
+import { useToast } from "../hooks/useToast";
 import { Page } from "../components/layout/Page";
 import { Stack } from "../components/layout/Stack";
 import { PageHeader } from "../components/layout/PageHeader";
@@ -33,6 +35,8 @@ export function PhotosGallery() {
   const photos = usePhotos();
   const { addPhoto, deletePhoto, reorderPhotos } = useStorageActions();
   const isAuth = useIsAuthenticated();
+  const confirm = useConfirm();
+  const toast = useToast();
   const [adding, setAdding] = useState(false);
 
   const sensors = useSensors(
@@ -46,11 +50,12 @@ export function PhotosGallery() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm(t("photos.deleteConfirm"))) return;
+    const ok = await confirm({ message: t("photos.deleteConfirm"), variant: "danger" });
+    if (!ok) return;
     try {
       await deletePhoto(id);
     } catch (e) {
-      alert(e instanceof Error ? e.message : "Delete failed");
+      toast.error(e instanceof Error ? e.message : t("common.deleteFailed"));
     }
   };
 
@@ -66,7 +71,7 @@ export function PhotosGallery() {
     try {
       await reorderPhotos(next);
     } catch (e) {
-      alert(e instanceof Error ? e.message : "Reorder failed");
+      toast.error(e instanceof Error ? e.message : t("common.reorderFailed"));
     }
   };
 
