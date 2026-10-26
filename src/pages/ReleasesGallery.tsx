@@ -18,6 +18,8 @@ import {
 import type { Release } from "../types";
 import { useReleases, useStorageActions } from "../storage/hooks";
 import { useIsAuthenticated } from "../auth/hooks";
+import { useConfirm } from "../hooks/useConfirm";
+import { useToast } from "../hooks/useToast";
 import { Page } from "../components/layout/Page";
 import { Stack } from "../components/layout/Stack";
 import { PageHeader } from "../components/layout/PageHeader";
@@ -46,6 +48,8 @@ export function ReleasesGallery() {
   const releases = useReleases();
   const { upsertRelease, deleteRelease, reorderReleases } = useStorageActions();
   const isAuth = useIsAuthenticated();
+  const confirm = useConfirm();
+  const toast = useToast();
   const [editing, setEditing] = useState<Release | null>(null);
 
   const sensors = useSensors(
@@ -59,11 +63,12 @@ export function ReleasesGallery() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm(t("releases.deleteConfirm"))) return;
+    const ok = await confirm({ message: t("releases.deleteConfirm"), variant: "danger" });
+    if (!ok) return;
     try {
       await deleteRelease(id);
     } catch (e) {
-      alert(e instanceof Error ? e.message : "Delete failed");
+      toast.error(e instanceof Error ? e.message : t("common.deleteFailed"));
     }
   };
 
@@ -77,7 +82,7 @@ export function ReleasesGallery() {
     try {
       await reorderReleases(next);
     } catch (e) {
-      alert(e instanceof Error ? e.message : "Reorder failed");
+      toast.error(e instanceof Error ? e.message : t("common.reorderFailed"));
     }
   };
 

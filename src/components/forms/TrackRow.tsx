@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { Track } from "../../types";
@@ -17,6 +18,7 @@ interface TrackRowProps {
 }
 
 export function TrackRow({ track, index, onChange, onDelete }: TrackRowProps) {
+  const { t } = useTranslation();
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: track.id,
   });
@@ -60,7 +62,7 @@ export function TrackRow({ track, index, onChange, onDelete }: TrackRowProps) {
           type="button"
           {...attributes}
           {...listeners}
-          aria-label="Drag to reorder"
+          aria-label={t("admin.trackDragHandle")}
           className="text-fg-muted hover:text-white cursor-grab active:cursor-grabbing p-1"
         >
           <GripIcon />
@@ -70,7 +72,7 @@ export function TrackRow({ track, index, onChange, onDelete }: TrackRowProps) {
         </span>
         <div className="ml-auto flex items-center gap-2">
           <label className="flex items-center gap-2">
-            <span className={typography.caption}>Duration</span>
+            <span className={typography.caption}>{t("admin.trackDuration")}</span>
             <input
               type="text"
               value={durationInput}
@@ -89,12 +91,12 @@ export function TrackRow({ track, index, onChange, onDelete }: TrackRowProps) {
             onClick={() => setShowLyrics((v) => !v)}
             className="text-xs text-fg-muted hover:text-white transition-colors px-2 py-1 border border-white/10 rounded-sm"
           >
-            {showLyrics ? "Hide lyrics" : "Lyrics"}
+            {showLyrics ? t("admin.trackHideLyrics") : t("admin.trackShowLyrics")}
           </button>
           <button
             type="button"
             onClick={onDelete}
-            aria-label="Delete track"
+            aria-label={t("admin.trackDelete")}
             className="p-1 text-fg-muted hover:text-accent transition-colors"
           >
             <CloseIcon className="w-4 h-4" />
@@ -103,14 +105,14 @@ export function TrackRow({ track, index, onChange, onDelete }: TrackRowProps) {
       </div>
 
       <LocalizedTextInput
-        label="Title"
+        label={t("admin.releaseTitle")}
         value={track.title}
         onChange={(title) => onChange({ ...track, title })}
       />
 
       {showLyrics && (
         <LocalizedTextInput
-          label="Lyrics"
+          label={t("admin.trackLyricsLabel")}
           value={track.lyrics}
           onChange={(lyrics) => onChange({ ...track, lyrics })}
           multiline

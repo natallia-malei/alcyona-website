@@ -6,13 +6,19 @@ import "./i18n";
 import { router } from "./router";
 import { StorageProvider } from "./storage/StorageProvider";
 import { AuthProvider } from "./auth/AuthProvider";
+import { ToastProvider } from "./components/ui/ToastProvider";
+import { ConfirmProvider } from "./components/ui/ConfirmProvider";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <AuthProvider>
-      <StorageProvider>
-        <RouterProvider router={router} />
-      </StorageProvider>
-    </AuthProvider>
+    <ToastProvider>
+      <ConfirmProvider>
+        <AuthProvider>
+          <StorageProvider>
+            <RouterProvider router={router} />
+          </StorageProvider>
+        </AuthProvider>
+      </ConfirmProvider>
+    </ToastProvider>
   </StrictMode>,
 );

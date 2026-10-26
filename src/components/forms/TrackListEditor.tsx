@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import {
   DndContext,
   closestCenter,
@@ -32,6 +33,7 @@ function makeEmptyTrack(): Track {
 }
 
 export function TrackListEditor({ tracks, onChange }: TrackListEditorProps) {
+  const { t } = useTranslation();
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
@@ -55,7 +57,9 @@ export function TrackListEditor({ tracks, onChange }: TrackListEditorProps) {
 
   return (
     <div>
-      <div className={`mb-3 ${typography.caption}`}>Tracks ({tracks.length})</div>
+      <div className={`mb-3 ${typography.caption}`}>
+        {t("admin.tracksCount", { count: tracks.length })}
+      </div>
 
       {tracks.length > 0 && (
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
@@ -80,7 +84,7 @@ export function TrackListEditor({ tracks, onChange }: TrackListEditorProps) {
         onClick={handleAdd}
         className="mt-3 w-full py-2 border border-dashed border-white/20 rounded-sm text-sm text-fg-muted hover:text-white hover:border-white/40 transition-colors"
       >
-        + Add track
+        + {t("admin.addTrack")}
       </button>
     </div>
   );

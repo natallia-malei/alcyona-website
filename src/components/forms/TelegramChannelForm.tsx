@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 import { Input } from "../ui/Input";
 import { FormActions } from "../ui/FormActions";
 
@@ -13,6 +14,7 @@ export function TelegramChannelForm({
   onSubmit,
   onCancel,
 }: TelegramChannelFormProps) {
+  const { t } = useTranslation();
   const [url, setUrl] = useState(initialValue);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -24,7 +26,7 @@ export function TelegramChannelForm({
     try {
       await onSubmit(url.trim());
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to save");
+      setError(err instanceof Error ? err.message : t("common.saveFailed"));
       setSubmitting(false);
     }
   };
@@ -32,7 +34,7 @@ export function TelegramChannelForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <Input
-        label="Telegram channel URL"
+        label={t("admin.telegramUrl")}
         type="url"
         value={url}
         onChange={setUrl}

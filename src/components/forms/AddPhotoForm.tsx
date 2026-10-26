@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { uploadPhoto } from "../../supabase/storage";
 import { ImageUploadInput } from "../ui/ImageUploadInput";
 import { FormActions } from "../ui/FormActions";
@@ -9,6 +10,7 @@ interface AddPhotoFormProps {
 }
 
 export function AddPhotoForm({ onSubmit, onCancel }: AddPhotoFormProps) {
+  const { t } = useTranslation();
   const [url, setUrl] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -26,12 +28,12 @@ export function AddPhotoForm({ onSubmit, onCancel }: AddPhotoFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <ImageUploadInput
-        label="Photo"
+        label={t("admin.photoLabel")}
         value={url}
         onChange={setUrl}
         uploadFn={uploadPhoto}
       />
-      <FormActions onCancel={onCancel} submitLabel="Add" submitting={submitting} />
+      <FormActions onCancel={onCancel} submitLabel={t("common.add")} submitting={submitting} />
     </form>
   );
 }

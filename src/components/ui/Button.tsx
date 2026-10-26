@@ -13,6 +13,7 @@ interface ButtonProps {
   href?: string;
   onClick?: () => void;
   type?: "button" | "submit";
+  disabled?: boolean;
 }
 
 const base =
@@ -38,12 +39,15 @@ export function Button({
   href,
   onClick,
   type = "button",
+  disabled = false,
 }: ButtonProps) {
-  const cls = `${base} ${variantClass[variant]} ${sizeClass[size]} ${className}`;
+  const cls = `${base} ${variantClass[variant]} ${sizeClass[size]} ${
+    disabled ? "opacity-50 cursor-not-allowed pointer-events-none" : ""
+  } ${className}`;
 
   if (to) {
     return (
-      <Link to={to} className={cls}>
+      <Link to={to} className={cls} aria-disabled={disabled}>
         {children}
       </Link>
     );
@@ -51,14 +55,20 @@ export function Button({
 
   if (href) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className={cls}>
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={cls}
+        aria-disabled={disabled}
+      >
         {children}
       </a>
     );
   }
 
   return (
-    <button type={type} onClick={onClick} className={cls}>
+    <button type={type} onClick={onClick} disabled={disabled} className={cls}>
       {children}
     </button>
   );
