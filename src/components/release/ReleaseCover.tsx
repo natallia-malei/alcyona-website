@@ -12,5 +12,7 @@ const sizeClass: Record<Size, string> = {
 };
 
 export function ReleaseCover({ coverUrl, alt, size = "md" }: ReleaseCoverProps) {
-  return <img src={coverUrl} alt={alt} className={sizeClass[size]} />;
+  return (
+    <img src={coverUrl} alt={alt} loading="lazy" decoding="async" className={sizeClass[size]} />
+  );
 }
