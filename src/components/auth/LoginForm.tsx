@@ -11,10 +11,11 @@ import { interactive } from "../../styles/interactive";
 type Mode = "link" | "password";
 
 interface LoginFormProps {
+  next: string; // page to return to after sign-in
   onSuccess?: () => void;
 }
 
-export function LoginForm({ onSuccess }: LoginFormProps) {
+export function LoginForm({ next, onSuccess }: LoginFormProps) {
   const { t } = useTranslation();
   const { signInWithPassword, signInWithMagicLink, signInWithGoogle } = useAuthActions();
   const [mode, setMode] = useState<Mode>("link");
@@ -44,7 +45,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         await signInWithPassword(email, password);
         onSuccess?.();
       } else {
-        await signInWithMagicLink(email);
+        await signInWithMagicLink(email, next);
         setLinkSentTo(email);
       }
     });
@@ -76,7 +77,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         variant="outline"
         size="md"
         className="w-full"
-        onClick={() => run(signInWithGoogle)}
+        onClick={() => run(() => signInWithGoogle(next))}
         disabled={submitting}
       >
         <GoogleIcon />

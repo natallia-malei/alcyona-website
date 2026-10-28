@@ -33,6 +33,41 @@ export function isProfileComplete(profile: Profile): boolean {
   return [profile.firstName, profile.lastName, profile.phone].every((v) => v.trim() !== "");
 }
 
+// Complete + consent to personal data processing — required to book (013)
+export function isProfileReady(profile: Profile): boolean {
+  return isProfileComplete(profile) && profile.privacyConsentAt !== null;
+}
+
+export interface Account {
+  name: string; // "First Last", or email until the profile is filled in
+  email: string;
+  avatarUrl: string | null; // Google photo; null → initials
+  initials: string;
+}
+
+// What the header shows for the signed-in user
+export function useAccount(): Account | null {
+  const { session, profile } = useAuth();
+  if (!session) return null;
+
+  const email = session.user.email ?? "";
+  const meta = session.user.user_metadata as { avatar_url?: string; picture?: string };
+  const fullName = [profile?.firstName, profile?.lastName].filter(Boolean).join(" ").trim();
+  const initials = fullName
+    ? fullName
+        .split(/\s+/)
+        .map((part) => part[0])
+        .join("")
+    : email.slice(0, 1);
+
+  return {
+    name: fullName || email,
+    email,
+    avatarUrl: meta.avatar_url ?? meta.picture ?? null,
+    initials: initials.slice(0, 2).toUpperCase(),
+  };
+}
+
 export function useAuthActions() {
   const { signInWithPassword, signInWithMagicLink, signInWithGoogle, signOut, updateProfile } =
     useAuth();
