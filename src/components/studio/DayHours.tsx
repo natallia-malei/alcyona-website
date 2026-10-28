@@ -10,7 +10,7 @@ import {
   type HourState,
   type SlotContext,
 } from "../../utils/studioTime";
-import { slotStyles, unavailableLabel } from "./slotStyles";
+import { slotStyles, statusTextClass, unavailableLabel } from "./slotStyles";
 import { typography } from "../../styles/typography";
 
 interface DayHoursProps {
@@ -86,7 +86,9 @@ export function DayHours({ day, ctx, onPick }: DayHoursProps) {
                   <span className="block text-sm truncate">{bookingTitle(booking, t)}</span>
                   {/* status / purpose come only for the author and admin (get_calendar decides) */}
                   {booking.status && (
-                    <span className={`block ${typography.eyebrowXs} text-[10px] text-accent`}>
+                    <span
+                      className={`block ${typography.eyebrowXs} text-[10px] ${statusTextClass[booking.status]}`}
+                    >
                       {t(`studio.status.${booking.status}`)}
                     </span>
                   )}

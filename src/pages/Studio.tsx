@@ -26,6 +26,7 @@ import { DayHours } from "../components/studio/DayHours";
 import { WeekGrid } from "../components/studio/WeekGrid";
 import { BookingSheet } from "../components/studio/BookingSheet";
 import { MyBookings } from "../components/studio/MyBookings";
+import { MyBookingsSummary } from "../components/studio/MyBookingsSummary";
 import { typography } from "../styles/typography";
 
 const STUDIO_PATH = "/studio";
@@ -128,6 +129,9 @@ export function Studio() {
           <SectionTitle size="sm">{t("studio.calendar.title")}</SectionTitle>
           {data && !authLoading && !viewer.isAdmin && (
             <BookingRules settings={data.settings} needsReview={!viewer.trusted} />
+          )}
+          {isAuth && data && !authLoading && (
+            <MyBookingsSummary bookings={data.myBookings} now={data.now} />
           )}
           {!authLoading && gate && (
             <GateNotice gate={gate} onOpenProfile={() => setIsProfileOpen(true)} />

@@ -11,6 +11,7 @@ import { bookingErrorKey, cancelBooking } from "../../supabase/bookings";
 import { useConfirm } from "../../hooks/useConfirm";
 import { useToast } from "../../hooks/useToast";
 import { Button } from "../ui/Button";
+import { statusTextClass } from "./slotStyles";
 import { SectionTitle } from "../ui/SectionTitle";
 import { typography } from "../../styles/typography";
 
@@ -25,7 +26,7 @@ interface MyBookingsProps {
 
 const statusClass: Record<MyBooking["status"], string> = {
   confirmed: "bg-accent/20 border border-accent/60 text-white",
-  pending: "border border-dashed border-accent text-accent",
+  pending: `border border-dashed border-current ${statusTextClass.pending}`,
   cancelled: "border border-white/10 text-fg-muted",
   rejected: "border border-red-900/60 text-red-400",
   expired: "border border-white/10 text-fg-muted",

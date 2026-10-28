@@ -12,7 +12,7 @@ import {
   type HourSlot,
   type SlotContext,
 } from "../../utils/studioTime";
-import { slotStyles, unavailableLabel } from "./slotStyles";
+import { slotStyles, statusTextClass, unavailableLabel } from "./slotStyles";
 import { typography } from "../../styles/typography";
 import { interactive } from "../../styles/interactive";
 
@@ -108,7 +108,9 @@ export function WeekGrid({
         >
           <span className="font-semibold truncate">{title}</span>
           <span className="truncate opacity-80">{time}</span>
-          {status && <span className="truncate text-accent">{status}</span>}
+          {status && b.status && (
+            <span className={`truncate ${statusTextClass[b.status]}`}>{status}</span>
+          )}
           {b.purpose && <span className="truncate opacity-70">{b.purpose}</span>}
         </div>
       );

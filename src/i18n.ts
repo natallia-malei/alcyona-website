@@ -115,6 +115,11 @@ const resources = {
         my: {
           title: "Мои брони",
           empty: "Предстоящих броней нет",
+          summary_one: "У вас {{count}} бронь",
+          summary_few: "У вас {{count}} брони",
+          summary_many: "У вас {{count}} броней",
+          summary_other: "У вас {{count}} брони",
+          nearest: "ближайшая {{when}}",
           limit: "Одновременно можно иметь до {{count}} будущих броней",
           pendingUntil: "Ждёт подтверждения до {{time}}",
           cancel: "Отменить",
@@ -427,6 +432,9 @@ const resources = {
         my: {
           title: "My bookings",
           empty: "No upcoming bookings",
+          summary_one: "You have {{count}} booking",
+          summary_other: "You have {{count}} bookings",
+          nearest: "next {{when}}",
           limit: "You can have up to {{count}} upcoming bookings at a time",
           pendingUntil: "Awaiting confirmation until {{time}}",
           cancel: "Cancel",
