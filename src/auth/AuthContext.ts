@@ -11,6 +11,7 @@ export interface AuthContextValue {
   signInWithGoogle: (next: string) => Promise<void>;
   signOut: () => Promise<void>;
   updateProfile: (input: ProfileInput) => Promise<void>;
+  refreshProfile: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);

@@ -75,3 +75,47 @@ export type ProfileInput = Pick<
   Profile,
   "firstName" | "lastName" | "phone" | "telegramUsername" | "showFullName" | "privacyConsentAt"
 >;
+
+// ----- Studio bookings (012) -----
+
+export type BookingStatus = "pending" | "confirmed" | "cancelled" | "rejected" | "expired";
+
+// Whose booking it is; null for guests (not signed in) — they see only "Busy"
+export type BookingKind = "client" | "guest" | "admin" | "deleted";
+
+// An active booking as the calendar shows it (get_calendar).
+// title / status / purpose are null when the viewer may not see them.
+export interface CalendarBooking {
+  id: string;
+  startsAt: Date;
+  endsAt: Date;
+  kind: BookingKind | null;
+  title: string | null;
+  isMine: boolean;
+  status: "pending" | "confirmed" | null;
+  purpose: string | null;
+}
+
+// The signed-in client's own booking ("My bookings")
+export interface MyBooking {
+  id: string;
+  startsAt: Date;
+  endsAt: Date;
+  status: BookingStatus;
+  expiresAt: Date | null; // pending request turns into 'expired' at this moment
+  purpose: string;
+}
+
+// Booking rules (single row, edited by admin in stage 3). Hours are Europe/Minsk.
+export interface StudioSettings {
+  openHour: number;
+  closeHour: number; // 24 = until midnight
+  minBookingHours: number;
+  maxBookingHours: number;
+  bookingHorizonWeeks: number;
+  maxActiveBookings: number;
+  requestTtlHours: number;
+  requestCutoffHours: number;
+  freeCancelHours: number;
+  noShowLimit: number;
+}

@@ -33,9 +33,12 @@ export function isProfileComplete(profile: Profile): boolean {
   return [profile.firstName, profile.lastName, profile.phone].every((v) => v.trim() !== "");
 }
 
-// Complete + consent to personal data processing — required to book (013)
+// Complete + consent to personal data processing — required to book (013).
+// Admin is the data operator and needs no consent, same as in create_booking.
 export function isProfileReady(profile: Profile): boolean {
-  return isProfileComplete(profile) && profile.privacyConsentAt !== null;
+  return (
+    isProfileComplete(profile) && (profile.role === "admin" || profile.privacyConsentAt !== null)
+  );
 }
 
 export interface Account {
@@ -69,7 +72,20 @@ export function useAccount(): Account | null {
 }
 
 export function useAuthActions() {
-  const { signInWithPassword, signInWithMagicLink, signInWithGoogle, signOut, updateProfile } =
-    useAuth();
-  return { signInWithPassword, signInWithMagicLink, signInWithGoogle, signOut, updateProfile };
+  const {
+    signInWithPassword,
+    signInWithMagicLink,
+    signInWithGoogle,
+    signOut,
+    updateProfile,
+    refreshProfile,
+  } = useAuth();
+  return {
+    signInWithPassword,
+    signInWithMagicLink,
+    signInWithGoogle,
+    signOut,
+    updateProfile,
+    refreshProfile,
+  };
 }

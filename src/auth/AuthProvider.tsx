@@ -101,6 +101,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
     [userId],
   );
 
+  // Re-reads fields admin may change meanwhile (trusted, blocked, role).
+  // A result for a user who has since signed out / switched is dropped.
+  const refreshProfile = useCallback(async () => {
+    if (!userId) return;
+    const next = await fetchProfile(userId);
+    setLoaded((prev) => (prev?.userId === userId ? { userId, profile: next } : prev));
+  }, [userId]);
+
   const value = useMemo<AuthContextValue>(
     () => ({
       session,
@@ -111,6 +119,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       signInWithGoogle,
       signOut,
       updateProfile,
+      refreshProfile,
     }),
     [
       session,
@@ -122,6 +131,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       signInWithGoogle,
       signOut,
       updateProfile,
+      refreshProfile,
     ],
   );
 
