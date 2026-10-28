@@ -17,7 +17,7 @@ import {
 } from "@dnd-kit/sortable";
 import type { Release } from "../types";
 import { useReleases, useStorageActions } from "../storage/hooks";
-import { useIsAuthenticated } from "../auth/hooks";
+import { useIsAdmin } from "../auth/hooks";
 import { useConfirm } from "../hooks/useConfirm";
 import { useToast } from "../hooks/useToast";
 import { Page } from "../components/layout/Page";
@@ -47,7 +47,7 @@ export function ReleasesGallery() {
   const { t } = useTranslation();
   const releases = useReleases();
   const { upsertRelease, deleteRelease, reorderReleases } = useStorageActions();
-  const isAuth = useIsAuthenticated();
+  const isAdmin = useIsAdmin();
   const confirm = useConfirm();
   const toast = useToast();
   const [editing, setEditing] = useState<Release | null>(null);
@@ -94,7 +94,7 @@ export function ReleasesGallery() {
         <PageHeader
           title={t("releases.title")}
           actions={
-            isAuth ? (
+            isAdmin ? (
               <Button variant="outline" size="sm" onClick={() => setEditing(makeEmptyRelease())}>
                 + {t("releases.addRelease")}
               </Button>
@@ -104,7 +104,7 @@ export function ReleasesGallery() {
 
         {releases.length === 0 ? (
           <p>{t("releases.empty")}</p>
-        ) : isAuth ? (
+        ) : isAdmin ? (
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={releases.map((r) => r.id)} strategy={rectSortingStrategy}>
               <div className={grids.releases}>

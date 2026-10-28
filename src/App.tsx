@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Header } from "./components/shell/Header";
 import { Footer } from "./components/shell/Footer";
+import { ProfileOnboarding } from "./components/auth/ProfileOnboarding";
 import { useScrollOnRouteChange } from "./hooks/useScrollOnRouteChange";
 import { useStorageError, useStorageLoading } from "./storage/hooks";
 
@@ -41,6 +42,7 @@ export default function App() {
         <Outlet />
       </main>
       <Footer />
+      <ProfileOnboarding />
     </div>
   );
 }

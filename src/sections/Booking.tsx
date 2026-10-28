@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { BandInfo } from "../types";
 import { useBand, useStorageActions } from "../storage/hooks";
-import { useIsAuthenticated } from "../auth/hooks";
+import { useIsAdmin } from "../auth/hooks";
 import { SocialLinks } from "../components/shell/SocialLinks";
 import { CTASection } from "../components/layout/CTASection";
 import { BookingEmail } from "../components/booking/BookingEmail";
@@ -15,7 +15,7 @@ export function Booking() {
   const { t } = useTranslation();
   const band = useBand();
   const { updateBand } = useStorageActions();
-  const isAuth = useIsAuthenticated();
+  const isAdmin = useIsAdmin();
   const [editing, setEditing] = useState(false);
 
   const handleSave = async (next: BandInfo) => {
@@ -29,7 +29,7 @@ export function Booking() {
         id="booking"
         title={t("booking.title")}
         subtitle={t("booking.subtitle")}
-        action={isAuth ? <EditButton onClick={() => setEditing(true)} /> : undefined}
+        action={isAdmin ? <EditButton onClick={() => setEditing(true)} /> : undefined}
       >
         <BookingEmail email={band.bookingEmail} />
         <div className={flex.center}>
