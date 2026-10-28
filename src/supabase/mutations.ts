@@ -1,5 +1,6 @@
-import type { BandInfo, Photo, Release, Track, Video } from "../types";
+import type { BandInfo, Photo, Profile, ProfileInput, Release, Track, Video } from "../types";
 import { supabase } from "./client";
+import { PROFILE_COLUMNS, rowToProfile, type ProfileRow } from "./queries";
 
 // ----- Releases -----
 
@@ -124,4 +125,25 @@ export async function updateBand(band: BandInfo): Promise<void> {
     .eq("id", 1);
 
   if (error) throw error;
+}
+
+// ----- Profiles -----
+
+// Empty optional fields go to NULL (the DB validates telegram_username format).
+export async function updateProfile(userId: string, input: ProfileInput): Promise<Profile> {
+  const { data, error } = await supabase
+    .from("profiles")
+    .update({
+      first_name: input.firstName,
+      last_name: input.lastName,
+      phone: input.phone,
+      telegram_username: input.telegramUsername || null,
+      show_full_name: input.showFullName,
+    })
+    .eq("id", userId)
+    .select(PROFILE_COLUMNS)
+    .single();
+
+  if (error) throw error;
+  return rowToProfile(data as ProfileRow);
 }

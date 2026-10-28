@@ -16,7 +16,7 @@ import {
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
 import { usePhotos, useStorageActions } from "../storage/hooks";
-import { useIsAuthenticated } from "../auth/hooks";
+import { useIsAdmin } from "../auth/hooks";
 import { useConfirm } from "../hooks/useConfirm";
 import { useToast } from "../hooks/useToast";
 import { Page } from "../components/layout/Page";
@@ -34,7 +34,7 @@ export function PhotosGallery() {
   const { t } = useTranslation();
   const photos = usePhotos();
   const { addPhoto, deletePhoto, reorderPhotos } = useStorageActions();
-  const isAuth = useIsAuthenticated();
+  const isAdmin = useIsAdmin();
   const confirm = useConfirm();
   const toast = useToast();
   const [adding, setAdding] = useState(false);
@@ -81,7 +81,7 @@ export function PhotosGallery() {
         <PageHeader
           title={t("photos.title")}
           actions={
-            isAuth ? (
+            isAdmin ? (
               <Button variant="outline" size="sm" onClick={() => setAdding(true)}>
                 + {t("photos.addPhoto")}
               </Button>
@@ -91,7 +91,7 @@ export function PhotosGallery() {
 
         {photos.length === 0 ? (
           <p>{t("photos.empty")}</p>
-        ) : isAuth ? (
+        ) : isAdmin ? (
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={photos.map((p) => p.id)} strategy={rectSortingStrategy}>
               <div className={grids.photos}>

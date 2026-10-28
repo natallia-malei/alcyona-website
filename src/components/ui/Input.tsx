@@ -6,7 +6,7 @@ interface InputProps {
   onChange: (value: string) => void;
   onBlur?: () => void;
   placeholder?: string;
-  type?: "text" | "email" | "url" | "date" | "number";
+  type?: "text" | "email" | "tel" | "url" | "date" | "number";
   required?: boolean;
   className?: string;
 }

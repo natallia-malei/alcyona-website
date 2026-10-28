@@ -1,4 +1,4 @@
-import type { BandInfo, Photo, Release, Track, Video } from "../types";
+import type { BandInfo, Photo, Profile, Release, Track, Video } from "../types";
 import { supabase } from "./client";
 
 interface ReleaseRow {
@@ -39,6 +39,37 @@ interface BandRow {
   booking_email: string;
   telegram_channel: string;
   social: BandInfo["social"];
+}
+
+export interface ProfileRow {
+  id: string;
+  first_name: string | null;
+  last_name: string | null;
+  phone: string | null;
+  telegram_username: string | null;
+  show_full_name: boolean;
+  role: Profile["role"];
+  trusted: boolean;
+  no_show_count: number;
+  blocked: boolean;
+}
+
+export const PROFILE_COLUMNS =
+  "id, first_name, last_name, phone, telegram_username, show_full_name, role, trusted, no_show_count, blocked";
+
+export function rowToProfile(row: ProfileRow): Profile {
+  return {
+    id: row.id,
+    firstName: row.first_name ?? "",
+    lastName: row.last_name ?? "",
+    phone: row.phone ?? "",
+    telegramUsername: row.telegram_username ?? "",
+    showFullName: row.show_full_name,
+    role: row.role,
+    trusted: row.trusted,
+    noShowCount: row.no_show_count,
+    blocked: row.blocked,
+  };
 }
 
 function rowToTrack(row: TrackRow): Track {
@@ -113,4 +144,15 @@ export async function fetchBand(): Promise<BandInfo> {
     telegramChannel: row.telegram_channel,
     social: row.social,
   };
+}
+
+export async function fetchProfile(userId: string): Promise<Profile | null> {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select(PROFILE_COLUMNS)
+    .eq("id", userId)
+    .maybeSingle();
+
+  if (error) throw error;
+  return data ? rowToProfile(data as ProfileRow) : null;
 }

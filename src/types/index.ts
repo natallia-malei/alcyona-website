@@ -53,3 +53,24 @@ export interface BandInfo {
   telegramChannel: string;
   social: SocialLinks;
 }
+
+export type UserRole = "client" | "admin";
+
+export interface Profile {
+  id: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  telegramUsername: string;
+  showFullName: boolean;
+  role: UserRole;
+  trusted: boolean;
+  noShowCount: number;
+  blocked: boolean;
+}
+
+// Fields the user fills in themselves (onboarding / profile form)
+export type ProfileInput = Pick<
+  Profile,
+  "firstName" | "lastName" | "phone" | "telegramUsername" | "showFullName"
+>;

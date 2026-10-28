@@ -17,7 +17,7 @@ import {
 } from "@dnd-kit/sortable";
 import type { LocalizedText } from "../types";
 import { useBand, useStorageActions, useVideos } from "../storage/hooks";
-import { useIsAuthenticated } from "../auth/hooks";
+import { useIsAdmin } from "../auth/hooks";
 import { useConfirm } from "../hooks/useConfirm";
 import { useToast } from "../hooks/useToast";
 import { useLocalizedText } from "../hooks/useLocalizedText";
@@ -38,7 +38,7 @@ export function VideosGallery() {
   const videos = useVideos();
   const band = useBand();
   const { addVideo, deleteVideo, reorderVideos } = useStorageActions();
-  const isAuth = useIsAuthenticated();
+  const isAdmin = useIsAdmin();
   const confirm = useConfirm();
   const toast = useToast();
   const [adding, setAdding] = useState(false);
@@ -93,7 +93,7 @@ export function VideosGallery() {
                   {t("videos.youtubeChannel")}
                 </Button>
               )}
-              {isAuth && (
+              {isAdmin && (
                 <Button variant="outline" size="sm" onClick={() => setAdding(true)}>
                   + {t("videos.addVideo")}
                 </Button>
@@ -104,7 +104,7 @@ export function VideosGallery() {
 
         {videos.length === 0 ? (
           <p>{t("videos.empty")}</p>
-        ) : isAuth ? (
+        ) : isAdmin ? (
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={videos.map((v) => v.id)} strategy={rectSortingStrategy}>
               <div className={grids.videos}>

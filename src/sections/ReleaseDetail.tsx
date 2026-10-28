@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import type { Release } from "../types";
 import { useLocalizedText } from "../hooks/useLocalizedText";
 import { useStorageActions } from "../storage/hooks";
-import { useIsAuthenticated } from "../auth/hooks";
+import { useIsAdmin } from "../auth/hooks";
 import { PageTitle } from "../components/ui/PageTitle";
 import { SectionTitle } from "../components/ui/SectionTitle";
 import { Eyebrow } from "../components/ui/Eyebrow";
@@ -23,7 +23,7 @@ export function ReleaseDetail({ release }: ReleaseDetailProps) {
   const { t } = useTranslation();
   const tr = useLocalizedText();
   const { upsertRelease } = useStorageActions();
-  const isAuth = useIsAuthenticated();
+  const isAdmin = useIsAdmin();
   const [editing, setEditing] = useState(false);
 
   const handleSave = async (next: Release) => {
@@ -33,7 +33,7 @@ export function ReleaseDetail({ release }: ReleaseDetailProps) {
 
   return (
     <>
-      {isAuth && (
+      {isAdmin && (
         <div className="flex justify-end mt-8">
           <EditButton onClick={() => setEditing(true)} />
         </div>
