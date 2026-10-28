@@ -77,6 +77,12 @@ const resources = {
           noFreeHours: "На этот день свободного времени нет",
           loadFailed: "Не удалось загрузить календарь",
           retry: "Повторить",
+          rules:
+            "Бронь от {{min}} до {{max}} ч · до {{limit}} будущих броней · бесплатная отмена не позднее чем за {{cancel}} ч до начала",
+          rulesRequest:
+            "Новые клиенты отправляют заявку — администратор подтвердит её в течение {{count}} ч.",
+          dayFew: "мало свободного времени",
+          dayNone: "нет свободного времени",
         },
         status: {
           pending: "На рассмотрении",
@@ -92,6 +98,7 @@ const resources = {
           hours_few: "{{count}} часа",
           hours_many: "{{count}} часов",
           hours_other: "{{count}} часа",
+          until: "до {{time}}",
           purpose: "Что будем делать",
           purposePlaceholder: "Например: репетиция перед концертом, запись вокала",
           purposeHint: "Видите только вы и администратор",
@@ -382,6 +389,12 @@ const resources = {
           noFreeHours: "No free time on this day",
           loadFailed: "Could not load the calendar",
           retry: "Retry",
+          rules:
+            "{{min}}–{{max}} h per booking · up to {{limit}} upcoming bookings · free cancellation up to {{cancel}} h before the start",
+          rulesRequest:
+            "New clients send a request — the admin will confirm it within {{count}} h.",
+          dayFew: "little free time",
+          dayNone: "no free time",
         },
         status: {
           pending: "Pending",
@@ -395,6 +408,7 @@ const resources = {
           duration: "Duration",
           hours_one: "{{count}} hour",
           hours_other: "{{count}} hours",
+          until: "until {{time}}",
           purpose: "What we'll do",
           purposePlaceholder: "E.g. rehearsal before a gig, vocal recording",
           purposeHint: "Only you and the admin can see this",

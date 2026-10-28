@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
 import { useTranslation } from "react-i18next";
 import type { CalendarBooking, Locale } from "../../types";
 import {
@@ -71,6 +71,14 @@ export function WeekGrid({
   const locale = (i18n.language as Locale) ?? "ru";
   const days = daysFrom(weekStart, 7);
   const hours = dayHours(ctx.settings);
+  // Hovered free hour: highlights the shortest booking that would start there
+  const [hovered, setHovered] = useState<{ day: DayKey; hour: number } | null>(null);
+  const previewHours = ctx.viewer.isAdmin ? 1 : ctx.settings.minBookingHours;
+  const inPreview = (day: DayKey, hour: number) =>
+    hovered !== null &&
+    hovered.day === day &&
+    hour >= hovered.hour &&
+    hour < hovered.hour + previewHours;
 
   const rangeLabel = `${formatDay(days[0], "d MMM", locale)} – ${formatDay(days[6], "d MMM", locale)}`;
 
@@ -117,9 +125,17 @@ export function WeekGrid({
           type="button"
           style={place(column, cell.row)}
           onClick={() => onPick(slot)}
+          onMouseEnter={() => setHovered({ day, hour: slot.hour })}
+          onMouseLeave={() => setHovered(null)}
+          onFocus={() => setHovered({ day, hour: slot.hour })}
+          onBlur={() => setHovered(null)}
           aria-label={`${t("studio.calendar.free")}: ${dateLabel}, ${timeRange}`}
-          className={`${slotStyles.free} rounded-sm text-xs focus-visible:outline-2 focus-visible:outline-accent`}
-        />
+          className={`${inPreview(day, slot.hour) ? slotStyles.preview : slotStyles.free} rounded-sm text-xs focus-visible:outline-2 focus-visible:outline-accent`}
+        >
+          {hovered?.day === day && hovered.hour === slot.hour && (
+            <span aria-hidden>+ {hourLabel(slot.hour)}</span>
+          )}
+        </button>
       );
     }
 
@@ -129,7 +145,7 @@ export function WeekGrid({
         key={`${day}-${slot.hour}`}
         style={place(column, cell.row)}
         title={labelKey ? t(labelKey, { count: ctx.settings.minBookingHours }) : undefined}
-        className={`${slotStyles.unavailable} rounded-sm`}
+        className={`${inPreview(day, slot.hour) ? slotStyles.preview : slotStyles.unavailable} rounded-sm`}
       />
     );
   };

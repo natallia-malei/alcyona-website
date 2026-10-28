@@ -5,7 +5,15 @@ import { isProfileReady, useAuthLoading, useIsAuthenticated, useProfile } from "
 import { loginPath } from "../auth/redirect";
 import { useStudioCalendar } from "../hooks/useStudioCalendar";
 import { useToast } from "../hooks/useToast";
-import { addDays, bookableDays, dayKeyOf, type DayKey, type HourSlot } from "../utils/studioTime";
+import type { StudioSettings } from "../types";
+import {
+  addDays,
+  bookableDays,
+  dayAvailability,
+  dayKeyOf,
+  type DayKey,
+  type HourSlot,
+} from "../utils/studioTime";
 import { PageTitle } from "../components/ui/PageTitle";
 import { SectionTitle } from "../components/ui/SectionTitle";
 import { Button } from "../components/ui/Button";
@@ -77,12 +85,19 @@ export function Studio() {
     const days = bookableDays(today, data.settings);
     const day = selectedDay && days.includes(selectedDay) ? selectedDay : today;
     const week = weekStart ?? data.from;
+    const availability = Object.fromEntries(days.map((d) => [d, dayAvailability(d, slotContext)]));
 
     return (
       <>
         <div className="md:hidden space-y-4">
           <p className={typography.caption}>{t("studio.calendar.timezone")}</p>
-          <DateStrip days={days} selected={day} today={today} onSelect={setSelectedDay} />
+          <DateStrip
+            days={days}
+            selected={day}
+            today={today}
+            availability={availability}
+            onSelect={setSelectedDay}
+          />
           <DayHours day={day} ctx={slotContext} onPick={handlePick} />
         </div>
         <div className="hidden md:block">
@@ -111,6 +126,9 @@ export function Studio() {
 
         <section className="space-y-6">
           <SectionTitle size="sm">{t("studio.calendar.title")}</SectionTitle>
+          {data && !authLoading && !viewer.isAdmin && (
+            <BookingRules settings={data.settings} needsReview={!viewer.trusted} />
+          )}
           {!authLoading && gate && (
             <GateNotice gate={gate} onOpenProfile={() => setIsProfileOpen(true)} />
           )}
@@ -141,6 +159,33 @@ export function Studio() {
       )}
       <ProfileModal open={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
     </Page>
+  );
+}
+
+// The rules up front, so people don't learn them from error messages
+function BookingRules({
+  settings,
+  needsReview,
+}: {
+  settings: StudioSettings;
+  needsReview: boolean; // guest or not-yet-trusted client: bookings are requests
+}) {
+  const { t } = useTranslation();
+
+  return (
+    <div className={`space-y-1 ${typography.caption}`}>
+      <p>
+        {t("studio.calendar.rules", {
+          min: settings.minBookingHours,
+          max: settings.maxBookingHours,
+          limit: settings.maxActiveBookings,
+          cancel: settings.freeCancelHours,
+        })}
+      </p>
+      {needsReview && (
+        <p>{t("studio.calendar.rulesRequest", { count: settings.requestTtlHours })}</p>
+      )}
+    </div>
   );
 }
 

@@ -213,6 +213,12 @@ function BookingForm({ titleId, slot, ctx, onClose, onDone }: BookingFormProps) 
                 }`}
               >
                 {t("studio.sheet.hours", { count: h })}
+                <span className="opacity-60">
+                  {" · "}
+                  {t("studio.sheet.until", {
+                    time: `${String(slot.hour + h).padStart(2, "0")}:00`,
+                  })}
+                </span>
               </button>
             );
           })}

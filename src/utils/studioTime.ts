@@ -159,6 +159,15 @@ export function getDaySlots(day: DayKey, ctx: SlotContext): HourSlot[] {
   return dayHours(ctx.settings).map((hour) => getHourSlot(day, hour, ctx));
 }
 
+// How much bookable time a day has — for the date strip indicator
+export type DayAvailability = "many" | "few" | "none";
+
+export function dayAvailability(day: DayKey, ctx: SlotContext): DayAvailability {
+  const free = getDaySlots(day, ctx).filter((s) => s.state === "free").length;
+  if (free === 0) return "none";
+  return free <= 4 ? "few" : "many";
+}
+
 // What the calendar writes on a booking block
 export function bookingTitle(booking: CalendarBooking, t: TFunction): string {
   if (booking.title) return booking.title;
