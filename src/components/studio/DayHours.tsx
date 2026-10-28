@@ -2,7 +2,6 @@ import { useTranslation } from "react-i18next";
 import type { CalendarBooking } from "../../types";
 import {
   bookingTitle,
-  formatStudio,
   formatTimeRange,
   getDaySlots,
   hourStart,
@@ -20,11 +19,14 @@ interface DayHoursProps {
   onPick: (slot: HourSlot) => void;
 }
 
-// Consecutive hours of one booking, or of one unavailable state, collapse into a single row
+// Bookings and runs of past hours are rows; the hours you can start from
+// (and the too-short ones between them) are a grid of chips
 type Row =
   | { kind: "booking"; booking: CalendarBooking; mine: boolean }
-  | { kind: "free"; slot: HourSlot }
-  | { kind: "unavailable"; state: HourState; first: HourSlot; last: HourSlot };
+  | { kind: "unavailable"; state: HourState; first: HourSlot; last: HourSlot }
+  | { kind: "hours"; slots: HourSlot[] };
+
+const isChip = (slot: HourSlot) => slot.state === "free" || slot.state === "too_short";
 
 function toRows(slots: HourSlot[]): Row[] {
   const rows: Row[] = [];
@@ -33,8 +35,9 @@ function toRows(slots: HourSlot[]): Row[] {
     if (slot.booking) {
       if (prev?.kind === "booking" && prev.booking.id === slot.booking.id) continue;
       rows.push({ kind: "booking", booking: slot.booking, mine: slot.state === "mine" });
-    } else if (slot.state === "free") {
-      rows.push({ kind: "free", slot });
+    } else if (isChip(slot)) {
+      if (prev?.kind === "hours") prev.slots.push(slot);
+      else rows.push({ kind: "hours", slots: [slot] });
     } else if (prev?.kind === "unavailable" && prev.state === slot.state) {
       prev.last = slot;
     } else {
@@ -44,22 +47,27 @@ function toRows(slots: HourSlot[]): Row[] {
   return rows;
 }
 
+const hourLabel = (hour: number) => `${String(hour).padStart(2, "0")}:00`;
+
 const rowBase = "flex items-center gap-4 w-full min-h-12 px-4 py-2 rounded-sm text-left";
 const timeCol = "w-24 shrink-0 text-sm tabular-nums";
+const chipBase = "flex items-center justify-center min-h-11 rounded-sm text-sm tabular-nums";
 
-// Phone: the selected day's hours as a vertical list
+// Phone: the selected day's hours
 export function DayHours({ day, ctx, onPick }: DayHoursProps) {
   const { t } = useTranslation();
   const slots = getDaySlots(day, ctx);
   const rows = toRows(slots);
   const hasFree = slots.some((s) => s.state === "free");
+  const hasTooShort = slots.some((s) => s.state === "too_short");
+  const minHours = { count: ctx.settings.minBookingHours };
 
   return (
-    <div>
-      {!hasFree && (
-        <p className={`${typography.caption} mb-3`}>{t("studio.calendar.noFreeHours")}</p>
-      )}
-      <ul className="flex flex-col gap-1.5">
+    <div className="space-y-3">
+      <p className={typography.caption}>
+        {t(hasFree ? "studio.calendar.pickStart" : "studio.calendar.noFreeHours")}
+      </p>
+      <ul className="flex flex-col gap-2">
         {rows.map((row) => {
           if (row.kind === "booking") {
             const { booking } = row;
@@ -90,18 +98,27 @@ export function DayHours({ day, ctx, onPick }: DayHoursProps) {
             );
           }
 
-          if (row.kind === "free") {
-            const { slot } = row;
+          if (row.kind === "hours") {
             return (
-              <li key={slot.hour}>
-                <button
-                  type="button"
-                  onClick={() => onPick(slot)}
-                  className={`${rowBase} ${slotStyles.free}`}
-                >
-                  <span className={timeCol}>{formatStudio(slot.startsAt, "HH:mm", "ru")}</span>
-                  <span className="text-sm">{t("studio.calendar.free")}</span>
-                </button>
+              <li key={`hours-${row.slots[0].hour}`} className="grid grid-cols-4 gap-2">
+                {row.slots.map((slot) =>
+                  slot.state === "free" ? (
+                    <button
+                      key={slot.hour}
+                      type="button"
+                      onClick={() => onPick(slot)}
+                      aria-label={`${t("studio.calendar.free")}: ${hourLabel(slot.hour)}`}
+                      className={`${chipBase} ${slotStyles.free}`}
+                    >
+                      {hourLabel(slot.hour)}
+                    </button>
+                  ) : (
+                    <span key={slot.hour} className={`${chipBase} ${slotStyles.unavailable}`}>
+                      {hourLabel(slot.hour)}
+                      <span className="sr-only">: {t("studio.calendar.tooShort", minHours)}</span>
+                    </span>
+                  ),
+                )}
               </li>
             );
           }
@@ -112,16 +129,17 @@ export function DayHours({ day, ctx, onPick }: DayHoursProps) {
             <li key={first.hour} className={`${rowBase} ${slotStyles.unavailable}`}>
               <span className={timeCol}>
                 {first === last
-                  ? formatStudio(first.startsAt, "HH:mm", "ru")
+                  ? hourLabel(first.hour)
                   : formatTimeRange(first.startsAt, hourStart(day, last.hour + 1))}
               </span>
-              {label && (
-                <span className="text-sm">{t(label, { count: ctx.settings.minBookingHours })}</span>
-              )}
+              {label && <span className="text-sm">{t(label, minHours)}</span>}
             </li>
           );
         })}
       </ul>
+      {hasTooShort && (
+        <p className={typography.caption}>{t("studio.calendar.hatchedHint", minHours)}</p>
+      )}
     </div>
   );
 }

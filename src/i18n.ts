@@ -75,6 +75,8 @@ const resources = {
           tooShort: "Меньше {{count}} ч подряд",
           beyondHorizon: "Запись пока закрыта",
           noFreeHours: "На этот день свободного времени нет",
+          pickStart: "Выберите час начала",
+          hatchedHint: "Заштрихованные часы — меньше {{count}} ч подряд, бронь не поместится",
           loadFailed: "Не удалось загрузить календарь",
           retry: "Повторить",
           rules:
@@ -387,6 +389,8 @@ const resources = {
           tooShort: "Less than {{count}} h in a row",
           beyondHorizon: "Not open for booking yet",
           noFreeHours: "No free time on this day",
+          pickStart: "Pick a start time",
+          hatchedHint: "Hatched hours: less than {{count}} h in a row, a booking won't fit",
           loadFailed: "Could not load the calendar",
           retry: "Retry",
           rules:
