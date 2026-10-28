@@ -52,10 +52,11 @@ export interface ProfileRow {
   trusted: boolean;
   no_show_count: number;
   blocked: boolean;
+  privacy_consent_at: string | null;
 }
 
 export const PROFILE_COLUMNS =
-  "id, first_name, last_name, phone, telegram_username, show_full_name, role, trusted, no_show_count, blocked";
+  "id, first_name, last_name, phone, telegram_username, show_full_name, role, trusted, no_show_count, blocked, privacy_consent_at";
 
 export function rowToProfile(row: ProfileRow): Profile {
   return {
@@ -69,6 +70,7 @@ export function rowToProfile(row: ProfileRow): Profile {
     trusted: row.trusted,
     noShowCount: row.no_show_count,
     blocked: row.blocked,
+    privacyConsentAt: row.privacy_consent_at,
   };
 }
 

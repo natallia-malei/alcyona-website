@@ -7,8 +7,8 @@ export interface AuthContextValue {
   profile: Profile | null;
   loading: boolean;
   signInWithPassword: (email: string, password: string) => Promise<void>;
-  signInWithMagicLink: (email: string) => Promise<void>;
-  signInWithGoogle: () => Promise<void>;
+  signInWithMagicLink: (email: string, next: string) => Promise<void>;
+  signInWithGoogle: (next: string) => Promise<void>;
   signOut: () => Promise<void>;
   updateProfile: (input: ProfileInput) => Promise<void>;
 }

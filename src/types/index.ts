@@ -67,10 +67,11 @@ export interface Profile {
   trusted: boolean;
   noShowCount: number;
   blocked: boolean;
+  privacyConsentAt: string | null; // ISO date; null = no consent to data processing yet
 }
 
 // Fields the user fills in themselves (onboarding / profile form)
 export type ProfileInput = Pick<
   Profile,
-  "firstName" | "lastName" | "phone" | "telegramUsername" | "showFullName"
+  "firstName" | "lastName" | "phone" | "telegramUsername" | "showFullName" | "privacyConsentAt"
 >;

@@ -1,8 +1,11 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
 import { useBand } from "../../storage/hooks";
-import { useAuthActions, useIsAuthenticated } from "../../auth/hooks";
+import { useAccount, useAuthActions, useAuthLoading } from "../../auth/hooks";
+import { loginPath } from "../../auth/redirect";
 import { NavLink } from "../ui/NavLink";
+import { Avatar } from "../ui/Avatar";
 import { SocialLinks } from "./SocialLinks";
 import { LangSwitcher } from "./LangSwitcher";
 import { CloseIcon } from "../icons/CloseIcon";
@@ -12,12 +15,15 @@ import { interactive } from "../../styles/interactive";
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
+  onOpenProfile: () => void;
 }
 
-export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
+export function MobileMenu({ isOpen, onClose, onOpenProfile }: MobileMenuProps) {
   const { t } = useTranslation();
   const band = useBand();
-  const isAuth = useIsAuthenticated();
+  const account = useAccount();
+  const authLoading = useAuthLoading();
+  const { pathname } = useLocation();
   const { signOut } = useAuthActions();
 
   const handleSignOut = async () => {
@@ -78,17 +84,53 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       </nav>
 
       <div className="flex flex-col items-center gap-6 p-8">
+        {!authLoading &&
+          (account ? (
+            <div className="flex flex-col items-center gap-4">
+              <div className="flex items-center gap-3">
+                <Avatar imageUrl={account.avatarUrl} initials={account.initials} />
+                <span className="text-sm text-white">{account.name}</span>
+              </div>
+              <div className="flex items-center gap-6">
+                <NavLink
+                  variant="accent"
+                  to="/studio#my-bookings"
+                  onClick={onClose}
+                  className={typography.eyebrow}
+                >
+                  {t("auth.myBookings")}
+                </NavLink>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose();
+                    onOpenProfile();
+                  }}
+                  className={`${typography.eyebrow} ${interactive.accentHover}`}
+                >
+                  {t("auth.profile")}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  className={`${typography.eyebrow} ${interactive.accentHover}`}
+                >
+                  {t("auth.signOut")}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <NavLink
+              variant="accent"
+              to={loginPath(pathname)}
+              onClick={onClose}
+              className={typography.eyebrow}
+            >
+              {t("auth.signIn")}
+            </NavLink>
+          ))}
         <SocialLinks links={band.social} size="lg" />
         <LangSwitcher />
-        {isAuth && (
-          <button
-            type="button"
-            onClick={handleSignOut}
-            className={`${typography.eyebrow} ${interactive.accentHover}`}
-          >
-            {t("auth.signOut")}
-          </button>
-        )}
       </div>
     </div>
   );

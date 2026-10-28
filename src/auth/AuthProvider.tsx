@@ -17,9 +17,11 @@ interface LoadedProfile {
   profile: Profile | null;
 }
 
-// Magic link and Google both return the user to the landing page;
+// Magic link and Google return the user to `next` (the page they came from);
 // the onboarding form opens there if the profile isn't filled in yet.
-const redirectTo = () => window.location.origin;
+// Supabase → Auth → URL Configuration must allow "<origin>/**", otherwise
+// it falls back to the Site URL (landing page).
+const redirectTo = (next: string) => new URL(next, window.location.origin).toString();
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [session, setSession] = useState<Session | null>(null);
@@ -69,18 +71,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
     if (error) throw error;
   }, []);
 
-  const signInWithMagicLink = useCallback(async (email: string) => {
+  const signInWithMagicLink = useCallback(async (email: string, next: string) => {
     const { error } = await supabase.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: redirectTo() },
+      options: { emailRedirectTo: redirectTo(next) },
     });
     if (error) throw error;
   }, []);
 
-  const signInWithGoogle = useCallback(async () => {
+  const signInWithGoogle = useCallback(async (next: string) => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: redirectTo() },
+      options: { redirectTo: redirectTo(next) },
     });
     if (error) throw error;
   }, []);

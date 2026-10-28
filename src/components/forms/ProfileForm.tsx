@@ -24,6 +24,7 @@ export function ProfileForm({ initial, onSubmit, onCancel, cancelLabel }: Profil
   const [phone, setPhone] = useState(initial.phone);
   const [telegram, setTelegram] = useState(initial.telegramUsername);
   const [showFullName, setShowFullName] = useState(initial.showFullName);
+  const [consent, setConsent] = useState(initial.privacyConsentAt !== null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -39,6 +40,10 @@ export function ProfileForm({ initial, onSubmit, onCancel, cancelLabel }: Profil
       setError(t("profile.invalidTelegram"));
       return;
     }
+    if (!consent) {
+      setError(t("profile.consentRequired"));
+      return;
+    }
 
     setSubmitting(true);
     setError(null);
@@ -49,6 +54,8 @@ export function ProfileForm({ initial, onSubmit, onCancel, cancelLabel }: Profil
         phone: phone.trim(),
         telegramUsername,
         showFullName,
+        // keep the original consent date; set it the first time the box is ticked
+        privacyConsentAt: initial.privacyConsentAt ?? new Date().toISOString(),
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : t("common.saveFailed"));
@@ -90,6 +97,25 @@ export function ProfileForm({ initial, onSubmit, onCancel, cancelLabel }: Profil
         label={t("profile.showFullName")}
         checked={showFullName}
         onChange={setShowFullName}
+      />
+
+      {/* Opens in a new tab: navigating would close the form */}
+      <Checkbox
+        label={
+          <>
+            {t("profile.consentPrefix")}
+            <a
+              href="/privacy"
+              target="_blank"
+              rel="noopener"
+              className="underline hover:text-accent"
+            >
+              {t("profile.consentLink")}
+            </a>
+          </>
+        }
+        checked={consent}
+        onChange={setConsent}
       />
 
       {error && (

@@ -1,5 +1,7 @@
+import type { ReactNode } from "react";
+
 interface CheckboxProps {
-  label: string;
+  label: ReactNode;
   checked: boolean;
   onChange: (checked: boolean) => void;
   className?: string;

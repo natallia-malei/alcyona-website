@@ -139,6 +139,7 @@ export async function updateProfile(userId: string, input: ProfileInput): Promis
       phone: input.phone,
       telegram_username: input.telegramUsername || null,
       show_full_name: input.showFullName,
+      privacy_consent_at: input.privacyConsentAt,
     })
     .eq("id", userId)
     .select(PROFILE_COLUMNS)

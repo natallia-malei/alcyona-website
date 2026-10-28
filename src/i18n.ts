@@ -62,12 +62,69 @@ const resources = {
         content:
           "Здесь будет описание студии группы ALCYONA: оборудование, услуги записи, фотографии помещения, контакты.",
       },
+      // Placeholders in [brackets] — to be filled in by the site owner
       privacy: {
         title: "Политика конфиденциальности",
-        paragraph1:
-          "Сайт ALCYONA не собирает персональные данные посетителей за исключением информации, добровольно предоставляемой через формы обратной связи.",
-        paragraph2:
-          "Используются только технические cookies, необходимые для работы сайта. Аналитические системы и трекеры не подключены.",
+        sections: [
+          {
+            title: "Кто обрабатывает данные",
+            paragraphs: [
+              "Оператор персональных данных — [ФИО или название], [адрес / УНП, если есть].",
+            ],
+          },
+          {
+            title: "Посетители сайта",
+            paragraphs: [
+              "Просматривать сайт можно без регистрации — в этом случае мы не собираем персональные данные. Аналитика и трекеры не подключены.",
+            ],
+          },
+          {
+            title: "Клиенты студии",
+            paragraphs: [
+              "Чтобы бронировать студию, нужно войти на сайт и заполнить профиль. Мы обрабатываем:",
+            ],
+            items: [
+              "email, с которым вы входите (при входе через Google — также имя, фамилию и фото из аккаунта Google);",
+              "имя, фамилию и телефон;",
+              "ник в Telegram, если вы его указали;",
+              "данные о бронированиях: дату и время, описание «что будем делать», отметки о посещении.",
+            ],
+          },
+          {
+            title: "Зачем",
+            paragraphs: [
+              "Чтобы принимать и подтверждать брони, связываться с вами по поводу брони и не допускать накладок в расписании.",
+            ],
+          },
+          {
+            title: "Кто видит",
+            paragraphs: [
+              "Все данные профиля видит администратор студии. Другие вошедшие пользователи видят в календаре ваши имя и фамилию, только если вы включили это в профиле, — иначе «Занято». Описание брони видите только вы и администратор. Мы не передаём данные третьим лицам и не используем их для рекламы.",
+            ],
+          },
+          {
+            title: "Где хранятся",
+            paragraphs: ["В облачной базе данных Supabase (серверы в [регион])."],
+          },
+          {
+            title: "Сколько хранятся",
+            paragraphs: [
+              "Пока существует ваш аккаунт. После удаления аккаунта профиль удаляется, будущие брони отменяются, а прошедшие остаются в истории студии без имени.",
+            ],
+          },
+          {
+            title: "Ваши права",
+            paragraphs: [
+              "Вы можете в любой момент изменить данные в профиле, запросить информацию о том, какие данные мы храним, отозвать согласие и потребовать удалить аккаунт — напишите нам на почту ниже. Без согласия бронирование через сайт недоступно.",
+            ],
+          },
+          {
+            title: "Cookies и хранилище браузера",
+            paragraphs: [
+              "Сайт использует только то, что нужно для работы: сохраняет вход в аккаунт и выбранный язык.",
+            ],
+          },
+        ],
         contactPrefix: "По вопросам обработки персональных данных пишите на ",
       },
       release: { tracks: "Треки", lyrics: "Текст", back: "Назад" },
@@ -75,6 +132,9 @@ const resources = {
       auth: {
         signIn: "Войти",
         signOut: "Выйти",
+        accountMenu: "Меню аккаунта",
+        myBookings: "Мои брони",
+        profile: "Профиль",
         email: "Email",
         password: "Пароль",
         showPassword: "Показать пароль",
@@ -102,6 +162,11 @@ const resources = {
         invalidTelegram: "Ник в Telegram: 5–32 символа — латиница, цифры и _",
         later: "Позже",
         saved: "Профиль сохранён",
+        editTitle: "Профиль",
+        consentPrefix: "Я согласен(на) на обработку моих персональных данных в соответствии с ",
+        consentLink: "Политикой конфиденциальности",
+        consentRequired:
+          "Чтобы бронировать студию, нужно согласие на обработку персональных данных",
       },
       app: {
         loading: "Загрузка…",
@@ -218,10 +283,66 @@ const resources = {
       },
       privacy: {
         title: "Privacy Policy",
-        paragraph1:
-          "The ALCYONA website does not collect personal data of visitors, except for information voluntarily provided through contact forms.",
-        paragraph2:
-          "Only technical cookies essential for the site to function are used. No analytics systems or trackers are connected.",
+        sections: [
+          {
+            title: "Who processes your data",
+            paragraphs: [
+              "The personal data controller is [full name or company name], [address / registration number, if any].",
+            ],
+          },
+          {
+            title: "Website visitors",
+            paragraphs: [
+              "You can browse the site without signing up — in that case we collect no personal data. No analytics or trackers are connected.",
+            ],
+          },
+          {
+            title: "Studio clients",
+            paragraphs: [
+              "To book the studio you need to sign in and fill in your profile. We process:",
+            ],
+            items: [
+              "the email you sign in with (with Google sign-in — also the name, surname and photo from your Google account);",
+              "your first name, last name and phone number;",
+              "your Telegram username, if you provided it;",
+              "booking details: date and time, the “what we'll do” description, attendance marks.",
+            ],
+          },
+          {
+            title: "Why",
+            paragraphs: [
+              "To accept and confirm bookings, contact you about them and avoid schedule conflicts.",
+            ],
+          },
+          {
+            title: "Who can see it",
+            paragraphs: [
+              "The studio admin sees all profile data. Other signed-in users see your name in the calendar only if you enabled it in your profile — otherwise “Busy”. The booking description is visible only to you and the admin. We do not share your data with third parties or use it for advertising.",
+            ],
+          },
+          {
+            title: "Where it is stored",
+            paragraphs: ["In the Supabase cloud database (servers in [region])."],
+          },
+          {
+            title: "How long it is kept",
+            paragraphs: [
+              "As long as your account exists. When the account is deleted, the profile is removed, future bookings are cancelled, and past ones stay in the studio history without your name.",
+            ],
+          },
+          {
+            title: "Your rights",
+            paragraphs: [
+              "You can change your profile at any time, ask what data we store, withdraw your consent and request account deletion — write to the email below. Without consent, booking through the site is not available.",
+            ],
+          },
+          {
+            title: "Cookies and browser storage",
+            paragraphs: [
+              "The site stores only what it needs to work: your sign-in session and chosen language.",
+            ],
+          },
+        ],
         contactPrefix: "For questions about personal data processing, write to ",
       },
       release: { tracks: "Tracks", lyrics: "Lyrics", back: "Back" },
@@ -229,6 +350,9 @@ const resources = {
       auth: {
         signIn: "Sign in",
         signOut: "Sign out",
+        accountMenu: "Account menu",
+        myBookings: "My bookings",
+        profile: "Profile",
         email: "Email",
         password: "Password",
         showPassword: "Show password",
@@ -255,6 +379,10 @@ const resources = {
         invalidTelegram: "Telegram username: 5–32 characters — Latin letters, digits and _",
         later: "Later",
         saved: "Profile saved",
+        editTitle: "Profile",
+        consentPrefix: "I agree to the processing of my personal data in accordance with the ",
+        consentLink: "Privacy Policy",
+        consentRequired: "Consent to personal data processing is required to book the studio",
       },
       app: {
         loading: "Loading…",
