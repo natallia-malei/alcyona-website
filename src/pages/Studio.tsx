@@ -5,12 +5,14 @@ import { isProfileReady, useAuthLoading, useIsAuthenticated, useProfile } from "
 import { loginPath } from "../auth/redirect";
 import { useStudioCalendar } from "../hooks/useStudioCalendar";
 import { useToast } from "../hooks/useToast";
-import type { StudioSettings } from "../types";
+import type { MyBooking, StudioSettings } from "../types";
 import {
   addDays,
   bookableDays,
   dayAvailability,
   dayKeyOf,
+  reasonText,
+  unavailableReason,
   type DayKey,
   type HourSlot,
 } from "../utils/studioTime";
@@ -27,6 +29,7 @@ import { WeekGrid } from "../components/studio/WeekGrid";
 import { BookingSheet } from "../components/studio/BookingSheet";
 import { MyBookings } from "../components/studio/MyBookings";
 import { MyBookingsSummary } from "../components/studio/MyBookingsSummary";
+import { CalendarSkeleton } from "../components/studio/CalendarSkeleton";
 import { typography } from "../styles/typography";
 
 const STUDIO_PATH = "/studio";
@@ -48,6 +51,7 @@ export function Studio() {
   const [weekStart, setWeekStart] = useState<DayKey | null>(null);
   const [picked, setPicked] = useState<HourSlot | null>(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [highlightId, setHighlightId] = useState<string | null>(null);
 
   // #my-bookings appears only after the data loads — the router's hash scroll runs too early
   const loaded = data !== null && !authLoading;
@@ -56,6 +60,16 @@ export function Studio() {
       document.getElementById("my-bookings")?.scrollIntoView({ behavior: "smooth" });
     }
   }, [loaded, hash]);
+
+  // Scroll the just-created booking into view once the refreshed calendar has it.
+  // Both views are mounted (one hidden by CSS) — pick the visible element.
+  useEffect(() => {
+    if (!highlightId) return;
+    const el = Array.from(
+      document.querySelectorAll<HTMLElement>(`[data-booking="${highlightId}"]`),
+    ).find((e) => e.offsetParent !== null);
+    el?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [highlightId, data]);
 
   const canBook = profile !== null && isProfileReady(profile);
   const gate: Gate = !isAuth ? "guest" : profile?.blocked ? "blocked" : canBook ? null : "profile";
@@ -66,6 +80,21 @@ export function Studio() {
     else if (gate === "blocked") toast.error(t("studio.gate.blocked"));
     else setPicked(slot);
   };
+
+  const handleExplain = (slot: HourSlot) => {
+    const reason = slotContext && unavailableReason(slot, slotContext);
+    if (reason) toast.info(reasonText(reason, slotContext, t, "hint"));
+  };
+
+  const handleBooked = (created?: MyBooking) => {
+    void refresh();
+    if (!created) return;
+    setHighlightId(created.id);
+    window.setTimeout(() => setHighlightId((id) => (id === created.id ? null : id)), 4000);
+  };
+
+  const scrollToCalendar = () =>
+    document.getElementById("booking")?.scrollIntoView({ behavior: "smooth" });
 
   const renderCalendar = () => {
     if (!data && error) {
@@ -79,7 +108,7 @@ export function Studio() {
       );
     }
     if (!data || !slotContext || authLoading) {
-      return <p className={typography.caption}>{t("app.loading")}</p>;
+      return <CalendarSkeleton />;
     }
 
     const today = dayKeyOf(data.now);
@@ -99,7 +128,13 @@ export function Studio() {
             availability={availability}
             onSelect={setSelectedDay}
           />
-          <DayHours day={day} ctx={slotContext} onPick={handlePick} />
+          <DayHours
+            day={day}
+            ctx={slotContext}
+            onPick={handlePick}
+            onExplain={handleExplain}
+            highlightId={highlightId}
+          />
         </div>
         <div className="hidden md:block">
           <WeekGrid
@@ -111,6 +146,8 @@ export function Studio() {
             onPrev={() => setWeekStart(addDays(week, -7))}
             onNext={() => setWeekStart(addDays(week, 7))}
             onPick={handlePick}
+            onExplain={handleExplain}
+            highlightId={highlightId}
           />
         </div>
       </>
@@ -125,7 +162,7 @@ export function Studio() {
           <Lead>{t("studio.content")}</Lead>
         </Stack>
 
-        <section className="space-y-6">
+        <section id="booking" className="space-y-6">
           <SectionTitle size="sm">{t("studio.calendar.title")}</SectionTitle>
           {data && !authLoading && !viewer.isAdmin && (
             <BookingRules settings={data.settings} needsReview={!viewer.trusted} />
@@ -148,6 +185,7 @@ export function Studio() {
               isAdmin={viewer.isAdmin}
               onChanged={() => void refresh()}
               onEditProfile={() => setIsProfileOpen(true)}
+              onPickTime={scrollToCalendar}
             />
           </section>
         )}
@@ -158,7 +196,7 @@ export function Studio() {
           slot={picked}
           ctx={slotContext}
           onClose={() => setPicked(null)}
-          onDone={() => void refresh()}
+          onDone={handleBooked}
         />
       )}
       <ProfileModal open={isProfileOpen} onClose={() => setIsProfileOpen(false)} />

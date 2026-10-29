@@ -71,9 +71,6 @@ const resources = {
           busy: "Занято",
           mine: "Моя бронь",
           deletedUser: "Удалённый пользователь",
-          past: "Недоступно",
-          tooShort: "Меньше {{count}} ч подряд",
-          beyondHorizon: "Запись пока закрыта",
           noFreeHours: "На этот день свободного времени нет",
           pickStart: "Выберите час начала",
           hatchedHint: "Заштрихованные часы — меньше {{count}} ч подряд, бронь не поместится",
@@ -85,6 +82,19 @@ const resources = {
             "Новые клиенты отправляют заявку — администратор подтвердит её в течение {{count}} ч.",
           dayFew: "мало свободного времени",
           dayNone: "нет свободного времени",
+        },
+        // Why an hour can't be picked: short label + explanation on tap (studioTime.reasonText)
+        reason: {
+          past: "Прошло",
+          pastHint: "Это время уже прошло.",
+          too_soon: "Слишком скоро",
+          too_soonHint:
+            "До начала меньше {{cutoff}} ч — администратор не успеет рассмотреть заявку. Выберите время позже.",
+          too_short: "Меньше {{min}} ч подряд",
+          too_shortHint:
+            "Отсюда до следующей брони или закрытия меньше {{min}} ч — бронь не поместится.",
+          beyond_horizon: "Запись пока закрыта",
+          beyond_horizonHint: "Бронировать можно не дальше чем на {{weeks}} нед. вперёд.",
         },
         status: {
           pending: "На рассмотрении",
@@ -115,6 +125,9 @@ const resources = {
         my: {
           title: "Мои брони",
           empty: "Предстоящих броней нет",
+          emptyAction: "Выбрать время",
+          addToCalendar: "В календарь",
+          icsTitle: "Студия ALCYONA",
           summary_one: "У вас {{count}} бронь",
           summary_few: "У вас {{count}} брони",
           summary_many: "У вас {{count}} броней",
@@ -390,9 +403,6 @@ const resources = {
           busy: "Busy",
           mine: "My booking",
           deletedUser: "Deleted user",
-          past: "Unavailable",
-          tooShort: "Less than {{count}} h in a row",
-          beyondHorizon: "Not open for booking yet",
           noFreeHours: "No free time on this day",
           pickStart: "Pick a start time",
           hatchedHint: "Hatched hours: less than {{count}} h in a row, a booking won't fit",
@@ -404,6 +414,18 @@ const resources = {
             "New clients send a request — the admin will confirm it within {{count}} h.",
           dayFew: "little free time",
           dayNone: "no free time",
+        },
+        reason: {
+          past: "Passed",
+          pastHint: "This time has already passed.",
+          too_soon: "Too soon",
+          too_soonHint:
+            "Less than {{cutoff}} h before the start — the admin won't have time to review a request. Pick a later time.",
+          too_short: "Less than {{min}} h in a row",
+          too_shortHint:
+            "Less than {{min}} h until the next booking or closing — a booking won't fit.",
+          beyond_horizon: "Not open yet",
+          beyond_horizonHint: "You can book at most {{weeks}} weeks ahead.",
         },
         status: {
           pending: "Pending",
@@ -432,6 +454,9 @@ const resources = {
         my: {
           title: "My bookings",
           empty: "No upcoming bookings",
+          emptyAction: "Pick a time",
+          addToCalendar: "Add to calendar",
+          icsTitle: "ALCYONA Studio",
           summary_one: "You have {{count}} booking",
           summary_other: "You have {{count}} bookings",
           nearest: "next {{when}}",
