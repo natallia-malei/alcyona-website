@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { useTranslation } from "react-i18next";
 import type { CalendarBooking, Locale } from "../../types";
 import {
@@ -6,13 +6,17 @@ import {
   dayHours,
   daysFrom,
   formatDay,
+  formatStudio,
   formatTimeRange,
   getDaySlots,
+  hourOf,
+  reasonText,
+  unavailableReason,
   type DayKey,
   type HourSlot,
   type SlotContext,
 } from "../../utils/studioTime";
-import { slotStyles, statusTextClass, unavailableLabel } from "./slotStyles";
+import { slotStyles, statusTextClass } from "./slotStyles";
 import { typography } from "../../styles/typography";
 import { interactive } from "../../styles/interactive";
 
@@ -25,6 +29,8 @@ interface WeekGridProps {
   onPrev: () => void;
   onNext: () => void;
   onPick: (slot: HourSlot) => void; // only for state "free"
+  onExplain: (slot: HourSlot) => void; // tap on an unavailable hour → why
+  highlightId?: string | null; // just-created booking, briefly outlined
 }
 
 // One item in a day column: a single hour, or a booking spanning several rows
@@ -51,11 +57,24 @@ function dayCells(day: DayKey, ctx: SlotContext): Cell[] {
 
 const hourLabel = (hour: number) => `${String(hour).padStart(2, "0")}:00`;
 
-// Grid row 1 is the day header, hour rows start at 2
+const COLUMNS = "3.5rem repeat(7, minmax(0, 1fr))";
+const ROW_HEIGHT = "2.25rem";
+
+// Hour rows start at grid row 1 (the day header is a separate sticky grid)
 const place = (column: number, row: number, span = 1): CSSProperties => ({
   gridColumn: column,
-  gridRow: `${row + 2} / span ${span}`,
+  gridRow: `${row + 1} / span ${span}`,
 });
+
+// Re-renders every minute so the "now" line moves
+function useNow(): Date {
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const id = window.setInterval(() => setNow(new Date()), 60_000);
+    return () => window.clearInterval(id);
+  }, []);
+  return now;
+}
 
 export function WeekGrid({
   weekStart,
@@ -66,11 +85,14 @@ export function WeekGrid({
   onPrev,
   onNext,
   onPick,
+  onExplain,
+  highlightId,
 }: WeekGridProps) {
   const { t, i18n } = useTranslation();
   const locale = (i18n.language as Locale) ?? "ru";
   const days = daysFrom(weekStart, 7);
   const hours = dayHours(ctx.settings);
+  const now = useNow();
   // Hovered free hour: highlights the shortest booking that would start there
   const [hovered, setHovered] = useState<{ day: DayKey; hour: number } | null>(null);
   const previewHours = ctx.viewer.isAdmin ? 1 : ctx.settings.minBookingHours;
@@ -81,6 +103,12 @@ export function WeekGrid({
     hour < hovered.hour + previewHours;
 
   const rangeLabel = `${formatDay(days[0], "d MMM", locale)} – ${formatDay(days[6], "d MMM", locale)}`;
+
+  // "Now" line: today's column, inside the current hour's row
+  const todayColumn = days.indexOf(today);
+  const nowRow = hourOf(now) - ctx.settings.openHour;
+  const showNow = todayColumn !== -1 && nowRow >= 0 && nowRow < hours.length;
+  const nowMinutes = Number(formatStudio(now, "m", locale));
 
   const renderCell = (day: DayKey, cell: Cell, column: number) => {
     if (cell.kind === "booking") {
@@ -102,9 +130,12 @@ export function WeekGrid({
       return (
         <div
           key={`${day}-b-${b.id}`}
+          data-booking={b.id}
           style={place(column, cell.row, cell.span)}
           title={tooltip}
-          className={`${style} rounded-sm px-2 py-1 overflow-hidden min-w-0 flex flex-col text-xs leading-4`}
+          className={`${style} rounded-sm px-2 py-1 overflow-hidden min-w-0 flex flex-col text-xs leading-4 transition-shadow ${
+            b.id === highlightId ? slotStyles.highlight : ""
+          }`}
         >
           <span className="font-semibold truncate">{title}</span>
           <span className="truncate opacity-80">{time}</span>
@@ -141,13 +172,20 @@ export function WeekGrid({
       );
     }
 
-    const labelKey = unavailableLabel[slot.state];
+    // Unavailable: a click explains why. Out of the tab order — a week has
+    // dozens of these; keyboard users get the reason from the label.
+    const reason = unavailableReason(slot, ctx);
+    const label = reason ? reasonText(reason, ctx, t, "label") : undefined;
     return (
-      <div
+      <button
         key={`${day}-${slot.hour}`}
+        type="button"
+        tabIndex={-1}
         style={place(column, cell.row)}
-        title={labelKey ? t(labelKey, { count: ctx.settings.minBookingHours }) : undefined}
-        className={`${inPreview(day, slot.hour) ? slotStyles.preview : slotStyles.unavailable} rounded-sm`}
+        onClick={() => onExplain(slot)}
+        title={label}
+        aria-label={label ? `${timeRange}: ${label}` : timeRange}
+        className={`${inPreview(day, slot.hour) ? slotStyles.preview : slotStyles.unavailable} rounded-sm cursor-help`}
       />
     );
   };
@@ -173,21 +211,19 @@ export function WeekGrid({
         <p className={typography.caption}>{t("studio.calendar.timezone")}</p>
       </div>
 
+      {/* Day header stays under the site header while the hours scroll */}
       <div
-        className="grid gap-1"
-        style={{
-          gridTemplateColumns: "3.5rem repeat(7, minmax(0, 1fr))",
-          gridTemplateRows: `auto repeat(${hours.length}, 2.75rem)`,
-        }}
+        className="sticky top-16 z-20 grid gap-1 py-2 bg-bg border-b border-white/10"
+        style={{ gridTemplateColumns: COLUMNS }}
       >
         {days.map((day, i) => {
           const isToday = day === today;
           return (
             <div
               key={day}
-              style={{ gridColumn: i + 2, gridRow: 1 }}
+              style={{ gridColumn: i + 2 }}
               aria-current={isToday ? "date" : undefined}
-              className={`pb-2 text-center ${typography.eyebrowXs} ${
+              className={`text-center ${typography.eyebrowXs} ${
                 isToday ? "text-accent" : "text-fg-muted"
               }`}
             >
@@ -202,7 +238,15 @@ export function WeekGrid({
             </div>
           );
         })}
+      </div>
 
+      <div
+        className="grid gap-1 mt-1"
+        style={{
+          gridTemplateColumns: COLUMNS,
+          gridTemplateRows: `repeat(${hours.length}, ${ROW_HEIGHT})`,
+        }}
+      >
         {hours.map((hour, row) => (
           <div key={hour} style={place(1, row)} className="pr-2 text-right text-xs text-fg-muted">
             {hourLabel(hour)}
@@ -210,6 +254,21 @@ export function WeekGrid({
         ))}
 
         {days.flatMap((day, i) => dayCells(day, ctx).map((cell) => renderCell(day, cell, i + 2)))}
+
+        {showNow && (
+          <div
+            aria-hidden
+            style={place(todayColumn + 2, nowRow)}
+            className="relative z-10 pointer-events-none"
+          >
+            <div
+              className="absolute inset-x-0 h-0.5 bg-red-500"
+              style={{ top: `${(nowMinutes / 60) * 100}%` }}
+            >
+              <span className="absolute -left-1 -top-[3px] size-2 rounded-full bg-red-500" />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

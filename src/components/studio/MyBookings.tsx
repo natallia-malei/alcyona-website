@@ -8,6 +8,7 @@ import {
   formatTimeRange,
 } from "../../utils/studioTime";
 import { bookingErrorKey, cancelBooking } from "../../supabase/bookings";
+import { downloadIcs } from "../../utils/ics";
 import { useConfirm } from "../../hooks/useConfirm";
 import { useToast } from "../../hooks/useToast";
 import { Button } from "../ui/Button";
@@ -22,6 +23,7 @@ interface MyBookingsProps {
   isAdmin: boolean;
   onChanged: () => void; // page refreshes after cancel/withdraw (or a failed attempt)
   onEditProfile: () => void;
+  onPickTime: () => void; // empty list → scroll up to the calendar
 }
 
 const statusClass: Record<MyBooking["status"], string> = {
@@ -39,6 +41,7 @@ export function MyBookings({
   isAdmin,
   onChanged,
   onEditProfile,
+  onPickTime,
 }: MyBookingsProps) {
   const { t } = useTranslation();
 
@@ -49,7 +52,12 @@ export function MyBookings({
       </SectionTitle>
 
       {bookings.length === 0 ? (
-        <p className={typography.caption}>{t("studio.my.empty")}</p>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+          <p className={typography.caption}>{t("studio.my.empty")}</p>
+          <Button variant="outline" size="sm" onClick={onPickTime}>
+            {t("studio.my.emptyAction")} ↑
+          </Button>
+        </div>
       ) : (
         <ul className="flex flex-col gap-3">
           {bookings.map((b) => (
@@ -97,6 +105,16 @@ function BookingItem({ booking, settings, now, isAdmin, onChanged }: BookingItem
   const status = effectiveStatus(booking, now);
   const option = cancelOption(booking, settings, now, isAdmin);
   const range = formatTimeRange(booking.startsAt, booking.endsAt);
+  const canExport = status === "confirmed" && booking.startsAt > now;
+
+  const handleExport = () =>
+    downloadIcs(`alcyona-studio-${formatStudio(booking.startsAt, "yyyy-MM-dd-HHmm", locale)}.ics`, {
+      uid: `${booking.id}@alcyona`,
+      startsAt: booking.startsAt,
+      endsAt: booking.endsAt,
+      title: t("studio.my.icsTitle"),
+      description: booking.purpose,
+    });
 
   const handleCancel = async (kind: "withdraw" | "cancel") => {
     const when = `${formatStudio(booking.startsAt, "d MMMM", locale)}, ${range}`;
@@ -146,22 +164,29 @@ function BookingItem({ booking, settings, now, isAdmin, onChanged }: BookingItem
         )}
       </div>
 
-      {(option === "withdraw" || option === "cancel") && (
-        <Button
-          variant="outline"
-          size="sm"
-          disabled={busy}
-          onClick={() => void handleCancel(option)}
-          className="self-start md:self-center shrink-0"
-        >
-          {t(option === "withdraw" ? "studio.my.withdraw" : "studio.my.cancel")}
-        </Button>
-      )}
-      {option === "via_admin" && (
-        <p className={`${typography.caption} md:max-w-56`}>
-          {t("studio.my.viaAdmin", { count: settings.freeCancelHours })}
-        </p>
-      )}
+      <div className="flex flex-wrap items-center gap-2 self-start md:self-center md:justify-end md:max-w-72">
+        {canExport && (
+          <Button variant="outline" size="sm" onClick={handleExport} className="shrink-0">
+            {t("studio.my.addToCalendar")}
+          </Button>
+        )}
+        {(option === "withdraw" || option === "cancel") && (
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={busy}
+            onClick={() => void handleCancel(option)}
+            className="shrink-0"
+          >
+            {t(option === "withdraw" ? "studio.my.withdraw" : "studio.my.cancel")}
+          </Button>
+        )}
+        {option === "via_admin" && (
+          <p className={typography.caption}>
+            {t("studio.my.viaAdmin", { count: settings.freeCancelHours })}
+          </p>
+        )}
+      </div>
     </li>
   );
 }

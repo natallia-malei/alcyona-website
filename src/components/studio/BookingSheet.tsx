@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import type { Locale } from "../../types";
+import type { Locale, MyBooking } from "../../types";
 import {
   availableDurations,
   formatDay,
@@ -20,7 +20,7 @@ interface BookingSheetProps {
   slot: HourSlot | null; // open when not null (a "free" slot)
   ctx: SlotContext;
   onClose: () => void;
-  onDone: () => void; // page refreshes the calendar
+  onDone: (created?: MyBooking) => void; // page refreshes the calendar, highlights `created`
 }
 
 const PURPOSE_MAX = 200;
@@ -136,7 +136,7 @@ interface BookingFormProps {
   slot: HourSlot;
   ctx: SlotContext;
   onClose: () => void;
-  onDone: () => void;
+  onDone: (created?: MyBooking) => void;
 }
 
 function BookingForm({ titleId, slot, ctx, onClose, onDone }: BookingFormProps) {
@@ -169,7 +169,7 @@ function BookingForm({ titleId, slot, ctx, onClose, onDone }: BookingFormProps) 
       toast.success(
         t(booking.status === "confirmed" ? "studio.sheet.confirmed" : "studio.sheet.requested"),
       );
-      onDone();
+      onDone(booking);
       onClose();
     } catch (err) {
       if (err instanceof BookingError && err.code === "slot_taken") {

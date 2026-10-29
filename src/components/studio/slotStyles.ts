@@ -1,5 +1,4 @@
 import type { BookingStatus } from "../../types";
-import type { HourState } from "../../utils/studioTime";
 
 // One visual language for the day list (phone) and the week grid (desktop).
 // Accent (sky) = confirmed, amber = request awaiting the admin.
@@ -14,6 +13,8 @@ export const slotStyles = {
   busyPending: "bg-white/5 border border-dashed border-amber-400/50 text-fg-muted", // admin sees others' requests
   mineConfirmed: "bg-accent/20 border-l-2 border-accent text-white",
   minePending: "bg-amber-400/10 border-l-2 border-dashed border-amber-400 text-white",
+  // Just-created booking, for a few seconds after "Book"
+  highlight: "ring-2 ring-white/80 shadow-[0_0_0_6px_rgb(14_165_233/0.35)]",
 } as const;
 
 // Status label colour, same meaning everywhere
@@ -23,11 +24,4 @@ export const statusTextClass: Record<BookingStatus, string> = {
   cancelled: "text-fg-muted",
   rejected: "text-red-400",
   expired: "text-fg-muted",
-};
-
-// Hour states that can't be picked, with their i18n label
-export const unavailableLabel: Partial<Record<HourState, string>> = {
-  past: "studio.calendar.past",
-  too_short: "studio.calendar.tooShort", // needs { count: settings.minBookingHours }
-  beyond_horizon: "studio.calendar.beyondHorizon",
 };

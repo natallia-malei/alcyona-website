@@ -159,6 +159,37 @@ export function getDaySlots(day: DayKey, ctx: SlotContext): HourSlot[] {
   return dayHours(ctx.settings).map((hour) => getHourSlot(day, hour, ctx));
 }
 
+// Why an hour can't be picked. "past" splits in two: already started, or
+// too_soon — a request starting this soon would expire before admin sees it.
+export type UnavailableReason = "past" | "too_soon" | "too_short" | "beyond_horizon";
+
+export function unavailableReason(slot: HourSlot, ctx: SlotContext): UnavailableReason | null {
+  switch (slot.state) {
+    case "past":
+      return slot.startsAt > ctx.now ? "too_soon" : "past";
+    case "too_short":
+    case "beyond_horizon":
+      return slot.state;
+    default:
+      return null;
+  }
+}
+
+// Short label for a cell / row, or the full explanation shown on tap
+export function reasonText(
+  reason: UnavailableReason,
+  ctx: SlotContext,
+  t: TFunction,
+  form: "label" | "hint",
+): string {
+  const { settings } = ctx;
+  return t(`studio.reason.${reason}${form === "hint" ? "Hint" : ""}`, {
+    min: settings.minBookingHours,
+    cutoff: settings.requestCutoffHours,
+    weeks: settings.bookingHorizonWeeks,
+  });
+}
+
 // How much bookable time a day has — for the date strip indicator
 export type DayAvailability = "many" | "few" | "none";
 
