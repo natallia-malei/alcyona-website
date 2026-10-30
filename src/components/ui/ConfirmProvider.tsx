@@ -14,13 +14,15 @@ interface ConfirmProviderProps {
 export function ConfirmProvider({ children }: ConfirmProviderProps) {
   const { t } = useTranslation();
   const [pending, setPending] = useState<PendingConfirm | null>(null);
+  // Ref нужен settle, чтобы не пересоздаваться; обновляем его там же, где меняем pending
   const pendingRef = useRef<PendingConfirm | null>(null);
-  pendingRef.current = pending;
 
   const confirm = useCallback((input: ConfirmOptions | string) => {
     const options: ConfirmOptions = typeof input === "string" ? { message: input } : input;
     return new Promise<boolean>((resolve) => {
-      setPending({ ...options, resolve });
+      const next = { ...options, resolve };
+      pendingRef.current = next;
+      setPending(next);
     });
   }, []);
 
@@ -28,6 +30,7 @@ export function ConfirmProvider({ children }: ConfirmProviderProps) {
     const current = pendingRef.current;
     if (!current) return;
     current.resolve(result);
+    pendingRef.current = null;
     setPending(null);
   }, []);
 
@@ -55,7 +58,11 @@ export function ConfirmProvider({ children }: ConfirmProviderProps) {
               <Button
                 size="sm"
                 onClick={() => settle(true)}
-                className={pending.variant === "danger" ? "bg-red-600 hover:bg-red-700" : ""}
+                className={
+                  pending.variant === "danger"
+                    ? "bg-none bg-red-600 border-red-700 text-white hover:bg-red-700"
+                    : ""
+                }
               >
                 {pending.confirmLabel ?? t("common.confirm")}
               </Button>

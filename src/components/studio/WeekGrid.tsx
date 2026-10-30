@@ -230,7 +230,7 @@ export function WeekGrid({
               <span className="block">{formatDay(day, "EEEEEE", locale)}</span>
               <span
                 className={`inline-block mt-1 px-2 rounded-sm text-sm ${
-                  isToday ? "bg-accent text-white" : "text-white"
+                  isToday ? "bg-accent text-on-accent" : "text-white"
                 }`}
               >
                 {formatDay(day, "d", locale)}

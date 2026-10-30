@@ -14,9 +14,9 @@ export function ReleasePage() {
   if (!release) {
     return (
       <Page size="xl">
-        <p>Release not found.</p>
+        <p>{t("release.notFound")}</p>
         <NavLink to="/" underline>
-          ← Home
+          ← {t("release.home")}
         </NavLink>
       </Page>
     );
@@ -24,7 +24,7 @@ export function ReleasePage() {
 
   return (
     <Page size="xl">
-      <BackLink to="/">{t("release.back")}</BackLink>
+      <BackLink fallback="/releases">{t("release.back")}</BackLink>
       <ReleaseDetail release={release} />
     </Page>
   );

@@ -1,12 +1,11 @@
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
 import { usePhotos } from "../storage/hooks";
 import { Container } from "../components/layout/Container";
-import { SectionTitle } from "../components/ui/SectionTitle";
+import { SectionHeader } from "../components/ui/SectionHeader";
 import { MediaFrame } from "../components/ui/MediaFrame";
 import { MediaImage } from "../components/ui/MediaImage";
+import { Filigree } from "../components/fx/Filigree";
 import { grids } from "../styles/layouts";
-import { interactive } from "../styles/interactive";
 
 export function Photos() {
   const { t } = useTranslation();
@@ -14,16 +13,22 @@ export function Photos() {
   const visible = photos.slice(0, 4);
 
   return (
-    <section id="photos" className="py-20">
+    <section id="photos" className="py-24">
       <Container>
-        <Link to="/photos" className={`inline-block mb-10 ${interactive.accentHover}`}>
-          <SectionTitle>{t("photos.title")}</SectionTitle>
-        </Link>
+        <SectionHeader
+          eyebrow={t("photos.eyebrow")}
+          title={t("photos.title")}
+          to="/photos"
+          linkLabel={t("photos.all")}
+        />
         <div className={grids.photos}>
           {visible.map((p) => (
-            <MediaFrame key={p.id}>
-              <MediaImage src={p.url} alt="" zoom="hover" />
-            </MediaFrame>
+            <div key={p.id} className="reveal group relative">
+              <MediaFrame>
+                <MediaImage src={p.url} alt="" zoom="group-hover" />
+              </MediaFrame>
+              <Filigree inset={10} />
+            </div>
           ))}
         </div>
       </Container>

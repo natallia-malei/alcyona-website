@@ -1,6 +1,22 @@
-import type { BandInfo, Photo, Profile, ProfileInput, Release, Track, Video } from "../types";
+import type {
+  BandInfo,
+  Concert,
+  Photo,
+  Profile,
+  ProfileInput,
+  Release,
+  Track,
+  Video,
+} from "../types";
 import { supabase } from "./client";
-import { PROFILE_COLUMNS, rowToProfile, type ProfileRow } from "./queries";
+import {
+  CONCERT_COLUMNS,
+  PROFILE_COLUMNS,
+  rowToConcert,
+  rowToProfile,
+  type ConcertRow,
+  type ProfileRow,
+} from "./queries";
 
 // ----- Releases -----
 
@@ -29,7 +45,10 @@ export async function upsertRelease(release: Release, position: number): Promise
 
 export async function updateReleasePositions(releases: Release[]): Promise<void> {
   const updates = releases.map((r, idx) =>
-    supabase.from("releases").update({ position: idx + 1 }).eq("id", r.id),
+    supabase
+      .from("releases")
+      .update({ position: idx + 1 })
+      .eq("id", r.id),
   );
   const results = await Promise.all(updates);
   const firstError = results.find((r) => r.error)?.error;
@@ -77,7 +96,10 @@ export async function addPhoto(photo: Omit<Photo, "id">, position: number): Prom
 
 export async function updatePhotoPositions(photos: Photo[]): Promise<void> {
   const updates = photos.map((p, idx) =>
-    supabase.from("photos").update({ position: idx + 1 }).eq("id", p.id),
+    supabase
+      .from("photos")
+      .update({ position: idx + 1 })
+      .eq("id", p.id),
   );
   const results = await Promise.all(updates);
   const firstError = results.find((r) => r.error)?.error;
@@ -104,11 +126,43 @@ export async function addVideo(video: Omit<Video, "id">, position: number): Prom
 
 export async function updateVideoPositions(videos: Video[]): Promise<void> {
   const updates = videos.map((v, idx) =>
-    supabase.from("videos").update({ position: idx + 1 }).eq("id", v.id),
+    supabase
+      .from("videos")
+      .update({ position: idx + 1 })
+      .eq("id", v.id),
   );
   const results = await Promise.all(updates);
   const firstError = results.find((r) => r.error)?.error;
   if (firstError) throw firstError;
+}
+
+// ----- Concerts -----
+
+// Пустые поля формы уходят в NULL; без id — новый концерт (id выдаёт база).
+export async function upsertConcert(concert: Concert): Promise<Concert> {
+  const row = {
+    concert_date: concert.date,
+    start_time: concert.time || null,
+    city: concert.city,
+    venue: concert.venue,
+    status: concert.status,
+    ticket_url: concert.ticketUrl || null,
+    vip_url: concert.vipUrl || null,
+    video_url: concert.videoUrl || null,
+    updated_at: new Date().toISOString(),
+  };
+  const query = concert.id
+    ? supabase.from("concerts").update(row).eq("id", concert.id)
+    : supabase.from("concerts").insert(row);
+  const { data, error } = await query.select(CONCERT_COLUMNS).single();
+
+  if (error) throw error;
+  return rowToConcert(data as ConcertRow);
+}
+
+export async function deleteConcert(id: string): Promise<void> {
+  const { error } = await supabase.from("concerts").delete().eq("id", id);
+  if (error) throw error;
 }
 
 // ----- Band -----

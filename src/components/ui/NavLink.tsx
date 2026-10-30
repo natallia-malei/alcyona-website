@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink as RouterNavLink } from "react-router-dom";
 
 type Variant = "default" | "accent";
 
@@ -14,7 +14,7 @@ interface NavLinkProps {
 }
 
 const variantClass: Record<Variant, string> = {
-  default: "hover:text-white",
+  default: "hover:text-accent-hi",
   accent: "hover:text-accent",
 };
 
@@ -37,11 +37,17 @@ export function NavLink({
 }: NavLinkProps) {
   const cls = `transition-colors ${variantClass[variant]} ${underline ? "underline" : ""} ${className}`;
 
+  // Текущий раздел подсвечен золотом (главную не подсвечиваем — она везде «родитель»)
   if (to) {
     return (
-      <Link to={to} className={cls} onClick={onClick}>
+      <RouterNavLink
+        to={to}
+        end={to === "/"}
+        className={({ isActive }) => `${cls} ${isActive && to !== "/" ? "text-accent-hi" : ""}`}
+        onClick={onClick}
+      >
         {children}
-      </Link>
+      </RouterNavLink>
     );
   }
 

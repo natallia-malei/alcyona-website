@@ -1,7 +1,7 @@
 export const grids = {
   photos: "grid grid-cols-2 md:grid-cols-4 gap-4",
   videos: "grid md:grid-cols-2 gap-6",
-  releases: "grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6",
+  releases: "grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6",
   releaseDetail: "grid md:grid-cols-[1fr_2fr] gap-12",
 } as const;
 

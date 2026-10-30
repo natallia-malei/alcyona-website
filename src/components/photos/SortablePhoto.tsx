@@ -34,7 +34,7 @@ export function SortablePhoto({ photo, onDelete, deleteLabel }: SortablePhotoPro
         type="button"
         onClick={() => onDelete(photo.id)}
         aria-label={deleteLabel}
-        className="absolute top-2 right-2 p-1.5 rounded-sm bg-black/70 text-white opacity-0 group-hover:opacity-100 hover:bg-accent transition-opacity"
+        className="absolute top-2 right-2 p-1.5 rounded-sm bg-black/70 text-white opacity-0 group-hover:opacity-100 hover:bg-accent hover:text-on-accent transition-opacity"
       >
         <CloseIcon className="w-4 h-4" />
       </button>

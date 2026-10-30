@@ -14,8 +14,8 @@ interface DateStripProps {
 
 // Dot under the date: bright = plenty of free time, dim = a little, none = fully booked
 const dotClass: Record<DayAvailability, { normal: string; selected: string }> = {
-  many: { normal: "bg-accent", selected: "bg-white" },
-  few: { normal: "bg-accent/40", selected: "bg-white/50" },
+  many: { normal: "bg-accent", selected: "bg-on-accent" },
+  few: { normal: "bg-accent/40", selected: "bg-on-accent/50" },
   none: { normal: "bg-transparent", selected: "bg-transparent" },
 };
 
@@ -70,7 +70,7 @@ export function DateStrip({ days, selected, today, availability, onSelect }: Dat
               aria-label={label}
               className={`flex flex-col items-center justify-center min-w-14 min-h-16 px-2 py-1.5 rounded-sm border transition-colors ${
                 isSelected
-                  ? "bg-accent border-accent text-white"
+                  ? "bg-accent border-accent text-on-accent"
                   : `${isToday ? "border-accent/60" : "border-white/10"} ${
                       free === "none" ? "text-fg-muted/40" : "text-fg-muted"
                     } hover:border-accent hover:text-white`

@@ -1,17 +1,17 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type ReactNode,
-} from "react";
-import type { BandInfo, Photo, Release, Video } from "../types";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import type { BandInfo, Concert, Photo, Release, Video } from "../types";
 import { StorageContext, type StorageContextValue } from "./StorageContext";
-import { fetchBand, fetchPhotos, fetchReleases, fetchVideos } from "../supabase/queries";
+import {
+  fetchBand,
+  fetchConcerts,
+  fetchPhotos,
+  fetchReleases,
+  fetchVideos,
+} from "../supabase/queries";
 import {
   addPhoto as addPhotoMutation,
   addVideo as addVideoMutation,
+  deleteConcert as deleteConcertMutation,
   deletePhoto as deletePhotoMutation,
   deleteRelease as deleteReleaseMutation,
   deleteVideo as deleteVideoMutation,
@@ -19,6 +19,7 @@ import {
   updatePhotoPositions as updatePhotoPositionsMutation,
   updateReleasePositions as updateReleasePositionsMutation,
   updateVideoPositions as updateVideoPositionsMutation,
+  upsertConcert as upsertConcertMutation,
   upsertRelease as upsertReleaseMutation,
 } from "../supabase/mutations";
 
@@ -30,6 +31,7 @@ export function StorageProvider({ children }: StorageProviderProps) {
   const [releases, setReleases] = useState<Release[]>([]);
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [videos, setVideos] = useState<Video[]>([]);
+  const [concerts, setConcerts] = useState<Concert[]>([]);
   const [band, setBand] = useState<BandInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -49,12 +51,13 @@ export function StorageProvider({ children }: StorageProviderProps) {
   }, [videos]);
 
   useEffect(() => {
-    Promise.all([fetchReleases(), fetchPhotos(), fetchVideos(), fetchBand()])
-      .then(([r, p, v, b]) => {
+    Promise.all([fetchReleases(), fetchPhotos(), fetchVideos(), fetchBand(), fetchConcerts()])
+      .then(([r, p, v, b, c]) => {
         setReleases(r);
         setPhotos(p);
         setVideos(v);
         setBand(b);
+        setConcerts(c);
       })
       .catch((e: unknown) => {
         setError(e instanceof Error ? e.message : "Unknown error");
@@ -142,11 +145,26 @@ export function StorageProvider({ children }: StorageProviderProps) {
     setBand(next);
   }, []);
 
+  const upsertConcert = useCallback(async (concert: Concert) => {
+    const saved = await upsertConcertMutation(concert);
+    setConcerts((prev) =>
+      [...prev.filter((c) => c.id !== saved.id), saved].sort((a, b) =>
+        a.date.localeCompare(b.date),
+      ),
+    );
+  }, []);
+
+  const deleteConcert = useCallback(async (id: string) => {
+    await deleteConcertMutation(id);
+    setConcerts((prev) => prev.filter((c) => c.id !== id));
+  }, []);
+
   const value = useMemo<StorageContextValue>(
     () => ({
       releases,
       photos,
       videos,
+      concerts,
       band,
       loading,
       error,
@@ -160,11 +178,14 @@ export function StorageProvider({ children }: StorageProviderProps) {
       deleteVideo,
       reorderVideos,
       updateBand,
+      upsertConcert,
+      deleteConcert,
     }),
     [
       releases,
       photos,
       videos,
+      concerts,
       band,
       loading,
       error,
@@ -178,6 +199,8 @@ export function StorageProvider({ children }: StorageProviderProps) {
       deleteVideo,
       reorderVideos,
       updateBand,
+      upsertConcert,
+      deleteConcert,
     ],
   );
 

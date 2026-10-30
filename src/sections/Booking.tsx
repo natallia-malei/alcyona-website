@@ -27,6 +27,7 @@ export function Booking() {
     <>
       <CTASection
         id="booking"
+        eyebrow={t("booking.eyebrow")}
         title={t("booking.title")}
         subtitle={t("booking.subtitle")}
         action={isAdmin ? <EditButton onClick={() => setEditing(true)} /> : undefined}

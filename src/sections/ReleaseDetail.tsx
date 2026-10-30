@@ -10,6 +10,8 @@ import { Eyebrow } from "../components/ui/Eyebrow";
 import { ReleaseLinks } from "../components/release/ReleaseLinks";
 import { TrackList } from "../components/release/TrackList";
 import { ReleaseCover } from "../components/release/ReleaseCover";
+import { releaseCoverTransition } from "../components/release/releaseTransition";
+import { ReleaseMeta } from "../components/release/ReleaseMeta";
 import { EditButton } from "../components/ui/EditButton";
 import { Modal } from "../components/ui/Modal";
 import { ReleaseForm } from "../components/forms/ReleaseForm";
@@ -39,17 +41,31 @@ export function ReleaseDetail({ release }: ReleaseDetailProps) {
         </div>
       )}
 
+      {/* На телефоне сначала название, потом обложка — заголовок не уезжает под сгиб */}
+      <div className="mt-6 md:hidden">
+        <Eyebrow tracking="extra" className="text-accent mb-2">
+          <ReleaseMeta release={release} />
+        </Eyebrow>
+        <PageTitle className="mb-6">{tr(release.title)}</PageTitle>
+      </div>
+
       <div className={`${grids.releaseDetail} mt-4`}>
         <div>
-          <ReleaseCover coverUrl={release.coverUrl} alt={tr(release.title)} />
+          <ReleaseCover
+            coverUrl={release.coverUrl}
+            alt={tr(release.title)}
+            transitionName={releaseCoverTransition(release.id)}
+          />
           <ReleaseLinks links={release.links} className="mt-6" />
         </div>
 
         <div>
-          <Eyebrow tracking="extra" className="text-accent mb-2">
-            {release.type} · {new Date(release.releaseDate).getFullYear()}
-          </Eyebrow>
-          <PageTitle className="mb-6">{tr(release.title)}</PageTitle>
+          <div className="hidden md:block">
+            <Eyebrow tracking="extra" className="text-accent mb-2">
+              <ReleaseMeta release={release} />
+            </Eyebrow>
+            <PageTitle className="mb-6">{tr(release.title)}</PageTitle>
+          </div>
           <p className="mb-10">{tr(release.description)}</p>
 
           <SectionTitle size="sm" className="mb-4">
