@@ -41,6 +41,23 @@ export interface Video {
   title: LocalizedText;
 }
 
+export type ConcertStatus = "announced" | "on_sale" | "sold_out" | "cancelled";
+
+export interface Concert {
+  id: string;
+  /** Дата концерта, «2026-11-15» */
+  date: string;
+  /** Время начала, «19:00»; пусто — не объявлено */
+  time: string;
+  city: LocalizedText;
+  venue: string;
+  status: ConcertStatus;
+  ticketUrl: string;
+  vipUrl: string;
+  /** Видео с концерта — для архива */
+  videoUrl: string;
+}
+
 export interface SocialLinks {
   instagram?: string;
   youtube?: string;

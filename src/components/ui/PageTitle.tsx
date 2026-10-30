@@ -7,8 +7,8 @@ interface Props {
 }
 
 const sizeClass = {
-  default: "text-4xl md:text-5xl",
-  hero: "text-5xl md:text-7xl",
+  default: "text-5xl md:text-6xl",
+  hero: "text-6xl md:text-8xl leading-[0.95]",
 };
 
 export function PageTitle({

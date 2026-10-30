@@ -1,4 +1,4 @@
-import type { BandInfo, Photo, Profile, Release, Track, Video } from "../types";
+import type { BandInfo, Concert, Photo, Profile, Release, Track, Video } from "../types";
 import { supabase } from "./client";
 
 interface ReleaseRow {
@@ -33,6 +33,35 @@ interface VideoRow {
   youtube_id: string;
   title: Video["title"];
   position: number;
+}
+
+export interface ConcertRow {
+  id: string;
+  concert_date: string;
+  start_time: string | null;
+  city: Concert["city"];
+  venue: string;
+  status: Concert["status"];
+  ticket_url: string | null;
+  vip_url: string | null;
+  video_url: string | null;
+}
+
+export const CONCERT_COLUMNS =
+  "id, concert_date, start_time, city, venue, status, ticket_url, vip_url, video_url";
+
+export function rowToConcert(row: ConcertRow): Concert {
+  return {
+    id: row.id,
+    date: row.concert_date,
+    time: row.start_time ?? "",
+    city: row.city,
+    venue: row.venue,
+    status: row.status,
+    ticketUrl: row.ticket_url ?? "",
+    vipUrl: row.vip_url ?? "",
+    videoUrl: row.video_url ?? "",
+  };
 }
 
 interface BandRow {
@@ -99,10 +128,7 @@ function rowToRelease(row: ReleaseRow): Release {
 }
 
 export async function fetchReleases(): Promise<Release[]> {
-  const { data, error } = await supabase
-    .from("releases")
-    .select("*, tracks(*)")
-    .order("position");
+  const { data, error } = await supabase.from("releases").select("*, tracks(*)").order("position");
 
   if (error) throw error;
   return (data as ReleaseRow[]).map(rowToRelease);
@@ -130,6 +156,25 @@ export async function fetchVideos(): Promise<Video[]> {
     youtubeId: row.youtube_id,
     title: row.title,
   }));
+}
+
+// Таблица появляется миграцией 014. Пока её нет, сайт работает, просто без концертов.
+const MISSING_TABLE_CODES = new Set(["42P01", "PGRST205"]);
+
+export async function fetchConcerts(): Promise<Concert[]> {
+  const { data, error } = await supabase
+    .from("concerts")
+    .select(CONCERT_COLUMNS)
+    .order("concert_date");
+
+  if (error) {
+    if (MISSING_TABLE_CODES.has(error.code)) {
+      console.warn("Concerts table not found — apply supabase/migrations/014_concerts.sql");
+      return [];
+    }
+    throw error;
+  }
+  return (data as ConcertRow[]).map(rowToConcert);
 }
 
 export async function fetchBand(): Promise<BandInfo> {

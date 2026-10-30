@@ -92,6 +92,7 @@ export function ReleasesGallery() {
     <Page size="xl">
       <Stack gap="lg">
         <PageHeader
+          eyebrow={t("releases.eyebrow")}
           title={t("releases.title")}
           actions={
             isAdmin ? (
@@ -105,7 +106,11 @@ export function ReleasesGallery() {
         {releases.length === 0 ? (
           <p>{t("releases.empty")}</p>
         ) : isAdmin ? (
-          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
             <SortableContext items={releases.map((r) => r.id)} strategy={rectSortingStrategy}>
               <div className={grids.releases}>
                 {releases.map((release) => (

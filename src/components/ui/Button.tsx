@@ -14,20 +14,22 @@ interface ButtonProps {
   onClick?: () => void;
   type?: "button" | "submit";
   disabled?: boolean;
+  /** Мягкое «дыхание» свечением — только для главных призывов на публичных страницах */
+  glow?: boolean;
 }
 
 const base =
-  "inline-flex items-center justify-center gap-2 uppercase tracking-widest font-semibold transition-colors";
+  "inline-flex items-center justify-center gap-2 uppercase tracking-[0.16em] font-semibold transition-colors";
 
 const variantClass: Record<Variant, string> = {
-  primary: "bg-accent hover:bg-sky-700 text-white",
-  telegram: "bg-[#229ED9] hover:bg-[#1a82b3] text-white",
-  outline: "border border-white/20 text-white hover:bg-white/10",
+  primary: "btn-gold",
+  telegram: "btn-gold",
+  outline: "border border-accent/70 text-fg hover:border-accent-hi hover:text-accent-hi",
 };
 
 const sizeClass: Record<Size, string> = {
-  sm: "px-4 py-2 text-sm",
-  md: "px-8 py-3 text-sm",
+  sm: "px-4 py-2 text-xs",
+  md: "px-7 py-3.5 text-[13px]",
 };
 
 export function Button({
@@ -40,8 +42,9 @@ export function Button({
   onClick,
   type = "button",
   disabled = false,
+  glow = false,
 }: ButtonProps) {
-  const cls = `${base} ${variantClass[variant]} ${sizeClass[size]} ${
+  const cls = `${base} ${variantClass[variant]} ${sizeClass[size]} ${glow ? "btn-glow" : ""} ${
     disabled ? "opacity-50 cursor-not-allowed pointer-events-none" : ""
   } ${className}`;
 

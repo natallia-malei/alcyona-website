@@ -85,6 +85,7 @@ export function VideosGallery() {
     <Page size="xl">
       <Stack gap="lg">
         <PageHeader
+          eyebrow={t("videos.eyebrow")}
           title={t("videos.title")}
           actions={
             <div className="flex flex-wrap gap-2">
@@ -105,7 +106,11 @@ export function VideosGallery() {
         {videos.length === 0 ? (
           <p>{t("videos.empty")}</p>
         ) : isAdmin ? (
-          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
             <SortableContext items={videos.map((v) => v.id)} strategy={rectSortingStrategy}>
               <div className={grids.videos}>
                 {videos.map((v) => (

@@ -12,12 +12,12 @@ interface EyebrowProps {
 }
 
 const sizeClass: Record<Size, string> = {
-  sm: "text-sm",
-  xs: "text-xs",
+  sm: "text-xs",
+  xs: "text-[11px]",
 };
 
 const trackingClass: Record<Tracking, string> = {
-  wide: "tracking-widest",
+  wide: "tracking-[0.18em]",
   extra: "tracking-[0.3em]",
 };
 
@@ -29,7 +29,9 @@ export function Eyebrow({
   children,
 }: EyebrowProps) {
   return (
-    <Tag className={`uppercase ${sizeClass[size]} ${trackingClass[tracking]} ${className}`}>
+    <Tag
+      className={`font-mono uppercase ${sizeClass[size]} ${trackingClass[tracking]} ${className}`}
+    >
       {children}
     </Tag>
   );

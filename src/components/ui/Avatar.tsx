@@ -20,7 +20,7 @@ export function Avatar({ imageUrl, initials, size = "sm" }: AvatarProps) {
 
   return (
     <span
-      className={`inline-flex items-center justify-center shrink-0 overflow-hidden rounded-full bg-accent font-semibold text-white ${sizeClass[size]}`}
+      className={`inline-flex items-center justify-center shrink-0 overflow-hidden rounded-full bg-accent font-semibold text-on-accent ${sizeClass[size]}`}
       aria-hidden="true"
     >
       {showImage ? (

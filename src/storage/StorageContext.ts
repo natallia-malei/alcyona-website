@@ -1,10 +1,11 @@
 import { createContext } from "react";
-import type { BandInfo, Photo, Release, Video } from "../types";
+import type { BandInfo, Concert, Photo, Release, Video } from "../types";
 
 export interface StorageContextValue {
   releases: Release[];
   photos: Photo[];
   videos: Video[];
+  concerts: Concert[];
   band: BandInfo | null;
   loading: boolean;
   error: string | null;
@@ -18,6 +19,8 @@ export interface StorageContextValue {
   deleteVideo: (id: string) => Promise<void>;
   reorderVideos: (videos: Video[]) => Promise<void>;
   updateBand: (band: BandInfo) => Promise<void>;
+  upsertConcert: (concert: Concert) => Promise<void>;
+  deleteConcert: (id: string) => Promise<void>;
 }
 
 export const StorageContext = createContext<StorageContextValue | null>(null);

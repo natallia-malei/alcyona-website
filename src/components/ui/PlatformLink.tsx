@@ -13,15 +13,10 @@ interface PlatformLinkProps {
 
 const variantClass: Record<Variant, string> = {
   text: `${typography.eyebrow} ${interactive.accentHover}`,
-  icon: interactive.accentHover,
+  icon: "grid size-11 place-items-center [&_svg]:size-5 rounded-full border border-fg/15 text-fg/85 transition-[color,border-color,box-shadow] duration-300 hover:border-accent hover:text-accent-hi hover:shadow-[0_0_18px_rgba(236,208,147,.3)]",
 };
 
-export function PlatformLink({
-  href,
-  children,
-  variant = "text",
-  ariaLabel,
-}: PlatformLinkProps) {
+export function PlatformLink({ href, children, variant = "text", ariaLabel }: PlatformLinkProps) {
   return (
     <a
       href={href}

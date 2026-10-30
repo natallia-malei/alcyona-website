@@ -79,6 +79,7 @@ export function PhotosGallery() {
     <Page size="xl">
       <Stack gap="lg">
         <PageHeader
+          eyebrow={t("photos.eyebrow")}
           title={t("photos.title")}
           actions={
             isAdmin ? (
@@ -92,7 +93,11 @@ export function PhotosGallery() {
         {photos.length === 0 ? (
           <p>{t("photos.empty")}</p>
         ) : isAdmin ? (
-          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
             <SortableContext items={photos.map((p) => p.id)} strategy={rectSortingStrategy}>
               <div className={grids.photos}>
                 {photos.map((p) => (

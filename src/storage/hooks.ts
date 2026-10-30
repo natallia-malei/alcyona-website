@@ -22,10 +22,16 @@ export function useVideos() {
   return useStorageContext().videos;
 }
 
+export function useConcerts() {
+  return useStorageContext().concerts;
+}
+
 export function useBand() {
   const band = useStorageContext().band;
   if (!band) {
-    throw new Error("useBand called before storage loaded — ensure StorageProvider has finished loading");
+    throw new Error(
+      "useBand called before storage loaded — ensure StorageProvider has finished loading",
+    );
   }
   return band;
 }
@@ -61,5 +67,7 @@ export function useStorageActions() {
     deleteVideo: ctx.deleteVideo,
     reorderVideos: ctx.reorderVideos,
     updateBand: ctx.updateBand,
+    upsertConcert: ctx.upsertConcert,
+    deleteConcert: ctx.deleteConcert,
   };
 }
