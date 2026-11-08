@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { useAccount, useAuthActions } from "../../auth/hooks";
+import { useAccount, useAuthActions, useIsAdmin } from "../../auth/hooks";
+import { MANAGE_PATH } from "../studio/manage/manageLinks";
 import { Avatar } from "../ui/Avatar";
 import { typography } from "../../styles/typography";
 import { interactive } from "../../styles/interactive";
@@ -15,6 +16,7 @@ export function UserMenu({ onOpenProfile }: UserMenuProps) {
   const { t } = useTranslation();
   const account = useAccount();
   const { signOut } = useAuthActions();
+  const isAdmin = useIsAdmin();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -61,6 +63,11 @@ export function UserMenu({ onOpenProfile }: UserMenuProps) {
           <Link to="/studio#my-bookings" onClick={() => setOpen(false)} className={item}>
             {t("auth.myBookings")}
           </Link>
+          {isAdmin && (
+            <Link to={MANAGE_PATH} onClick={() => setOpen(false)} className={item}>
+              {t("auth.manageStudio")}
+            </Link>
+          )}
           <button
             type="button"
             onClick={() => {

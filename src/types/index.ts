@@ -136,3 +136,60 @@ export interface StudioSettings {
   freeCancelHours: number;
   noShowLimit: number;
 }
+
+// ----- Studio management (015, /studio/manage) -----
+
+// The client a booking belongs to, as the admin sees it
+export interface BookingClient {
+  id: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  telegramUsername: string;
+  role: UserRole; // the admin's own bookings have the admin here
+  trusted: boolean;
+  noShowCount: number;
+  blocked: boolean;
+}
+
+// Any booking with everything the admin may see.
+// kind: client (registered) | guest (no account) | admin (closed time) | deleted (account gone)
+export interface AdminBooking {
+  id: string;
+  startsAt: Date;
+  endsAt: Date;
+  status: BookingStatus;
+  expiresAt: Date | null;
+  purpose: string; // "" when empty
+  attended: boolean | null; // null = not marked
+  kind: BookingKind;
+  client: BookingClient | null; // kind "client"
+  guestName: string | null; // kind "guest"
+  guestPhone: string | null;
+  label: string | null; // kind "admin"; "" = default "Busy"
+  createdAt: Date;
+}
+
+// A row of the Clients tab (get_clients): profile + email + booking stats
+export interface StudioClient {
+  id: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  telegramUsername: string;
+  email: string;
+  role: UserRole;
+  trusted: boolean;
+  blocked: boolean;
+  noShowCount: number;
+  createdAt: Date;
+  upcomingCount: number; // active future bookings and requests
+  attendedCount: number;
+  lastVisitAt: Date | null;
+}
+
+// Who the admin books for (admin_create_booking)
+export type AdminBookingTarget =
+  | { kind: "client"; userId: string }
+  | { kind: "guest"; name: string; phone: string }
+  | { kind: "block"; label: string }; // "" = "Busy"

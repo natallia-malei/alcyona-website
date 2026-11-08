@@ -31,6 +31,7 @@ interface WeekGridProps {
   onPick: (slot: HourSlot) => void; // only for state "free"
   onExplain: (slot: HourSlot) => void; // tap on an unavailable hour → why
   highlightId?: string | null; // just-created booking, briefly outlined
+  onOpenBooking?: (bookingId: string) => void; // admin panel: a booking block opens its details
 }
 
 // One item in a day column: a single hour, or a booking spanning several rows
@@ -87,6 +88,7 @@ export function WeekGrid({
   onPick,
   onExplain,
   highlightId,
+  onOpenBooking,
 }: WeekGridProps) {
   const { t, i18n } = useTranslation();
   const locale = (i18n.language as Locale) ?? "ru";
@@ -127,23 +129,39 @@ export function WeekGrid({
       const status = b.status ? t(`studio.status.${b.status}`) : null;
       const tooltip = [title, time, status, b.purpose].filter(Boolean).join("\n");
 
+      // Admin panel: the block is a button that opens the booking's details
+      const Block = onOpenBooking ? "button" : "div";
       return (
-        <div
+        <Block
           key={`${day}-b-${b.id}`}
           data-booking={b.id}
           style={place(column, cell.row, cell.span)}
           title={tooltip}
-          className={`${style} rounded-sm px-2 py-1 overflow-hidden min-w-0 flex flex-col text-xs leading-4 transition-shadow ${
-            b.id === highlightId ? slotStyles.highlight : ""
-          }`}
+          {...(onOpenBooking && {
+            type: "button" as const,
+            onClick: () => onOpenBooking(b.id),
+          })}
+          className={`${style} rounded-sm px-2 py-1 overflow-hidden min-w-0 flex flex-col text-left text-xs leading-4 transition-shadow ${
+            onOpenBooking ? slotStyles.openable : ""
+          } ${b.id === highlightId ? slotStyles.highlight : ""}`}
         >
-          <span className="font-semibold truncate">{title}</span>
-          <span className="truncate opacity-80">{time}</span>
-          {status && b.status && (
-            <span className={`truncate ${statusTextClass[b.status]}`}>{status}</span>
+          {cell.span === 1 ? (
+            // A 1-hour block (admin only) fits one line; the rest is in the tooltip
+            <span className="truncate">
+              <span className="font-semibold">{title}</span>{" "}
+              <span className="opacity-80">{time}</span>
+            </span>
+          ) : (
+            <>
+              <span className="font-semibold truncate">{title}</span>
+              <span className="truncate opacity-80">{time}</span>
+              {status && b.status && (
+                <span className={`truncate ${statusTextClass[b.status]}`}>{status}</span>
+              )}
+              {b.purpose && <span className="truncate opacity-70">{b.purpose}</span>}
+            </>
           )}
-          {b.purpose && <span className="truncate opacity-70">{b.purpose}</span>}
-        </div>
+        </Block>
       );
     }
 

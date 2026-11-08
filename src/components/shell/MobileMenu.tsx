@@ -2,7 +2,8 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import { useBand } from "../../storage/hooks";
-import { useAccount, useAuthActions, useAuthLoading } from "../../auth/hooks";
+import { useAccount, useAuthActions, useAuthLoading, useIsAdmin } from "../../auth/hooks";
+import { MANAGE_PATH } from "../studio/manage/manageLinks";
 import { loginPath } from "../../auth/redirect";
 import { NavLink } from "../ui/NavLink";
 import { Avatar } from "../ui/Avatar";
@@ -25,6 +26,7 @@ export function MobileMenu({ isOpen, onClose, onOpenProfile }: MobileMenuProps) 
   const authLoading = useAuthLoading();
   const { pathname } = useLocation();
   const { signOut } = useAuthActions();
+  const isAdmin = useIsAdmin();
 
   const handleSignOut = async () => {
     await signOut();
@@ -94,6 +96,16 @@ export function MobileMenu({ isOpen, onClose, onOpenProfile }: MobileMenuProps) 
                 <Avatar imageUrl={account.avatarUrl} initials={account.initials} />
                 <span className="text-sm text-white">{account.name}</span>
               </div>
+              {isAdmin && (
+                <NavLink
+                  variant="accent"
+                  to={MANAGE_PATH}
+                  onClick={onClose}
+                  className={typography.eyebrow}
+                >
+                  {t("auth.manageStudio")}
+                </NavLink>
+              )}
               <div className="flex items-center gap-6">
                 <NavLink
                   variant="accent"
