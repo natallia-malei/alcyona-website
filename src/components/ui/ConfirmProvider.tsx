@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { ConfirmContext, type ConfirmOptions, type ConfirmContextValue } from "./ConfirmContext";
 import { Button } from "./Button";
@@ -33,6 +33,19 @@ export function ConfirmProvider({ children }: ConfirmProviderProps) {
     pendingRef.current = null;
     setPending(null);
   }, []);
+
+  // Escape = "Cancel". Captured on window before any dialog underneath
+  // (e.g. a booking sheet) sees it, so only the confirm closes.
+  useEffect(() => {
+    if (!pending) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      e.stopPropagation();
+      settle(false);
+    };
+    window.addEventListener("keydown", onKey, true);
+    return () => window.removeEventListener("keydown", onKey, true);
+  }, [pending, settle]);
 
   const value = useMemo<ConfirmContextValue>(() => ({ confirm }), [confirm]);
 

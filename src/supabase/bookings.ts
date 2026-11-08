@@ -7,7 +7,8 @@ import type {
 } from "../types";
 import { supabase } from "./client";
 
-// Error codes raised by create_booking / cancel_booking / get_calendar (012, 013).
+// Error codes raised by create_booking / cancel_booking / get_calendar (012, 013)
+// and by the /studio/manage functions (015, src/supabase/manage.ts).
 // The UI shows them via t(`studio.errors.${code}`).
 export const BOOKING_ERROR_CODES = [
   "not_authenticated",
@@ -28,6 +29,18 @@ export const BOOKING_ERROR_CODES = [
   "not_active",
   "too_late_to_cancel",
   "invalid_range",
+  // 015
+  "forbidden",
+  "not_pending",
+  "request_expired",
+  "not_confirmed",
+  "not_started",
+  "invalid_kind",
+  "client_required",
+  "guest_required",
+  "label_too_long",
+  "cannot_block_admin",
+  "invalid_settings", // CHECK violation on studio_settings (raised by the client code)
 ] as const;
 
 export type BookingErrorCode = (typeof BOOKING_ERROR_CODES)[number];
@@ -47,7 +60,7 @@ function isBookingErrorCode(value: string): value is BookingErrorCode {
 }
 
 // RAISE EXCEPTION 'slot_taken' arrives as { message: "slot_taken" }
-function toBookingError(error: { message: string }): Error {
+export function toBookingError(error: { message: string }): Error {
   return isBookingErrorCode(error.message) ? new BookingError(error.message) : (error as Error);
 }
 
@@ -76,7 +89,7 @@ interface BookingRow {
   purpose: string | null;
 }
 
-interface SettingsRow {
+export interface SettingsRow {
   open_hour: number;
   close_hour: number;
   min_booking_hours: number;
@@ -141,14 +154,18 @@ export async function fetchMyBookings(userId: string): Promise<MyBooking[]> {
 export async function fetchStudioSettings(): Promise<StudioSettings> {
   const { data, error } = await supabase
     .from("studio_settings")
-    .select(
-      "open_hour, close_hour, min_booking_hours, max_booking_hours, booking_horizon_weeks, max_active_bookings, request_ttl_hours, request_cutoff_hours, free_cancel_hours, no_show_limit",
-    )
+    .select(SETTINGS_COLUMNS)
     .eq("id", 1)
     .single();
 
   if (error) throw error;
-  const row = data as SettingsRow;
+  return rowToSettings(data as SettingsRow);
+}
+
+export const SETTINGS_COLUMNS =
+  "open_hour, close_hour, min_booking_hours, max_booking_hours, booking_horizon_weeks, max_active_bookings, request_ttl_hours, request_cutoff_hours, free_cancel_hours, no_show_limit";
+
+export function rowToSettings(row: SettingsRow): StudioSettings {
   return {
     openHour: row.open_hour,
     closeHour: row.close_hour,

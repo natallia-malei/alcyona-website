@@ -13,6 +13,9 @@ export const slotStyles = {
   busyPending: "bg-white/5 border border-dashed border-amber-400/50 text-fg-muted", // admin sees others' requests
   mineConfirmed: "bg-accent/20 border-l-2 border-accent text-white",
   minePending: "bg-amber-400/10 border-l-2 border-dashed border-amber-400 text-white",
+  // Admin panel: a booking you can click to open
+  openable:
+    "cursor-pointer hover:ring-1 hover:ring-accent/70 focus-visible:outline-2 focus-visible:outline-accent",
   // Just-created booking, for a few seconds after "Book"
   highlight: "ring-2 ring-white/80 shadow-[0_0_0_6px_rgb(14_165_233/0.35)]",
 } as const;

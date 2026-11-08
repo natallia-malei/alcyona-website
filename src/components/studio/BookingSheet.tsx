@@ -49,7 +49,7 @@ export function BookingSheet({ slot, ctx, onClose, onDone }: BookingSheetProps) 
 }
 
 // Bottom sheet on phones, centered dialog from md. Same focus trap / scroll lock as Modal.
-function SheetFrame({
+export function SheetFrame({
   onClose,
   children,
 }: {

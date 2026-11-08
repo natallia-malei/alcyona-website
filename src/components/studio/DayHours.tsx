@@ -21,6 +21,7 @@ interface DayHoursProps {
   onPick: (slot: HourSlot) => void;
   onExplain: (slot: HourSlot) => void; // tap on an unavailable hour → why
   highlightId?: string | null; // just-created booking, briefly outlined
+  onOpenBooking?: (bookingId: string) => void; // admin panel: a booking row opens its details
 }
 
 // Bookings and runs of past hours are rows; the hours you can start from
@@ -59,7 +60,14 @@ const timeCol = "w-24 shrink-0 text-sm tabular-nums";
 const chipBase = "flex items-center justify-center min-h-11 rounded-sm text-sm tabular-nums";
 
 // Phone: the selected day's hours
-export function DayHours({ day, ctx, onPick, onExplain, highlightId }: DayHoursProps) {
+export function DayHours({
+  day,
+  ctx,
+  onPick,
+  onExplain,
+  highlightId,
+  onOpenBooking,
+}: DayHoursProps) {
   const { t } = useTranslation();
   const slots = getDaySlots(day, ctx);
   const rows = toRows(slots, ctx);
@@ -84,14 +92,8 @@ export function DayHours({ day, ctx, onPick, onExplain, highlightId }: DayHoursP
               : pending
                 ? slotStyles.busyPending
                 : slotStyles.busy;
-            return (
-              <li
-                key={booking.id}
-                data-booking={booking.id}
-                className={`${rowBase} ${style} transition-shadow ${
-                  booking.id === highlightId ? slotStyles.highlight : ""
-                }`}
-              >
+            const content = (
+              <>
                 <span className={timeCol}>{formatTimeRange(booking.startsAt, booking.endsAt)}</span>
                 <span className="min-w-0 flex-1">
                   <span className="block text-sm truncate">{bookingTitle(booking, t)}</span>
@@ -107,6 +109,24 @@ export function DayHours({ day, ctx, onPick, onExplain, highlightId }: DayHoursP
                     <span className="block text-xs text-fg-muted truncate">{booking.purpose}</span>
                   )}
                 </span>
+              </>
+            );
+            const rowClass = `${rowBase} ${style} transition-shadow ${
+              booking.id === highlightId ? slotStyles.highlight : ""
+            }`;
+            return (
+              <li key={booking.id} data-booking={booking.id}>
+                {onOpenBooking ? (
+                  <button
+                    type="button"
+                    onClick={() => onOpenBooking(booking.id)}
+                    className={`${rowClass} ${slotStyles.openable}`}
+                  >
+                    {content}
+                  </button>
+                ) : (
+                  <div className={rowClass}>{content}</div>
+                )}
               </li>
             );
           }

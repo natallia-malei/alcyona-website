@@ -3,6 +3,7 @@ import App from "./App";
 import { Landing } from "./pages/Landing";
 import { ReleasePage } from "./pages/Release";
 import { Studio } from "./pages/Studio";
+import { StudioManage } from "./pages/StudioManage";
 import { Privacy } from "./pages/Privacy";
 import { PhotosGallery } from "./pages/PhotosGallery";
 import { VideosGallery } from "./pages/VideosGallery";
@@ -21,6 +22,7 @@ export const router = createBrowserRouter([
       { index: true, Component: Landing },
       { path: "release/:id", Component: ReleasePage },
       { path: "studio", Component: Studio },
+      { path: "studio/manage", Component: StudioManage },
       { path: "privacy", Component: Privacy },
       { path: "photos", Component: PhotosGallery },
       { path: "videos", Component: VideosGallery },
