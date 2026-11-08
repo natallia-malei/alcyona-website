@@ -31,3 +31,6 @@ CHECKLIST.md
 *.njsproj
 *.sln
 *.sw?
+
+# Supabase CLI local state (supabase link)
+supabase/.temp/

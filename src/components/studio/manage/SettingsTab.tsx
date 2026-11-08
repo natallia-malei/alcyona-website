@@ -5,6 +5,7 @@ import { bookingErrorKey, fetchStudioSettings } from "../../../supabase/bookings
 import { updateStudioSettings } from "../../../supabase/manage";
 import { useToast } from "../../../hooks/useToast";
 import { Button } from "../../ui/Button";
+import { SettingsTelegram } from "./SettingsTelegram";
 import { typography } from "../../../styles/typography";
 import {
   SETTINGS_GROUPS,
@@ -95,58 +96,61 @@ export function SettingsTab() {
   };
 
   return (
-    <form onSubmit={(e) => void handleSubmit(e)} noValidate className="flex flex-col gap-8">
-      <p className={typography.caption}>{t("studio.manage.settings.hint")}</p>
+    <div className="flex flex-col gap-12">
+      <form onSubmit={(e) => void handleSubmit(e)} noValidate className="flex flex-col gap-8">
+        <p className={typography.caption}>{t("studio.manage.settings.hint")}</p>
 
-      {SETTINGS_GROUPS.map((group) => {
-        const messages = groupErrors[group.id] ?? [];
-        const errorId = `settings-${group.id}-error`;
-        return (
-          <fieldset key={group.id} className="flex flex-col gap-4">
-            <legend className={`mb-4 ${typography.eyebrow} text-accent`}>
-              {t(`studio.manage.settings.groups.${group.id}`)}
-            </legend>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {group.fields.map((field) => (
-                <SettingsNumberField
-                  key={field}
-                  label={t(`studio.manage.settings.${field}`)}
-                  value={form[field]}
-                  invalid={invalidFields.has(field)}
-                  errorId={messages.length > 0 ? errorId : undefined}
-                  max={field === "openHour" || field === "closeHour" ? 24 : undefined}
-                  disabled={saving}
-                  onChange={(v) => setField(field, v)}
-                />
-              ))}
-            </div>
-            {messages.length > 0 && (
-              <div id={errorId} role="alert" className="flex flex-col gap-1">
-                {messages.map((key) => (
-                  <p key={key} className="text-sm text-red-400">
-                    {t(`studio.manage.settings.invalid.${key}`)}
-                  </p>
+        {SETTINGS_GROUPS.map((group) => {
+          const messages = groupErrors[group.id] ?? [];
+          const errorId = `settings-${group.id}-error`;
+          return (
+            <fieldset key={group.id} className="flex flex-col gap-4">
+              <legend className={`mb-4 ${typography.eyebrow} text-accent`}>
+                {t(`studio.manage.settings.groups.${group.id}`)}
+              </legend>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {group.fields.map((field) => (
+                  <SettingsNumberField
+                    key={field}
+                    label={t(`studio.manage.settings.${field}`)}
+                    value={form[field]}
+                    invalid={invalidFields.has(field)}
+                    errorId={messages.length > 0 ? errorId : undefined}
+                    max={field === "openHour" || field === "closeHour" ? 24 : undefined}
+                    disabled={saving}
+                    onChange={(v) => setField(field, v)}
+                  />
                 ))}
               </div>
-            )}
-          </fieldset>
-        );
-      })}
+              {messages.length > 0 && (
+                <div id={errorId} role="alert" className="flex flex-col gap-1">
+                  {messages.map((key) => (
+                    <p key={key} className="text-sm text-red-400">
+                      {t(`studio.manage.settings.invalid.${key}`)}
+                    </p>
+                  ))}
+                </div>
+              )}
+            </fieldset>
+          );
+        })}
 
-      <div className="flex flex-wrap items-center justify-end gap-3 pt-4 border-t border-white/10">
-        <Button
-          variant="outline"
-          size="sm"
-          disabled={!changed || saving}
-          onClick={() => setForm(toForm(loaded))}
-        >
-          {t("studio.manage.settings.reset")}
-        </Button>
-        <Button size="sm" type="submit" disabled={!changed || !valid || saving}>
-          {t(saving ? "studio.manage.settings.saving" : "studio.manage.settings.save")}
-        </Button>
-      </div>
-    </form>
+        <div className="flex flex-wrap items-center justify-end gap-3 pt-4 border-t border-white/10">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={!changed || saving}
+            onClick={() => setForm(toForm(loaded))}
+          >
+            {t("studio.manage.settings.reset")}
+          </Button>
+          <Button size="sm" type="submit" disabled={!changed || !valid || saving}>
+            {t(saving ? "studio.manage.settings.saving" : "studio.manage.settings.save")}
+          </Button>
+        </div>
+      </form>
+      <SettingsTelegram />
+    </div>
   );
 }
 
