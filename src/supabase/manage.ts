@@ -5,6 +5,7 @@ import type {
   BookingStatus,
   StudioClient,
   StudioSettings,
+  StudioTelegram,
   UserRole,
 } from "../types";
 import { supabase } from "./client";
@@ -285,4 +286,57 @@ export async function updateStudioSettings(settings: StudioSettings): Promise<St
     throw error;
   }
   return rowToSettings(data as SettingsRow);
+}
+
+// ----- Telegram feed (016) -----
+
+interface TelegramRow {
+  chat_id: number | null;
+  thread_id: number | null;
+  chat_title: string | null;
+  connected_at: string | null;
+  connect_code: string | null;
+  connect_code_expires_at: string | null;
+  bot_username: string | null;
+}
+
+export async function fetchTelegramStatus(): Promise<StudioTelegram> {
+  const { data, error } = await supabase
+    .from("studio_telegram")
+    .select(
+      "chat_id, thread_id, chat_title, connected_at, connect_code, connect_code_expires_at, bot_username",
+    )
+    .eq("id", 1)
+    .single();
+
+  if (error) throw error;
+  const row = data as TelegramRow;
+  return {
+    connected: row.chat_id !== null,
+    chatTitle: row.chat_title,
+    threadId: row.thread_id,
+    connectedAt: row.connected_at ? new Date(row.connected_at) : null,
+    connectCode: row.connect_code,
+    connectCodeExpiresAt: row.connect_code_expires_at
+      ? new Date(row.connect_code_expires_at)
+      : null,
+    botUsername: row.bot_username,
+  };
+}
+
+// One-time code (15 min) to send as "/connect@bot CODE" in the group's topic
+export async function createTelegramConnectCode(): Promise<string> {
+  const { data, error } = await supabase.rpc("create_telegram_connect_code");
+  if (error) throw toBookingError(error);
+  return data as string;
+}
+
+export async function disconnectTelegram(): Promise<void> {
+  const { error } = await supabase.rpc("disconnect_telegram");
+  if (error) throw toBookingError(error);
+}
+
+export async function sendTelegramTest(): Promise<void> {
+  const { error } = await supabase.rpc("send_telegram_test");
+  if (error) throw toBookingError(error);
 }

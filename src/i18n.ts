@@ -231,6 +231,7 @@ const resources = {
           label_too_long: "Подпись — не больше 60 символов",
           cannot_block_admin: "Администратора нельзя заблокировать",
           invalid_settings: "Проверьте значения: такие правила не сохранить",
+          telegram_not_connected: "Чат в Telegram ещё не подключён",
         },
         // /studio/manage — admin panel of the studio (stage 3)
         manage: {
@@ -380,6 +381,29 @@ const resources = {
               positive: "Значение должно быть не меньше 1",
               nonNegative: "Значение не может быть отрицательным",
             },
+          },
+          // Telegram feed of the studio (016)
+          telegram: {
+            title: "Telegram",
+            hint: "Бот пишет о бронях, отменах и заявках в тему группы. Кнопок в чате нет — заявки подтверждаются здесь, на сайте.",
+            notSetUp: "Бот ещё не настроен на сервере.",
+            connected: "Подключено: {{chat}}",
+            connectedTopic: "в тему группы",
+            connectedSince: "с {{date}}",
+            notConnected: "Чат не подключён",
+            connect: "Подключить чат",
+            newCode: "Новый код",
+            steps:
+              "В группе включите «Темы», создайте тему «Студия» и добавьте в группу бота @{{bot}}. Затем отправьте в эту тему команду:",
+            codeExpires:
+              "Код действует до {{time}}. Страница обновится сама, когда чат подключится.",
+            copy: "Скопировать",
+            copied: "Скопировано",
+            test: "Отправить тестовое сообщение",
+            testSent: "Тестовое сообщение отправлено",
+            disconnect: "Отключить",
+            disconnectConfirm: "Отключить чат? Бот перестанет писать о бронях.",
+            disconnected: "Чат отключён",
           },
         },
       },
@@ -775,6 +799,7 @@ const resources = {
           label_too_long: "Caption — 60 characters at most",
           cannot_block_admin: "The admin can't be blocked",
           invalid_settings: "Check the values: these rules can't be saved",
+          telegram_not_connected: "No Telegram chat is connected yet",
         },
         // /studio/manage — admin panel of the studio (stage 3)
         manage: {
@@ -923,6 +948,28 @@ const resources = {
               positive: "The value must be at least 1",
               nonNegative: "The value can't be negative",
             },
+          },
+          telegram: {
+            title: "Telegram",
+            hint: "The bot posts bookings, cancellations and requests to a topic of your group. There are no buttons in the chat — requests are approved here, on the website.",
+            notSetUp: "The bot isn't set up on the server yet.",
+            connected: "Connected: {{chat}}",
+            connectedTopic: "to a topic of the group",
+            connectedSince: "since {{date}}",
+            notConnected: "No chat connected",
+            connect: "Connect a chat",
+            newCode: "New code",
+            steps:
+              "In the group, turn on Topics, create a “Studio” topic and add the bot @{{bot}} to the group. Then send this command in that topic:",
+            codeExpires:
+              "The code is valid until {{time}}. This page updates by itself once the chat is connected.",
+            copy: "Copy",
+            copied: "Copied",
+            test: "Send a test message",
+            testSent: "Test message sent",
+            disconnect: "Disconnect",
+            disconnectConfirm: "Disconnect the chat? The bot will stop posting bookings.",
+            disconnected: "Chat disconnected",
           },
         },
       },

@@ -41,6 +41,8 @@ export const BOOKING_ERROR_CODES = [
   "label_too_long",
   "cannot_block_admin",
   "invalid_settings", // CHECK violation on studio_settings (raised by the client code)
+  // 016
+  "telegram_not_connected",
 ] as const;
 
 export type BookingErrorCode = (typeof BOOKING_ERROR_CODES)[number];

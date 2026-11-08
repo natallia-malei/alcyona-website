@@ -193,3 +193,16 @@ export type AdminBookingTarget =
   | { kind: "client"; userId: string }
   | { kind: "guest"; name: string; phone: string }
   | { kind: "block"; label: string }; // "" = "Busy"
+
+// ----- Studio Telegram feed (016) -----
+
+// Where the bot posts (Settings → Telegram). Admin only.
+export interface StudioTelegram {
+  connected: boolean;
+  chatTitle: string | null;
+  threadId: number | null; // topic; null = the general chat of the group
+  connectedAt: Date | null;
+  connectCode: string | null; // waiting for "/connect CODE" in the group
+  connectCodeExpiresAt: Date | null;
+  botUsername: string | null; // null until the Edge Function's setup has run
+}
