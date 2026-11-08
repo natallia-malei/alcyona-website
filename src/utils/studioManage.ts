@@ -31,12 +31,14 @@ export function adminBookingPhone(b: AdminBooking): string {
   return b.client?.phone ?? b.guestPhone ?? "";
 }
 
-// The client's trust status as a badge key under studio.manage.badge.*
+// The client's status as a badge key under studio.manage.badge.*
 export function clientBadge(
   c: Pick<StudioClient, "role" | "trusted" | "blocked">,
-): "admin" | "blocked" | "trusted" | "newbie" {
+): "admin" | "member" | "applicant" | "blocked" | "trusted" | "newbie" {
   if (c.role === "admin") return "admin";
   if (c.blocked) return "blocked";
+  if (c.role === "member") return "member";
+  if (c.role === "applicant") return "applicant";
   return c.trusted ? "trusted" : "newbie";
 }
 

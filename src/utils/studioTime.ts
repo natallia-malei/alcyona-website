@@ -49,9 +49,18 @@ export function hourStart(day: DayKey, hour: number): Date {
   return new Date(new TZDate(y, m - 1, d, hour, 0, 0, STUDIO_TZ).getTime());
 }
 
+// The team has no horizon in the DB; the calendar shows this many weeks ahead
+// (get_calendar returns at most 62 days at once)
+export const TEAM_HORIZON_WEEKS = 8;
+
+// How many weeks ahead the calendar shows for this viewer
+export function horizonWeeks(settings: StudioSettings, unlimited: boolean): number {
+  return unlimited ? TEAM_HORIZON_WEEKS : settings.bookingHorizonWeeks;
+}
+
 // Days a client can book: today + (weeks × 7 − 1) days (same rule as create_booking)
-export function bookableDays(today: DayKey, settings: StudioSettings): DayKey[] {
-  return daysFrom(today, settings.bookingHorizonWeeks * 7);
+export function bookableDays(today: DayKey, settings: StudioSettings, unlimited = false): DayKey[] {
+  return daysFrom(today, horizonWeeks(settings, unlimited) * 7);
 }
 
 // Hours shown in the calendar: open_hour … close_hour − 1 (each is a 1-hour row)
@@ -83,9 +92,10 @@ export function formatTimeRange(startsAt: Date, endsAt: Date): string {
 
 // ----- Hour states -----
 
-// What the viewer is allowed to do — rules differ for admin and trusted clients
+// What the viewer is allowed to do — rules differ for the team and trusted clients
 export interface Viewer {
   isAdmin: boolean;
+  unlimited: boolean; // band member or admin (017): no min/max length, horizon or limit
   trusted: boolean;
 }
 
@@ -118,16 +128,16 @@ function bookingAt(bookings: CalendarBooking[], from: Date, to: Date): CalendarB
 
 // Earliest start the viewer may pick: a newbie's request needs time to be reviewed
 function earliestStart({ now, settings, viewer }: SlotContext): Date {
-  const needsReview = !viewer.isAdmin && !viewer.trusted;
+  const needsReview = !viewer.unlimited && !viewer.trusted;
   return needsReview ? new Date(now.getTime() + settings.requestCutoffHours * HOUR_MS) : now;
 }
 
 // Booking lengths (in hours) that fit from this hour: no overlap, end by close_hour.
-// Admin has no min/max — from 1 hour up to the next booking or closing time.
+// The team has no min/max — from 1 hour up to the next booking or closing time.
 export function availableDurations(day: DayKey, hour: number, ctx: SlotContext): number[] {
   const { settings, viewer, bookings } = ctx;
-  const min = viewer.isAdmin ? 1 : settings.minBookingHours;
-  const max = viewer.isAdmin ? settings.closeHour - hour : settings.maxBookingHours;
+  const min = viewer.unlimited ? 1 : settings.minBookingHours;
+  const max = viewer.unlimited ? settings.closeHour - hour : settings.maxBookingHours;
   const start = hourStart(day, hour);
   const result: number[] = [];
 
@@ -149,7 +159,7 @@ export function getHourSlot(day: DayKey, hour: number, ctx: SlotContext): HourSl
   const horizonEnd = addDays(dayKeyOf(ctx.now), ctx.settings.bookingHorizonWeeks * 7);
   let state: HourState = "free";
   if (startsAt <= earliestStart(ctx)) state = "past";
-  else if (!ctx.viewer.isAdmin && day >= horizonEnd) state = "beyond_horizon";
+  else if (!ctx.viewer.unlimited && day >= horizonEnd) state = "beyond_horizon";
   else if (availableDurations(day, hour, ctx).length === 0) state = "too_short";
 
   return { ...slot, state, booking: null };
@@ -224,12 +234,12 @@ export function cancelOption(
   booking: MyBooking,
   settings: StudioSettings,
   now: Date,
-  isAdmin: boolean,
+  unlimited: boolean, // the team cancels its own bookings any time
 ): CancelOption {
   if (booking.startsAt <= now) return null;
   const status = effectiveStatus(booking, now);
   if (status === "pending") return "withdraw";
   if (status !== "confirmed") return null;
   const deadline = booking.startsAt.getTime() - settings.freeCancelHours * HOUR_MS;
-  return isAdmin || now.getTime() <= deadline ? "cancel" : "via_admin";
+  return unlimited || now.getTime() <= deadline ? "cancel" : "via_admin";
 }

@@ -11,7 +11,8 @@ export interface QueuedNotification {
     | "rejected"
     | "expired"
     | "cancelled"
-    | "test";
+    | "test"
+    | "signup"; // 018: a new account waits for the admin's approval
   prev_status: string | null;
   by_owner: boolean;
   by_admin: boolean;
@@ -23,6 +24,7 @@ export interface QueuedNotification {
   has_user: boolean;
   first_name: string | null;
   last_name: string | null;
+  email: string | null; // kind "signup" only
   chat_id: number | null;
   thread_id: number | null;
 }
@@ -92,6 +94,18 @@ export function buildMessage(n: QueuedNotification, siteUrl: string): OutgoingMe
       silent: false,
     };
   }
+  if (n.kind === "signup") {
+    const fullName = `${n.first_name ?? ""} ${n.last_name ?? ""}`.trim();
+    const who = fullName
+      ? `<b>${escapeHtml(fullName)}</b> (${escapeHtml(n.email ?? "")})`
+      : `<b>${escapeHtml(n.email ?? "?")}</b>`;
+    return {
+      text:
+        `👤 Новая регистрация: ${who} — ждёт одобрения.\n` +
+        `Одобрить: <a href="${siteUrl}/studio/manage?tab=clients">на сайте</a>`,
+      silent: false,
+    };
+  }
   if (!n.starts_at || !n.ends_at) return null; // the booking was deleted meanwhile
 
   const time = `<b>${escapeHtml(when(new Date(n.starts_at), new Date(n.ends_at)))}</b>`;
@@ -118,7 +132,10 @@ export function buildMessage(n: QueuedNotification, siteUrl: string): OutgoingMe
     case "rejected":
       return { text: `🚫 Заявка отклонена: ${name} — ${time}`, silent: true };
     case "expired":
-      return { text: `⌛ Заявка не рассмотрена вовремя и сгорела: ${name} — ${time}`, silent: false };
+      return {
+        text: `⌛ Заявка не рассмотрена вовремя и сгорела: ${name} — ${time}`,
+        silent: false,
+      };
     case "cancelled":
       if (isBlock) return { text: `🔓 Студия снова свободна: ${time}${caption}`, silent: true };
       if (n.prev_status === "pending") {

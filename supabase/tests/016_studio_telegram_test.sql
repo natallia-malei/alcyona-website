@@ -51,15 +51,16 @@ DECLARE
 BEGIN
   SELECT * INTO saved FROM public.studio_telegram WHERE id = 1;
   SELECT COALESCE(max(id), 0) INTO mark FROM public.notifications;
+  -- Disconnected before creating users, so no "new sign-up" message (018) is queued
+  UPDATE public.studio_telegram SET chat_id = NULL, thread_id = NULL, notify_url = NULL WHERE id = 1;
 
   INSERT INTO auth.users (id, email, aud, role) VALUES
     (ella, 'test-ella@example.invalid',  'authenticated', 'authenticated'),
     (adm,  'test-admin@example.invalid', 'authenticated', 'authenticated');
-  UPDATE public.profiles SET first_name = 'Эля', last_name = 'Test', phone = '+375290000001', trusted = TRUE, privacy_consent_at = NOW() WHERE id = ella;
+  UPDATE public.profiles SET first_name = 'Эля', last_name = 'Test', phone = '+375290000001', trusted = TRUE, privacy_consent_at = NOW(), role = 'client' WHERE id = ella;
   UPDATE public.profiles SET first_name = 'Test', last_name = 'Admin', phone = '+375290000005', role = 'admin' WHERE id = adm;
 
   -- ------------------------------------------------------------ connect code
-  UPDATE public.studio_telegram SET chat_id = NULL, thread_id = NULL, notify_url = NULL WHERE id = 1;
   -- Expire real overdue requests now, while nothing is queued, so they don't mix in
   PERFORM public.expire_booking_requests();
 

@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuthActions } from "../../auth/hooks";
+import { isSignupClosedError } from "../../auth/signupClosed";
 import { Input } from "../ui/Input";
 import { Button } from "../ui/Button";
 import { GoogleIcon } from "../icons/GoogleIcon";
@@ -32,7 +33,13 @@ export function LoginForm({ next, onSuccess }: LoginFormProps) {
     try {
       await action();
     } catch (err) {
-      setError(err instanceof Error ? err.message : t("auth.signInFailed"));
+      setError(
+        isSignupClosedError(err)
+          ? t("auth.signupClosed")
+          : err instanceof Error
+            ? err.message
+            : t("auth.signInFailed"),
+      );
     } finally {
       setSubmitting(false);
     }

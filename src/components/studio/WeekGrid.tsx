@@ -97,7 +97,7 @@ export function WeekGrid({
   const now = useNow();
   // Hovered free hour: highlights the shortest booking that would start there
   const [hovered, setHovered] = useState<{ day: DayKey; hour: number } | null>(null);
-  const previewHours = ctx.viewer.isAdmin ? 1 : ctx.settings.minBookingHours;
+  const previewHours = ctx.viewer.unlimited ? 1 : ctx.settings.minBookingHours;
   const inPreview = (day: DayKey, hour: number) =>
     hovered !== null &&
     hovered.day === day &&

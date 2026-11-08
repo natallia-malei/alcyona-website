@@ -31,7 +31,7 @@ export interface CalendarTabProps {
   onRequestsChanged: () => void; // approved / rejected / cancelled a request → page reloads the tab count
 }
 
-const ADMIN_VIEWER = { isAdmin: true, trusted: true } as const;
+const ADMIN_VIEWER = { isAdmin: true, unlimited: true, trusted: true } as const;
 
 // Every booking week by week: free hour → new booking, booking → details and actions.
 // No horizon: past weeks for attendance, any future week for closing time.

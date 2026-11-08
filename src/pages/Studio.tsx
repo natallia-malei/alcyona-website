@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
-import { isProfileReady, useAuthLoading, useIsAuthenticated, useProfile } from "../auth/hooks";
+import {
+  hasStudioAccess,
+  isProfileReady,
+  useAuthLoading,
+  useIsAuthenticated,
+  useProfile,
+} from "../auth/hooks";
 import { loginPath } from "../auth/redirect";
 import { useStudioCalendar } from "../hooks/useStudioCalendar";
 import { useToast } from "../hooks/useToast";
@@ -37,7 +43,43 @@ const STUDIO_PATH = "/studio";
 // Why the viewer can't book yet (null = can book)
 type Gate = "guest" | "profile" | "blocked" | null;
 
+// /studio — only for people with studio access (018): approved renters, the
+// band, the admin. Everyone else gets an explanation instead of the calendar.
 export function Studio() {
+  const authLoading = useAuthLoading();
+  const isAuth = useIsAuthenticated();
+  const profile = useProfile();
+
+  if (authLoading) {
+    return (
+      <Page size="lg">
+        <CalendarSkeleton />
+      </Page>
+    );
+  }
+  if (!hasStudioAccess(profile)) return <StudioNoAccess signedIn={isAuth} />;
+  return <StudioCalendar />;
+}
+
+function StudioNoAccess({ signedIn }: { signedIn: boolean }) {
+  const { t } = useTranslation();
+
+  return (
+    <Page size="lg">
+      <Stack gap="lg">
+        <PageTitle>{t("studio.title")}</PageTitle>
+        <Lead>{t(signedIn ? "studio.access.awaitingApproval" : "studio.access.membersOnly")}</Lead>
+        {!signedIn && (
+          <div>
+            <Button to={loginPath(STUDIO_PATH)}>{t("auth.signIn")}</Button>
+          </div>
+        )}
+      </Stack>
+    </Page>
+  );
+}
+
+function StudioCalendar() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { hash } = useLocation();
@@ -112,7 +154,7 @@ export function Studio() {
     }
 
     const today = dayKeyOf(data.now);
-    const days = bookableDays(today, data.settings);
+    const days = bookableDays(today, data.settings, viewer.unlimited);
     const day = selectedDay && days.includes(selectedDay) ? selectedDay : today;
     const week = weekStart ?? data.from;
     const availability = Object.fromEntries(days.map((d) => [d, dayAvailability(d, slotContext)]));
@@ -164,7 +206,7 @@ export function Studio() {
 
         <section id="booking" className="space-y-6">
           <SectionTitle size="sm">{t("studio.calendar.title")}</SectionTitle>
-          {data && !authLoading && !viewer.isAdmin && (
+          {data && !authLoading && !viewer.unlimited && (
             <BookingRules settings={data.settings} needsReview={!viewer.trusted} />
           )}
           {isAuth && data && !authLoading && (
@@ -182,7 +224,7 @@ export function Studio() {
               bookings={data.myBookings}
               settings={data.settings}
               now={data.now}
-              isAdmin={viewer.isAdmin}
+              unlimited={viewer.unlimited}
               onChanged={() => void refresh()}
               onEditProfile={() => setIsProfileOpen(true)}
               onPickTime={scrollToCalendar}

@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CalendarBooking, MyBooking, StudioSettings } from "../types";
-import { useAuthActions, useProfile, useSession } from "../auth/hooks";
+import { isTeam, useAuthActions, useProfile, useSession } from "../auth/hooks";
 import { fetchCalendar, fetchMyBookings, fetchStudioSettings } from "../supabase/bookings";
 import {
   addDays,
   dayKeyOf,
+  horizonWeeks,
   hourStart,
   weekStartOf,
   type DayKey,
@@ -34,11 +35,11 @@ export interface StudioCalendar {
 
 // From Monday of this week to the end of the week where the booking horizon
 // ends — both views fit: 28-day strip and week grid with arrows.
-async function loadCalendar(userId: string | null): Promise<CalendarData> {
+async function loadCalendar(userId: string | null, unlimited: boolean): Promise<CalendarData> {
   const settings = await fetchStudioSettings();
   const now = new Date();
   const from = weekStartOf(dayKeyOf(now));
-  const horizonEnd = addDays(dayKeyOf(now), settings.bookingHorizonWeeks * 7);
+  const horizonEnd = addDays(dayKeyOf(now), horizonWeeks(settings, unlimited) * 7);
   const weeksEnd = addDays(weekStartOf(addDays(horizonEnd, -1)), 7);
   const maxEnd = addDays(from, MAX_RANGE_DAYS);
   const to = weeksEnd < maxEnd ? weeksEnd : maxEnd;
@@ -56,6 +57,7 @@ export function useStudioCalendar(): StudioCalendar {
   const profile = useProfile();
   const { refreshProfile } = useAuthActions();
   const userId = session?.user.id ?? null;
+  const team = profile !== null && isTeam(profile);
 
   const [data, setData] = useState<CalendarData | null>(null);
   const [error, setError] = useState<unknown>(null);
@@ -64,7 +66,7 @@ export function useStudioCalendar(): StudioCalendar {
   const refresh = useCallback(() => {
     const id = ++requestId.current;
     // A newer refresh started meanwhile (e.g. sign-in) — only its result counts
-    return loadCalendar(userId).then(
+    return loadCalendar(userId, team).then(
       (next) => {
         if (id !== requestId.current) return;
         setData(next);
@@ -76,7 +78,7 @@ export function useStudioCalendar(): StudioCalendar {
         setError(e);
       },
     );
-  }, [userId]);
+  }, [userId, team]);
 
   useEffect(() => {
     void refresh();
@@ -91,8 +93,12 @@ export function useStudioCalendar(): StudioCalendar {
 
   // Memoized so components can safely use them in useMemo / useEffect deps
   const isAdmin = profile?.role === "admin";
+  const unlimited = profile !== null && isTeam(profile);
   const trusted = profile?.trusted ?? false;
-  const viewer = useMemo<Viewer>(() => ({ isAdmin, trusted }), [isAdmin, trusted]);
+  const viewer = useMemo<Viewer>(
+    () => ({ isAdmin, unlimited, trusted }),
+    [isAdmin, unlimited, trusted],
+  );
 
   const slotContext = useMemo<SlotContext | null>(
     () =>

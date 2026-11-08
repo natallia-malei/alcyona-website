@@ -155,8 +155,10 @@ function BookingForm({ titleId, slot, ctx, onClose, onDone }: BookingFormProps) 
   // The calendar may refresh while the sheet is open and shrink the options
   const selected = durations.includes(hours) ? hours : (durations[0] ?? 0);
   const trimmed = purpose.trim();
-  const isRequest = !ctx.viewer.isAdmin && !ctx.viewer.trusted;
-  const canSubmit = selected > 0 && trimmed.length > 0 && !submitting;
+  const isRequest = !ctx.viewer.unlimited && !ctx.viewer.trusted;
+  // "What we'll do" is optional for the team (017)
+  const purposeRequired = !ctx.viewer.unlimited;
+  const canSubmit = selected > 0 && (trimmed.length > 0 || !purposeRequired) && !submitting;
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -232,7 +234,7 @@ function BookingForm({ titleId, slot, ctx, onClose, onDone }: BookingFormProps) 
 
       <div>
         <label htmlFor={purposeId} className={`block mb-2 ${typography.caption}`}>
-          {t("studio.sheet.purpose")}
+          {t(purposeRequired ? "studio.sheet.purpose" : "studio.sheet.purposeOptional")}
         </label>
         <textarea
           id={purposeId}
@@ -241,7 +243,7 @@ function BookingForm({ titleId, slot, ctx, onClose, onDone }: BookingFormProps) 
           maxLength={PURPOSE_MAX}
           placeholder={t("studio.sheet.purposePlaceholder")}
           rows={3}
-          required
+          required={purposeRequired}
           aria-describedby={hintId}
           className="w-full px-3 py-2 bg-bg border border-white/20 rounded-sm text-white focus:outline-none focus:border-accent transition-colors font-sans resize-y"
         />

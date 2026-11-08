@@ -1,5 +1,7 @@
 -- Tests for 012_bookings + 013_privacy_consent
 -- (create_booking / cancel_booking / get_calendar). Needs both applied.
+-- Needs 016 too (the Telegram chat is switched off for the run) and works
+-- with 018 (test users are approved as 'client', visitors can't read the calendar).
 -- Run in Supabase Dashboard → SQL Editor → Run. Result: one table
 -- "check | expected | got | ok" — every row should be ✅.
 --
@@ -55,7 +57,12 @@ DECLARE
   q TEXT;
   -- "what each viewer sees" for a day: title/status/purpose per booking
   cal CONSTANT TEXT := $$SELECT string_agg(COALESCE(title, '∅') || '/' || COALESCE(status, '∅') || '/' || COALESCE(purpose, '∅'), ' | ' ORDER BY starts_at) FROM public.get_calendar(%L, %L)$$;
+  saved_chat BIGINT;
 BEGIN
+  -- No Telegram posts during the test (016); restored at the end
+  SELECT chat_id INTO saved_chat FROM public.studio_telegram WHERE id = 1;
+  UPDATE public.studio_telegram SET chat_id = NULL WHERE id = 1;
+
   -- ------------------------------------------------------------------ setup
   INSERT INTO auth.users (id, email, aud, role) VALUES
     (anna,  'test-anna@example.invalid',  'authenticated', 'authenticated'),
@@ -69,6 +76,7 @@ BEGIN
   UPDATE public.profiles SET first_name = 'Test', last_name = 'Dan',   phone = '+375290000004', blocked = TRUE      WHERE id = dan;
   UPDATE public.profiles SET first_name = 'Test', last_name = 'Admin', phone = '+375290000005', role = 'admin'      WHERE id = adm;
   UPDATE public.profiles SET privacy_consent_at = NOW() WHERE id IN (anna, boris, dan);   -- admin needs no consent
+  UPDATE public.profiles SET role = 'client' WHERE id IN (anna, boris, cyril, dan);       -- approved renters (018)
 
   -- ------------------------------------------------- who may create at all
   q := format($$SELECT status FROM public.create_booking(%L, 2, '[test]')$$, pg_temp.at(20, 10));
@@ -101,7 +109,7 @@ BEGIN
 
   -- ----------------------------------------------------------- visibility
   q := format(cal, pg_temp.at(20, 0), pg_temp.at(21, 0));
-  PERFORM pg_temp.chk('guest sees only "busy"', '∅/∅/∅ | ∅/∅/∅', pg_temp.run('anon', NULL, q));
+  PERFORM pg_temp.chk('visitor cannot read the calendar (018)', 'permission denied for function get_calendar', pg_temp.run('anon', NULL, q));
   PERFORM pg_temp.chk('Boris sees Anna''s name (shown), own status + purpose',
     'Test Anna/∅/∅ | Test Boris/confirmed/[test] boris', pg_temp.run('authenticated', boris, q));
   PERFORM pg_temp.chk('Anna does not see Boris''s name (hidden)',
@@ -109,7 +117,7 @@ BEGIN
   PERFORM pg_temp.chk('admin sees everything',
     'Test Anna/pending/[test] anna 1 | Test Boris/confirmed/[test] boris', pg_temp.run('authenticated', adm, q));
   PERFORM pg_temp.chk('calendar range > 62 days', 'invalid_range',
-    pg_temp.run('anon', NULL, format($$SELECT count(*) FROM public.get_calendar(%L, %L)$$, NOW(), NOW() + INTERVAL '100 days')));
+    pg_temp.run('authenticated', anna, format($$SELECT count(*) FROM public.get_calendar(%L, %L)$$, NOW(), NOW() + INTERVAL '100 days')));
 
   -- -------------------------------------------- no direct table access
   PERFORM pg_temp.chk('guest reads bookings table directly', '0',
@@ -148,7 +156,7 @@ BEGIN
   -- ------------------------------------------------- expired request frees the slot
   UPDATE public.bookings SET expires_at = NOW() - INTERVAL '1 second' WHERE purpose = '[test] anna 2';
   PERFORM pg_temp.chk('expired request disappears from calendar', '0',
-    pg_temp.run('anon', NULL, format($$SELECT count(*) FROM public.get_calendar(%L, %L)$$, pg_temp.at(21, 0), pg_temp.at(22, 0))));
+    pg_temp.run('authenticated', boris, format($$SELECT count(*) FROM public.get_calendar(%L, %L)$$, pg_temp.at(21, 0), pg_temp.at(22, 0))));
   PERFORM pg_temp.chk('someone else takes the freed slot', 'confirmed',
     pg_temp.run('authenticated', boris, format($$SELECT status FROM public.create_booking(%L, 2, '[test] boris 2')$$, pg_temp.at(21, 10))));
   PERFORM pg_temp.chk('the old request is marked expired', 'expired',
@@ -170,6 +178,7 @@ BEGIN
   -- ------------------------------------------------------------ cleanup
   DELETE FROM public.bookings WHERE purpose LIKE '[test]%';
   DELETE FROM auth.users WHERE id IN (anna, boris, cyril, dan, adm);
+  UPDATE public.studio_telegram SET chat_id = saved_chat WHERE id = 1;
 END
 $test$;
 
