@@ -20,7 +20,7 @@ interface MyBookingsProps {
   bookings: MyBooking[];
   settings: StudioSettings;
   now: Date;
-  isAdmin: boolean;
+  unlimited: boolean; // band member or admin: no limit line, cancel any time
   onChanged: () => void; // page refreshes after cancel/withdraw (or a failed attempt)
   onEditProfile: () => void;
   onPickTime: () => void; // empty list → scroll up to the calendar
@@ -38,7 +38,7 @@ export function MyBookings({
   bookings,
   settings,
   now,
-  isAdmin,
+  unlimited,
   onChanged,
   onEditProfile,
   onPickTime,
@@ -66,7 +66,7 @@ export function MyBookings({
               booking={b}
               settings={settings}
               now={now}
-              isAdmin={isAdmin}
+              unlimited={unlimited}
               onChanged={onChanged}
             />
           ))}
@@ -74,7 +74,7 @@ export function MyBookings({
       )}
 
       <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
-        {!isAdmin && (
+        {!unlimited && (
           <p className={typography.caption}>
             {t("studio.my.limit", { count: settings.maxActiveBookings })}
           </p>
@@ -91,11 +91,11 @@ interface BookingItemProps {
   booking: MyBooking;
   settings: StudioSettings;
   now: Date;
-  isAdmin: boolean;
+  unlimited: boolean; // band member or admin: no limit line, cancel any time
   onChanged: () => void;
 }
 
-function BookingItem({ booking, settings, now, isAdmin, onChanged }: BookingItemProps) {
+function BookingItem({ booking, settings, now, unlimited, onChanged }: BookingItemProps) {
   const { t, i18n } = useTranslation();
   const locale = (i18n.language as Locale) ?? "ru";
   const confirm = useConfirm();
@@ -103,7 +103,7 @@ function BookingItem({ booking, settings, now, isAdmin, onChanged }: BookingItem
   const [busy, setBusy] = useState(false);
 
   const status = effectiveStatus(booking, now);
-  const option = cancelOption(booking, settings, now, isAdmin);
+  const option = cancelOption(booking, settings, now, unlimited);
   const range = formatTimeRange(booking.startsAt, booking.endsAt);
   const canExport = status === "confirmed" && booking.startsAt > now;
 

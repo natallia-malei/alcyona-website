@@ -43,6 +43,11 @@ export const BOOKING_ERROR_CODES = [
   "invalid_settings", // CHECK violation on studio_settings (raised by the client code)
   // 016
   "telegram_not_connected",
+  // 017
+  "invalid_role",
+  "cannot_change_admin",
+  // 018
+  "no_access",
 ] as const;
 
 export type BookingErrorCode = (typeof BOOKING_ERROR_CODES)[number];

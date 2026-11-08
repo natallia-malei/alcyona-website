@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { Locale, StudioClient } from "../../../types";
-import { setClientBlocked, setClientTrusted } from "../../../supabase/manage";
+import { setClientBlocked, setClientRole, setClientTrusted } from "../../../supabase/manage";
 import { bookingErrorKey } from "../../../supabase/bookings";
 import { personName } from "../../../utils/studioManage";
 import { formatStudio } from "../../../utils/studioTime";
@@ -47,7 +47,11 @@ export function ClientsCard({
 
   const name = personName(c, t);
   const isAdmin = c.role === "admin";
-  const incomplete = !c.firstName || !c.lastName || !c.phone;
+  const isMember = c.role === "member";
+  const isApplicant = c.role === "applicant"; // waits for approval, no studio access (018)
+  const isClient = c.role === "client";
+  // Members need only a name (017)
+  const incomplete = !c.firstName || !c.lastName || (!isMember && !isAdmin && !c.phone);
   const telegram = c.telegramUsername.replace(/^@/, "");
   const historyDomId = `${domId}-history`;
 
@@ -81,6 +85,43 @@ export function ClientsCard({
         await setClientTrusted(c.id, !c.trusted);
         return t(
           c.trusted ? "studio.manage.clients.untrustedDone" : "studio.manage.clients.trustedDone",
+        );
+      },
+    );
+
+  const handleBand = () =>
+    runAction(
+      t(
+        isMember
+          ? "studio.manage.clients.removeFromBandConfirm"
+          : "studio.manage.clients.addToBandConfirm",
+        {
+          name,
+        },
+      ),
+      false,
+      async () => {
+        await setClientRole(c.id, isMember ? "client" : "member");
+        return t(
+          isMember ? "studio.manage.clients.removedFromBand" : "studio.manage.clients.addedToBand",
+        );
+      },
+    );
+
+  // Applicant → client ("Approve"), client → applicant ("Revoke access")
+  const handleAccess = () =>
+    runAction(
+      t(
+        isApplicant
+          ? "studio.manage.clients.approveConfirm"
+          : "studio.manage.clients.revokeAccessConfirm",
+        { name },
+      ),
+      !isApplicant,
+      async () => {
+        await setClientRole(c.id, isApplicant ? "client" : "applicant");
+        return t(
+          isApplicant ? "studio.manage.clients.approved" : "studio.manage.clients.accessRevoked",
         );
       },
     );
@@ -163,7 +204,7 @@ export function ClientsCard({
                 date: formatStudio(c.createdAt, DATE_PATTERN, locale),
               })}
             </li>
-            {!isAdmin && (
+            {isClient && (
               <li className={c.noShowCount > 0 ? "text-red-400" : undefined}>
                 {t("studio.manage.noShows", { count: c.noShowCount, limit: noShowLimit })}
               </li>
@@ -173,9 +214,29 @@ export function ClientsCard({
 
         {!isAdmin && (
           <div className="flex flex-wrap gap-2 md:flex-col md:items-stretch md:w-56 shrink-0">
-            <Button variant="outline" size="sm" disabled={busy} onClick={() => void handleTrust()}>
-              {t(c.trusted ? "studio.manage.clients.untrust" : "studio.manage.clients.trust")}
+            {isApplicant && (
+              <Button size="sm" disabled={busy} onClick={() => void handleAccess()}>
+                {t("studio.manage.clients.approve")}
+              </Button>
+            )}
+            <Button variant="outline" size="sm" disabled={busy} onClick={() => void handleBand()}>
+              {t(
+                isMember
+                  ? "studio.manage.clients.removeFromBand"
+                  : "studio.manage.clients.addToBand",
+              )}
             </Button>
+            {/* Trust only matters for renters; the band has no limits anyway */}
+            {isClient && (
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={busy}
+                onClick={() => void handleTrust()}
+              >
+                {t(c.trusted ? "studio.manage.clients.untrust" : "studio.manage.clients.trust")}
+              </Button>
+            )}
             <Button
               variant="outline"
               size="sm"
@@ -187,6 +248,16 @@ export function ClientsCard({
             >
               {t(c.blocked ? "studio.manage.clients.unblock" : "studio.manage.clients.block")}
             </Button>
+            {isClient && (
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={busy}
+                onClick={() => void handleAccess()}
+              >
+                {t("studio.manage.clients.revokeAccess")}
+              </Button>
+            )}
           </div>
         )}
       </div>

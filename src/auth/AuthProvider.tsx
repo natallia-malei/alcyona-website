@@ -5,6 +5,9 @@ import { supabase } from "../supabase/client";
 import { fetchProfile } from "../supabase/queries";
 import { updateProfile as updateProfileMutation } from "../supabase/mutations";
 import { AuthContext, type AuthContextValue } from "./AuthContext";
+import { takeSignupClosedFromUrl } from "./signupClosed";
+import { useToast } from "../hooks/useToast";
+import { useTranslation } from "react-i18next";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -29,6 +32,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [loaded, setLoaded] = useState<LoadedProfile | null>(null);
 
   const userId = session?.user.id ?? null;
+  const toast = useToast();
+  const { t } = useTranslation();
+
+  // Google sign-in for an unknown account while sign-up is closed (017)
+  useEffect(() => {
+    if (takeSignupClosedFromUrl()) toast.error(t("auth.signupClosed"));
+  }, [toast, t]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {

@@ -71,7 +71,10 @@ export interface BandInfo {
   social: SocialLinks;
 }
 
-export type UserRole = "client" | "admin";
+// applicant = signed up, waits for the admin's approval — no studio access (018)
+// client    = approved renter (rental rules)
+// member    = band member (017): books without limits, like the admin
+export type UserRole = "applicant" | "client" | "member" | "admin";
 
 export interface Profile {
   id: string;

@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import type { Profile, ProfileInput } from "../../types";
+import { isTeam } from "../../auth/hooks";
 import { Input } from "../ui/Input";
 import { Checkbox } from "../ui/Checkbox";
 import { FormActions } from "../ui/FormActions";
@@ -19,6 +20,8 @@ const TELEGRAM_RE = /^[A-Za-z0-9_]{5,32}$/;
 
 export function ProfileForm({ initial, onSubmit, onCancel, cancelLabel }: ProfileFormProps) {
   const { t } = useTranslation();
+  // Band members and the admin: name only — phone optional, no consent (017)
+  const team = isTeam(initial);
   const [firstName, setFirstName] = useState(initial.firstName);
   const [lastName, setLastName] = useState(initial.lastName);
   const [phone, setPhone] = useState(initial.phone);
@@ -32,7 +35,7 @@ export function ProfileForm({ initial, onSubmit, onCancel, cancelLabel }: Profil
     e.preventDefault();
     const telegramUsername = telegram.trim().replace(/^@/, "");
 
-    if (!PHONE_RE.test(phone.trim())) {
+    if ((!team || phone.trim() !== "") && !PHONE_RE.test(phone.trim())) {
       setError(t("profile.invalidPhone"));
       return;
     }
@@ -40,7 +43,7 @@ export function ProfileForm({ initial, onSubmit, onCancel, cancelLabel }: Profil
       setError(t("profile.invalidTelegram"));
       return;
     }
-    if (!consent) {
+    if (!team && !consent) {
       setError(t("profile.consentRequired"));
       return;
     }
@@ -55,7 +58,9 @@ export function ProfileForm({ initial, onSubmit, onCancel, cancelLabel }: Profil
         telegramUsername,
         showFullName,
         // keep the original consent date; set it the first time the box is ticked
-        privacyConsentAt: initial.privacyConsentAt ?? new Date().toISOString(),
+        privacyConsentAt: team
+          ? initial.privacyConsentAt
+          : (initial.privacyConsentAt ?? new Date().toISOString()),
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : t("common.saveFailed"));
@@ -68,12 +73,7 @@ export function ProfileForm({ initial, onSubmit, onCancel, cancelLabel }: Profil
       <p className={typography.caption}>{t("profile.intro")}</p>
 
       <div className="grid sm:grid-cols-2 gap-6">
-        <Input
-          label={t("profile.firstName")}
-          value={firstName}
-          onChange={setFirstName}
-          required
-        />
+        <Input label={t("profile.firstName")} value={firstName} onChange={setFirstName} required />
         <Input label={t("profile.lastName")} value={lastName} onChange={setLastName} required />
       </div>
 
@@ -83,7 +83,7 @@ export function ProfileForm({ initial, onSubmit, onCancel, cancelLabel }: Profil
         value={phone}
         onChange={setPhone}
         placeholder="+375 29 123-45-67"
-        required
+        required={!team}
       />
 
       <Input
@@ -93,30 +93,35 @@ export function ProfileForm({ initial, onSubmit, onCancel, cancelLabel }: Profil
         placeholder="@username"
       />
 
-      <Checkbox
-        label={t("profile.showFullName")}
-        checked={showFullName}
-        onChange={setShowFullName}
-      />
+      {/* The team's names are always shown in the calendar; consent is for clients */}
+      {!team && (
+        <Checkbox
+          label={t("profile.showFullName")}
+          checked={showFullName}
+          onChange={setShowFullName}
+        />
+      )}
 
       {/* Opens in a new tab: navigating would close the form */}
-      <Checkbox
-        label={
-          <>
-            {t("profile.consentPrefix")}
-            <a
-              href="/privacy"
-              target="_blank"
-              rel="noopener"
-              className="underline hover:text-accent"
-            >
-              {t("profile.consentLink")}
-            </a>
-          </>
-        }
-        checked={consent}
-        onChange={setConsent}
-      />
+      {!team && (
+        <Checkbox
+          label={
+            <>
+              {t("profile.consentPrefix")}
+              <a
+                href="/privacy"
+                target="_blank"
+                rel="noopener"
+                className="underline hover:text-accent"
+              >
+                {t("profile.consentLink")}
+              </a>
+            </>
+          }
+          checked={consent}
+          onChange={setConsent}
+        />
+      )}
 
       {error && (
         <p className="text-sm text-red-400 bg-red-950/40 border border-red-900/60 rounded-sm p-3">

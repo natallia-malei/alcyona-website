@@ -2,7 +2,13 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import { useBand } from "../../storage/hooks";
-import { useAccount, useAuthActions, useAuthLoading, useIsAdmin } from "../../auth/hooks";
+import {
+  useAccount,
+  useAuthActions,
+  useAuthLoading,
+  useHasStudioAccess,
+  useIsAdmin,
+} from "../../auth/hooks";
 import { MANAGE_PATH } from "../studio/manage/manageLinks";
 import { loginPath } from "../../auth/redirect";
 import { NavLink } from "../ui/NavLink";
@@ -27,6 +33,7 @@ export function MobileMenu({ isOpen, onClose, onOpenProfile }: MobileMenuProps) 
   const { pathname } = useLocation();
   const { signOut } = useAuthActions();
   const isAdmin = useIsAdmin();
+  const studioAccess = useHasStudioAccess();
 
   const handleSignOut = async () => {
     await signOut();
@@ -83,9 +90,11 @@ export function MobileMenu({ isOpen, onClose, onOpenProfile }: MobileMenuProps) 
         <NavLink variant="accent" to="/photos" onClick={onClose}>
           {t("nav.photos")}
         </NavLink>
-        <NavLink variant="accent" to="/studio" onClick={onClose}>
-          {t("nav.studio")}
-        </NavLink>
+        {studioAccess && (
+          <NavLink variant="accent" to="/studio" onClick={onClose}>
+            {t("nav.studio")}
+          </NavLink>
+        )}
       </nav>
 
       <div className="flex flex-col items-center gap-6 p-8">
@@ -107,14 +116,16 @@ export function MobileMenu({ isOpen, onClose, onOpenProfile }: MobileMenuProps) 
                 </NavLink>
               )}
               <div className="flex items-center gap-6">
-                <NavLink
-                  variant="accent"
-                  to="/studio#my-bookings"
-                  onClick={onClose}
-                  className={typography.eyebrow}
-                >
-                  {t("auth.myBookings")}
-                </NavLink>
+                {studioAccess && (
+                  <NavLink
+                    variant="accent"
+                    to="/studio#my-bookings"
+                    onClick={onClose}
+                    className={typography.eyebrow}
+                  >
+                    {t("auth.myBookings")}
+                  </NavLink>
+                )}
                 <button
                   type="button"
                   onClick={() => {

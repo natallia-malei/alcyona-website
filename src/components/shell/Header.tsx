@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import { useBand } from "../../storage/hooks";
-import { useAuthLoading, useIsAuthenticated } from "../../auth/hooks";
+import { useAuthLoading, useHasStudioAccess, useIsAuthenticated } from "../../auth/hooks";
 import { loginPath } from "../../auth/redirect";
 import { SocialLinks } from "./SocialLinks";
 import { LangSwitcher } from "./LangSwitcher";
@@ -22,6 +22,7 @@ export function Header() {
   const band = useBand();
   const isAuth = useIsAuthenticated();
   const authLoading = useAuthLoading();
+  const studioAccess = useHasStudioAccess();
   const { pathname } = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -47,7 +48,7 @@ export function Header() {
             <NavLink href="/#concerts">{t("nav.concerts")}</NavLink>
             <NavLink to="/videos">{t("nav.videos")}</NavLink>
             <NavLink to="/photos">{t("nav.photos")}</NavLink>
-            <NavLink to="/studio">{t("nav.studio")}</NavLink>
+            {studioAccess && <NavLink to="/studio">{t("nav.studio")}</NavLink>}
           </nav>
 
           <div className="hidden lg:flex items-center gap-6">

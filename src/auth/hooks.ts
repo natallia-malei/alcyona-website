@@ -29,16 +29,34 @@ export function useIsAdmin(): boolean {
   return useAuth().profile?.role === "admin";
 }
 
+// Who may see and use the studio (018): approved renters, the band, the admin.
+// The database checks the same (has_studio_access).
+export function hasStudioAccess(profile: Pick<Profile, "role"> | null): boolean {
+  return profile !== null && profile.role !== "applicant";
+}
+
+// The studio menu item: only for people with access
+export function useHasStudioAccess(): boolean {
+  return hasStudioAccess(useAuth().profile);
+}
+
+// Band members and the admin (017): no booking limits, name-only profile, no consent
+export function isTeam(profile: Pick<Profile, "role">): boolean {
+  return profile.role === "member" || profile.role === "admin";
+}
+
+// Name for everyone; the phone only for clients (same rule as create_booking)
 export function isProfileComplete(profile: Profile): boolean {
-  return [profile.firstName, profile.lastName, profile.phone].every((v) => v.trim() !== "");
+  const required = isTeam(profile)
+    ? [profile.firstName, profile.lastName]
+    : [profile.firstName, profile.lastName, profile.phone];
+  return required.every((v) => v.trim() !== "");
 }
 
 // Complete + consent to personal data processing — required to book (013).
-// Admin is the data operator and needs no consent, same as in create_booking.
+// The team needs no consent (the admin is the data operator), same as in create_booking.
 export function isProfileReady(profile: Profile): boolean {
-  return (
-    isProfileComplete(profile) && (profile.role === "admin" || profile.privacyConsentAt !== null)
-  );
+  return isProfileComplete(profile) && (isTeam(profile) || profile.privacyConsentAt !== null);
 }
 
 export interface Account {

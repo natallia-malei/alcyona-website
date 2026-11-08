@@ -5,6 +5,8 @@ import { typography } from "../../../styles/typography";
 
 const badgeClass = {
   admin: "border-accent/60 text-accent",
+  member: "border-accent/60 text-accent",
+  applicant: "border-amber-400/70 text-amber-300",
   trusted: "border-accent/40 text-accent",
   newbie: "border-amber-400/50 text-amber-400",
   blocked: "border-red-500/60 text-red-400",

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { useAccount, useAuthActions, useIsAdmin } from "../../auth/hooks";
+import { useAccount, useAuthActions, useHasStudioAccess, useIsAdmin } from "../../auth/hooks";
 import { MANAGE_PATH } from "../studio/manage/manageLinks";
 import { Avatar } from "../ui/Avatar";
 import { typography } from "../../styles/typography";
@@ -17,6 +17,7 @@ export function UserMenu({ onOpenProfile }: UserMenuProps) {
   const account = useAccount();
   const { signOut } = useAuthActions();
   const isAdmin = useIsAdmin();
+  const studioAccess = useHasStudioAccess();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -60,9 +61,11 @@ export function UserMenu({ onOpenProfile }: UserMenuProps) {
               <p className={`${typography.caption} truncate`}>{account.email}</p>
             )}
           </div>
-          <Link to="/studio#my-bookings" onClick={() => setOpen(false)} className={item}>
-            {t("auth.myBookings")}
-          </Link>
+          {studioAccess && (
+            <Link to="/studio#my-bookings" onClick={() => setOpen(false)} className={item}>
+              {t("auth.myBookings")}
+            </Link>
+          )}
           {isAdmin && (
             <Link to={MANAGE_PATH} onClick={() => setOpen(false)} className={item}>
               {t("auth.manageStudio")}

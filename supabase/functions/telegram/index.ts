@@ -20,7 +20,10 @@ import { buildMessage, escapeHtml, type QueuedNotification } from "./messages.ts
 const TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN") ?? "";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-const SITE_URL = (Deno.env.get("SITE_URL") ?? "https://alcyona-website.vercel.app").replace(/\/$/, "");
+const SITE_URL = (Deno.env.get("SITE_URL") ?? "https://alcyona-website.vercel.app").replace(
+  /\/$/,
+  "",
+);
 const SELF_URL = `${SUPABASE_URL}/functions/v1/telegram`;
 
 const db = createClient(SUPABASE_URL, SERVICE_KEY, { auth: { persistSession: false } });
@@ -161,7 +164,10 @@ async function handleMessage(m: TgMessage): Promise<void> {
     } else if (data === true) {
       await reply(m, "✅ Подключено. Сюда будут приходить брони и отмены студии.");
     } else {
-      await reply(m, "Код не подошёл или устарел. Получите новый на сайте: Управление студией → Настройки.");
+      await reply(
+        m,
+        "Код не подошёл или устарел. Получите новый на сайте: Управление студией → Настройки.",
+      );
     }
     return;
   }

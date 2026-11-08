@@ -13,11 +13,17 @@ export interface ClientsTabProps {
   focusClientId: string | null; // ?client=… — open and scroll to this client's card
 }
 
-const FILTERS = ["all", "trusted", "newbies", "blocked"] as const;
+const FILTERS = ["all", "applicants", "band", "trusted", "newbies", "blocked"] as const;
 type ClientFilter = (typeof FILTERS)[number];
 
 // Filter chip → badge it shows; admins only appear under "all"
-const FILTER_BADGE = { trusted: "trusted", newbies: "newbie", blocked: "blocked" } as const;
+const FILTER_BADGE = {
+  applicants: "applicant",
+  band: "member",
+  trusted: "trusted",
+  newbies: "newbie",
+  blocked: "blocked",
+} as const;
 
 const HIGHLIGHT_MS = 3000;
 

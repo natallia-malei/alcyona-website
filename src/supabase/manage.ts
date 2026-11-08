@@ -180,7 +180,7 @@ export async function fetchUnmarkedAttendance(): Promise<AdminBooking[]> {
   if (error) throw error;
   return (data as unknown as AdminBookingRow[])
     .map(rowToAdminBooking)
-    .filter((b) => b.client?.role !== "admin");
+    .filter((b) => b.client?.role === "client"); // not the band (017) or the admin
 }
 
 // Every booking of one client (any status), newest first
@@ -247,6 +247,16 @@ export async function setClientTrusted(userId: string, trusted: boolean): Promis
     p_user_id: userId,
     p_trusted: trusted,
   });
+  if (error) throw toBookingError(error);
+}
+
+// "Add to band" (member) / "Remove from band" (client) — 017; "Approve" (client) /
+// "Revoke access" (applicant) — 018. Admins can't be changed.
+export async function setClientRole(
+  userId: string,
+  role: "applicant" | "client" | "member",
+): Promise<void> {
+  const { error } = await supabase.rpc("set_client_role", { p_user_id: userId, p_role: role });
   if (error) throw toBookingError(error);
 }
 

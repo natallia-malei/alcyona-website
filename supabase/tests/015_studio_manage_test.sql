@@ -1,5 +1,7 @@
 -- Tests for 015_studio_manage (approve/reject, admin_create_booking,
 -- mark_attendance, set_client_trusted/blocked, get_clients). Needs 012–015 applied.
+-- Needs 016 too (the Telegram chat is switched off for the run) and works
+-- with 018 (test users are approved as 'client', visitors can't read the calendar).
 -- Run in Supabase Dashboard → SQL Editor → Run. Result: one table
 -- "check | expected | got | ok" — every row should be ✅.
 --
@@ -53,7 +55,12 @@ DECLARE
   -- "who/what" of a day as the viewer sees it: kind/title per booking
   cal CONSTANT TEXT := $$SELECT string_agg(COALESCE(kind, '∅') || '/' || COALESCE(title, '∅'), ' | ' ORDER BY starts_at) FROM public.get_calendar(%L, %L)$$;
   counters CONSTANT TEXT := 'SELECT no_show_count || ''/'' || trusted FROM public.profiles WHERE id = %L';
+  saved_chat BIGINT;
 BEGIN
+  -- No Telegram posts during the test (016); restored at the end
+  SELECT chat_id INTO saved_chat FROM public.studio_telegram WHERE id = 1;
+  UPDATE public.studio_telegram SET chat_id = NULL WHERE id = 1;
+
   -- ------------------------------------------------------------------ setup
   INSERT INTO auth.users (id, email, aud, role) VALUES
     (anna,  'test-anna@example.invalid',  'authenticated', 'authenticated'),
@@ -65,6 +72,7 @@ BEGIN
   UPDATE public.profiles SET first_name = 'Test', last_name = 'Eve',   phone = '+375290000003' WHERE id = eve;
   UPDATE public.profiles SET first_name = 'Test', last_name = 'Admin', phone = '+375290000005', role = 'admin' WHERE id = adm;
   UPDATE public.profiles SET privacy_consent_at = NOW() WHERE id IN (anna, boris, eve);
+  UPDATE public.profiles SET role = 'client' WHERE id IN (anna, boris, eve);   -- approved renters (018)
 
   -- Requests are inserted directly: create_booking itself is covered by 012
   INSERT INTO public.bookings (starts_at, ends_at, status, expires_at, purpose, user_id)
@@ -197,6 +205,7 @@ BEGIN
   -- ------------------------------------------------------------ cleanup
   DELETE FROM public.bookings WHERE purpose LIKE '[test]%';
   DELETE FROM auth.users WHERE id IN (anna, boris, eve, adm);
+  UPDATE public.studio_telegram SET chat_id = saved_chat WHERE id = 1;
 END
 $test$;
 

@@ -106,6 +106,12 @@ const resources = {
       },
       studio: {
         title: "Студия ALCYONA",
+        // /studio for people without access (018)
+        access: {
+          membersOnly: "Студия — для участников группы ALCYONA. Если у вас есть аккаунт, войдите.",
+          awaitingApproval:
+            "Ваш аккаунт ждёт одобрения администратора. Как только доступ откроют, здесь появится календарь бронирования.",
+        },
         content:
           "Здесь будет описание студии группы ALCYONA: оборудование, услуги записи, фотографии помещения, контакты.",
         calendar: {
@@ -159,6 +165,7 @@ const resources = {
           hours_other: "{{count}} часа",
           until: "до {{time}}",
           purpose: "Что будем делать",
+          purposeOptional: "Что будем делать (необязательно)",
           purposePlaceholder: "Например: репетиция перед концертом, запись вокала",
           purposeHint: "Видите только вы и администратор",
           requestNote:
@@ -230,6 +237,11 @@ const resources = {
           guest_required: "Укажите имя и телефон гостя",
           label_too_long: "Подпись — не больше 60 символов",
           cannot_block_admin: "Администратора нельзя заблокировать",
+          // 017
+          invalid_role: "Такой роли нет",
+          cannot_change_admin: "Роль администратора здесь не меняется",
+          // 018
+          no_access: "Студия доступна только участникам группы и одобренным пользователям",
           invalid_settings: "Проверьте значения: такие правила не сохранить",
           telegram_not_connected: "Чат в Telegram ещё не подключён",
         },
@@ -255,6 +267,8 @@ const resources = {
           },
           badge: {
             admin: "Админ",
+            member: "Группа",
+            applicant: "Ждёт одобрения",
             trusted: "Доверенный",
             newbie: "Новичок",
             blocked: "Заблокирован",
@@ -325,6 +339,8 @@ const resources = {
             notFound: "Никого не нашли",
             filter: {
               all: "Все",
+              applicants: "Ждут одобрения",
+              band: "Группа",
               trusted: "Доверенные",
               newbies: "Новички",
               blocked: "Заблокированные",
@@ -351,6 +367,22 @@ const resources = {
             history: "История броней",
             hideHistory: "Скрыть историю",
             historyEmpty: "Броней ещё не было",
+            addToBand: "Добавить в группу",
+            removeFromBand: "Убрать из группы",
+            addToBandConfirm:
+              "Добавить в группу: {{name}}? Брони без ограничений и сразу подтверждаются, имя видно всем вошедшим.",
+            removeFromBandConfirm:
+              "Убрать из группы: {{name}}? Для новых броней снова будут действовать правила для клиентов.",
+            addedToBand: "Добавлено в группу",
+            removedFromBand: "Убрано из группы",
+            approve: "Одобрить",
+            approveConfirm:
+              "Одобрить: {{name}}? Откроется доступ к студии — брони по правилам для клиентов (заявки, лимиты).",
+            approved: "Доступ к студии открыт",
+            revokeAccess: "Закрыть доступ",
+            revokeAccessConfirm:
+              "Закрыть доступ к студии: {{name}}? Календарь и бронирование станут недоступны.",
+            accessRevoked: "Доступ закрыт",
           },
           settings: {
             hint: "Правила действуют для клиентов. На администратора ограничения не распространяются.",
@@ -501,6 +533,8 @@ const resources = {
         usePassword: "Войти по паролю",
         useMagicLink: "Войти по ссылке из письма",
         signInFailed: "Не удалось войти",
+        signupClosed:
+          "Аккаунты создаёт студия. Если вы из группы — попросите администратора добавить вас.",
       },
       profile: {
         title: "Заполните профиль",
@@ -679,6 +713,11 @@ const resources = {
       },
       studio: {
         title: "ALCYONA Studio",
+        access: {
+          membersOnly: "The studio is for ALCYONA band members. If you have an account, sign in.",
+          awaitingApproval:
+            "Your account is waiting for the admin's approval. Once access is granted, the booking calendar will appear here.",
+        },
         content:
           "Description of the ALCYONA studio will be placed here: equipment, recording services, photos, contacts.",
         calendar: {
@@ -729,6 +768,7 @@ const resources = {
           hours_other: "{{count}} hours",
           until: "until {{time}}",
           purpose: "What we'll do",
+          purposeOptional: "What we'll do (optional)",
           purposePlaceholder: "E.g. rehearsal before a gig, vocal recording",
           purposeHint: "Only you and the admin can see this",
           requestNote:
@@ -798,6 +838,11 @@ const resources = {
           guest_required: "Enter the guest's name and phone",
           label_too_long: "Caption — 60 characters at most",
           cannot_block_admin: "The admin can't be blocked",
+          // 017
+          invalid_role: "No such role",
+          cannot_change_admin: "The admin's role can't be changed here",
+          // 018
+          no_access: "The studio is only for band members and approved users",
           invalid_settings: "Check the values: these rules can't be saved",
           telegram_not_connected: "No Telegram chat is connected yet",
         },
@@ -822,6 +867,8 @@ const resources = {
           },
           badge: {
             admin: "Admin",
+            member: "Band",
+            applicant: "Awaiting approval",
             trusted: "Trusted",
             newbie: "Newbie",
             blocked: "Blocked",
@@ -892,6 +939,8 @@ const resources = {
             notFound: "Nobody found",
             filter: {
               all: "All",
+              applicants: "Awaiting approval",
+              band: "Band",
               trusted: "Trusted",
               newbies: "Newbies",
               blocked: "Blocked",
@@ -918,6 +967,22 @@ const resources = {
             history: "Booking history",
             hideHistory: "Hide history",
             historyEmpty: "No bookings yet",
+            addToBand: "Add to band",
+            removeFromBand: "Remove from band",
+            addToBandConfirm:
+              "Add {{name}} to the band? Bookings without limits, confirmed at once, name visible to everyone signed in.",
+            removeFromBandConfirm:
+              "Remove {{name}} from the band? New bookings will follow the client rules again.",
+            addedToBand: "Added to the band",
+            removedFromBand: "Removed from the band",
+            approve: "Approve",
+            approveConfirm:
+              "Approve {{name}}? They get studio access with the client rules (requests, limits).",
+            approved: "Studio access granted",
+            revokeAccess: "Revoke access",
+            revokeAccessConfirm:
+              "Revoke {{name}}'s studio access? The calendar and booking will be closed to them.",
+            accessRevoked: "Access revoked",
           },
           settings: {
             hint: "The rules apply to clients. The admin has no limits.",
@@ -1065,6 +1130,8 @@ const resources = {
         usePassword: "Sign in with password",
         useMagicLink: "Sign in with email link",
         signInFailed: "Sign in failed",
+        signupClosed:
+          "Accounts are created by the studio. If you're in the band, ask the admin to add you.",
       },
       profile: {
         title: "Complete your profile",
